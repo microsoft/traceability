@@ -1,11 +1,19 @@
-# Project
+# Project Traceability Toolkit
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+This repo hosts a tooklit that is informed by a thesis of ecosystem adoption hurdles. In the best case, it helps with Traceability ecosystem adoption.
 
-As the maintainer of this project, please make a few updates:
+It will consist of a number of individual projects that can be considered helper building blocks.
+Examples helper tools envisioned:
+- virtual HBOM creator 
+- proprietary document redaction tool 
+- attestation service via public blockchain
+- verifiable credential generation and transmission
+- self attestation of sufficiency of evidence 
+- MCP enablement for various tools
+- 
 
-- Improving this README.MD file to provide a great experience
+# IN PROGRESS As the maintainer of this project, please make a few updates:
+IN PROGRESS - Improving this README.MD file to provide a great experience
 - Updating SUPPORT.MD with content about this project's support experience
 - Understanding the security reporting process in SECURITY.MD
 - Remove this section from the README
