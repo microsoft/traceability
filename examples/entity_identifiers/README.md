@@ -19,7 +19,7 @@ Here is an example CID, relating a company owned website to legal entity identif
   "alsoKnownAs": [
     "urn:ietf:spice:glue:gln:123",
     "urn:ietf:spice:glue:lei:456",
-    "urn:ietf:spice:glue:pen:789"
+    "urn:ietf:spice:glue:pen:78901"
   ],
   "verificationMethod": [
     {
