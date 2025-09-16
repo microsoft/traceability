@@ -46,7 +46,7 @@ With the above controller document, the entity with identifier `https://controll
 
 - `urn:ietf:spice:glue:gln:123`
 - `urn:ietf:spice:glue:lei:456`
-- `urn:ietf:spice:glue:pen:789`
+- `urn:ietf:spice:glue:pen:78901`
 
 And supply chain assertions made by this entity can be verified by the following verification method:
 

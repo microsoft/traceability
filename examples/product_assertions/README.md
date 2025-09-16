@@ -13,7 +13,7 @@ This example demonstrates how W3C Verifiable Credentials can be used to create t
 ### 2. **Trust and Authentication**
 
 - **Issuer Verification**: Verifiers can cryptographically verify the identity of the credential issuer
-- **Trust Networks**: Enables trust relationships between different parties in the supply chain
+- **Trust Networks**: Enable trust relationships between different parties in the supply chain
 - **Decentralized Verification**: No need for centralized authorities to validate assertions
 
 ### 3. **Privacy and Selective Disclosure**
@@ -129,7 +129,7 @@ Based on the [W3C Verifiable Credentials Data Model v2.0](https://www.w3.org/TR/
 
 ## Key Features of This Example
 
-1. **Standard Compliance**: Uses W3C Verifiable Credentials v1 context with SPDX extensions
+1. **Standard Compliance**: Uses W3C Verifiable Credentials v2 context with SPDX extensions
 2. **Cryptographic Security**: Includes Ed25519 signature for tamper detection
 3. **Structured Data**: Hierarchical representation of product composition
 4. **Supplier Information**: Includes verifiable supplier details
