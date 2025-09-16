@@ -10,7 +10,7 @@ Together these specifications enable verifiable supply chain graphs that are ess
 - **Manage ESG risk** by verifying supplier environmental credentials
 - **Enable carbon credit trading** with verified emission reduction claims
 
-Here is an example, relating a company owned website to legal entity identifiers:
+Here is an example CID, relating a company owned website to legal entity identifiers:
 
 ```json
 {
