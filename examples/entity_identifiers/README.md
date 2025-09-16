@@ -2,7 +2,7 @@
 
 [GLUE](https://datatracker.ietf.org/doc/draft-ietf-spice-glue-id/) is an internet draft being developed by the SPICE Working group at IETF.
 
-Together these specifications enable verifiable supply chain graphs that are essential for managing tax and subsidy information related to ESG (Environmental, Social, and Governance) and climate issues. By providing cryptographically verifiable assertions about supply chain participants and their environmental practices, organizations can:
+Together these specifications enable verifiable supply chain graphs that are essential for managing tax and subsidy information related to ESG (Environmental, Social, and Governance) issues such as climate concerns. By providing cryptographically verifiable assertions about supply chain participants and their environmental practices, organizations can:
 
 - **Claim tax incentives** for sustainable practices with verifiable proof
 - **Qualify for climate subsidies** by demonstrating authentic supply chain sustainability
