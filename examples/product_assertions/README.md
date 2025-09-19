@@ -130,7 +130,7 @@ Based on the [W3C Verifiable Credentials Data Model v2.0](https://www.w3.org/TR/
 ## Key Features of This Example
 
 1. **Standard Compliance**: Uses W3C Verifiable Credentials v1 context with SPDX extensions
-2. **Cryptographic Security**: Includes Ed25519 signature for tamper detection
+2. **Cryptographic Security**: Signed manifests secure important product information
 3. **Structured Data**: Hierarchical representation of product composition
 4. **Supplier Information**: Includes verifiable supplier details
 5. **Temporal Validity**: Clear issuance and expiration dates
