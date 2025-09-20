@@ -1,0 +1,9 @@
+{
+  "https://chompchomp.example/entity/bvi-001": "case-studies/transhrimpment/controllers/chompchomp-controller.json",
+  "https://camaron-corriente.example/entity/ve-pbc-001": "case-studies/transhrimpment/controllers/camaron-corriente-controller.json",
+  "https://legit-shrimp.example/entity/tt-pos-001": "case-studies/transhrimpment/controllers/legit-shrimp-controller.json",
+  "https://shady-carrier.example/entity/aw-oru-001": "case-studies/transhrimpment/controllers/shady-carrier-controller.json",
+  "https://shady-distributor.example/entity/bvi-002": "case-studies/transhrimpment/controllers/shady-distributor-controller.json",
+  "https://transit-authority.example/entity/aw-003": "case-studies/transhrimpment/controllers/transit-authority-controller.json",
+  "https://final-consumer.example/entity/us-fl-004": "case-studies/transhrimpment/controllers/final-consumer-controller.json"
+}

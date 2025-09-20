@@ -1,0 +1,197 @@
+title: Controller Document Schema
+description: Schema for validating controller documents with cryptographic verification methods and geographic features
+type: object
+required:
+  - controller
+properties:
+  controller:
+    type: object
+    required:
+      - "@context"
+      - id
+      - verificationMethod
+    properties:
+      "@context":
+        type: array
+        items:
+          type: string
+        minItems: 1
+        contains:
+          const: "https://www.w3.org/ns/cid/v1"
+      id:
+        type: string
+        format: uri
+        description: "The controller identifier"
+      verificationMethod:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          required:
+            - id
+            - type
+            - controller
+            - publicKeyJwk
+          properties:
+            id:
+              type: string
+              format: uri
+              description: "Key identifier (controller ID + key thumbprint)"
+            type:
+              const: "JsonWebKey"
+            controller:
+              type: string
+              format: uri
+              description: "Must match the controller's id"
+            publicKeyJwk:
+              type: object
+              required:
+                - kid
+                - kty
+                - crv
+                - alg
+                - x
+                - y
+                - key_ops
+              properties:
+                kid:
+                  type: string
+                  description: "Key ID (thumbprint)"
+                kty:
+                  const: "EC"
+                crv:
+                  const: "P-256"
+                alg:
+                  const: "ES256"
+                x:
+                  type: string
+                  description: "Public key X coordinate (base64url)"
+                y:
+                  type: string
+                  description: "Public key Y coordinate (base64url)"
+                key_ops:
+                  type: array
+                  items:
+                    const: "verify"
+                  minItems: 1
+                  maxItems: 1
+      assertionMethod:
+        type: array
+        items:
+          type: string
+          format: uri
+        description: "Key IDs used for assertions/credentials"
+      authentication:
+        type: array
+        items:
+          type: string
+          format: uri
+        description: "Key IDs used for authentication"
+      type:
+        const: "FeatureCollection"
+        description: "GeoJSON type for geographic features"
+      features:
+        type: array
+        items:
+          type: object
+          required:
+            - type
+            - geometry
+            - properties
+          properties:
+            type:
+              const: "Feature"
+            geometry:
+              $ref: "#/$defs/GeoJSONPoint"
+            properties:
+              type: object
+              required:
+                - name
+                - type
+              properties:
+                name:
+                  type: string
+                  description: "Human-readable name for the location"
+                type:
+                  type: string
+                  description: "Type of entity or facility"
+                role:
+                  type: string
+                  description: "Role of this location"
+                address:
+                  type: object
+                  properties:
+                    streetAddress:
+                      type: string
+                    addressLocality:
+                      type: string
+                    addressRegion:
+                      type: string
+                    addressCountry:
+                      type: string
+                capacity:
+                  type: string
+                  description: "Storage or operational capacity"
+  generatedKeys:
+    type: object
+    description: "Reserved for private key generation metadata (should be empty in public controllers)"
+  generated:
+    type: string
+    format: date-time
+    description: "Timestamp when controller was generated"
+
+examples:
+  - controller:
+      "@context":
+        - "https://www.w3.org/ns/cid/v1"
+        - "https://geojson.org/geojson-ld/geojson-context.jsonld"
+      id: "https://example.com/entity/test-001"
+      verificationMethod:
+        - id: "https://example.com/entity/test-001#4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE"
+          type: "JsonWebKey"
+          controller: "https://example.com/entity/test-001"
+          publicKeyJwk:
+            kid: "4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE"
+            kty: "EC"
+            crv: "P-256"
+            alg: "ES256"
+            x: "TXYRYgX8eZTx4m7OkMRy_kLdaBIq9hCEQmODECNGSMw"
+            y: "rQ9q1YQHb8YTd6i6EaLYf_ycb9vQpN6VkLaFWlI5T_o"
+            key_ops:
+              - "verify"
+      assertionMethod:
+        - "https://example.com/entity/test-001#4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE"
+      authentication: []
+      type: "FeatureCollection"
+      features:
+        - type: "Feature"
+          geometry:
+            type: "Point"
+            coordinates: [-74.0059, 40.7128]
+          properties:
+            name: "Example Corp Headquarters"
+            type: "Corporate Office"
+            role: "headquarters"
+            address:
+              streetAddress: "123 Main St"
+              addressLocality: "New York"
+              addressRegion: "NY"
+              addressCountry: "US"
+    generatedKeys: {}
+    generated: "2024-01-01T00:00:00Z"
+
+$defs:
+  GeoJSONPoint:
+    type: object
+    required:
+      - type
+      - coordinates
+    properties:
+      type:
+        const: "Point"
+      coordinates:
+        type: array
+        minItems: 2
+        maxItems: 3
+        items:
+          type: number

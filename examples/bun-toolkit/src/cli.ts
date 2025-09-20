@@ -24,6 +24,7 @@ Commands:
   verify-presentation --pres <file> --resolver <file>    Verify presentation with resolver
   extract-public-key --key <file> --out <file>           Extract public key from private key
   validate-schema --schema <file> [--example <file>]      Validate YAML schema and optional example
+  validate-controller --controller <file>                 Validate controller document (security + schema)
   help                                          Show this help message
 
 Examples:
@@ -32,6 +33,7 @@ Examples:
   bun cli.ts sign-credential --key entity1-keys.json --cred shipment.json --out signed-shipment.json
   bun cli.ts verify-credential --cred signed-shipment.json --key entity1-public.json
   bun cli.ts validate-schema --schema schema.yaml --example example.json
+  bun cli.ts validate-controller --controller controller.json
 `);
 }
 
@@ -280,6 +282,130 @@ async function validateSchema(schemaFile: string, exampleFile?: string) {
   }
 }
 
+function containsPrivateKeys(obj: any): boolean {
+  if (typeof obj !== 'object' || obj === null) {
+    return false;
+  }
+
+  // Check for private key indicators in JWK format
+  if (obj.d || obj.p || obj.q || obj.dp || obj.dq || obj.qi) {
+    return true;
+  }
+
+  // Check for private key indicators in PEM format
+  if (typeof obj === 'string' && (
+    obj.includes('-----BEGIN PRIVATE KEY-----') ||
+    obj.includes('-----BEGIN RSA PRIVATE KEY-----') ||
+    obj.includes('-----BEGIN EC PRIVATE KEY-----') ||
+    obj.includes('privateKey') ||
+    obj.includes('private_key')
+  )) {
+    return true;
+  }
+
+  // Check for common private key property names
+  const privateKeyProperties = ['privateKey', 'private_key', 'secretKey', 'secret_key', 'd', 'assertion', 'authentication'];
+  for (const prop of privateKeyProperties) {
+    if (obj.hasOwnProperty(prop)) {
+      // Special handling for assertion/authentication arrays - these should only contain key references, not keys themselves
+      if ((prop === 'assertion' || prop === 'authentication') && Array.isArray(obj[prop])) {
+        for (const item of obj[prop]) {
+          if (typeof item === 'object' && item !== null && containsPrivateKeys(item)) {
+            return true;
+          }
+        }
+      } else if (obj[prop] && typeof obj[prop] === 'object') {
+        if (containsPrivateKeys(obj[prop])) {
+          return true;
+        }
+      }
+    }
+  }
+
+  // Recursively check nested objects and arrays
+  for (const value of Object.values(obj)) {
+    if (containsPrivateKeys(value)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+async function validateController(controllerFile: string) {
+  console.log(`Validating controller document ${controllerFile}...`);
+
+  try {
+    // Read controller document
+    const controllerData = await Bun.file(controllerFile).json();
+
+    // Security check: Reject controllers containing private keys
+    if (containsPrivateKeys(controllerData)) {
+      console.error(`❌ SECURITY VIOLATION: Controller document contains private keys!`);
+      console.error(`Controller documents should only contain public information.`);
+      console.error(`Private keys must be stored securely in entity configurations.`);
+      process.exit(1);
+    }
+    console.log(`✅ Security check passed - no private keys detected`);
+
+    // Load and validate against controller schema
+    const schemaContent = await Bun.file('schemas/controller-document.yaml').text();
+    const schemaData = yaml.load(schemaContent);
+
+    const ajv = new Ajv({ allErrors: true, verbose: true });
+    addFormats(ajv);
+
+    const validate = ajv.compile(schemaData);
+    const isValid = validate(controllerData);
+
+    if (isValid) {
+      console.log(`✅ Controller document structure is valid`);
+
+      // Additional validation checks
+      const controller = controllerData.controller;
+      if (controller) {
+        // Check that all verification method controllers match the document ID
+        for (const method of controller.verificationMethod || []) {
+          if (method.controller !== controller.id) {
+            console.error(`❌ Verification method controller mismatch: ${method.id}`);
+            console.error(`Expected: ${controller.id}, Got: ${method.controller}`);
+            process.exit(1);
+          }
+        }
+        console.log(`✅ Verification method controller references are valid`);
+
+        // Check that assertion/authentication method references exist in verificationMethod
+        const vmIds = new Set((controller.verificationMethod || []).map((vm: any) => vm.id));
+
+        for (const assertionId of controller.assertionMethod || []) {
+          if (!vmIds.has(assertionId)) {
+            console.error(`❌ Assertion method references non-existent verification method: ${assertionId}`);
+            process.exit(1);
+          }
+        }
+
+        for (const authId of controller.authentication || []) {
+          if (!vmIds.has(authId)) {
+            console.error(`❌ Authentication method references non-existent verification method: ${authId}`);
+            process.exit(1);
+          }
+        }
+        console.log(`✅ Method references are valid`);
+      }
+
+      console.log(`\n✅ Controller document validation completed successfully`);
+    } else {
+      console.error(`❌ Controller document is invalid:`);
+      console.error(JSON.stringify(validate.errors, null, 2));
+      process.exit(1);
+    }
+
+  } catch (error) {
+    console.error(`❌ Error validating controller: ${error}`);
+    process.exit(1);
+  }
+}
+
 // Parse command line arguments
 const { values, positionals } = parseArgs({
   args: Bun.argv.slice(2),
@@ -292,6 +418,7 @@ const { values, positionals } = parseArgs({
     resolver: { type: 'string' },
     schema: { type: 'string' },
     example: { type: 'string' },
+    controller: { type: 'string' },
     help: { type: 'boolean', short: 'h' }
   },
   allowPositionals: true
@@ -369,6 +496,14 @@ try {
         process.exit(1);
       }
       await validateSchema(values.schema, values.example);
+      break;
+
+    case 'validate-controller':
+      if (!values.controller) {
+        console.error("Please specify --controller <file>.");
+        process.exit(1);
+      }
+      await validateController(values.controller);
       break;
 
     default:

@@ -93,3 +93,203 @@ The controller identifier patterns follow a forensically advantageous structure:
 - **Forensic advantage**: Legitimate controllers should have valid cryptographic signatures, while forged documents from fraudulent entities will fail verification
 
 Now let's walk through the digital evidence step by step.
+
+## CLI Workflow for Digital Investigation
+
+This section demonstrates how to use the generic verifiable credentials CLI to investigate the Transhrimpment case study. All commands use the CLI located in `src/cli.ts`.
+
+### Step 1: Schema Validation
+
+First, validate all credential schemas to ensure they're properly formatted:
+
+```bash
+# Validate all schemas
+bun src/cli.ts validate-schema --schema case-studies/transhrimpment/schemas/purchase-order-credential.yaml
+bun src/cli.ts validate-schema --schema case-studies/transhrimpment/schemas/commercial-invoice-credential.yaml
+bun src/cli.ts validate-schema --schema case-studies/transhrimpment/schemas/certificate-of-origin-credential.yaml
+bun src/cli.ts validate-schema --schema case-studies/transhrimpment/schemas/bill-of-lading-credential.yaml
+```
+
+### Step 2: Generate Public Controller Documents
+
+⚠️ **IMPORTANT**: Entity configurations in `/entity_configurations/` contain **PRIVATE KEYS** and are highly sensitive. Controller documents are **PUBLIC** documents derived from these configurations.
+
+Generate public controller documents from private entity configurations:
+
+```bash
+# Generate PUBLIC controllers from PRIVATE entity configurations
+# These controller documents contain only public keys and can be shared publicly
+
+bun src/cli.ts generate-controller --config case-studies/transhrimpment/entity_configurations/chompchomp.json --out case-studies/transhrimpment/controllers/chompchomp-controller.json
+
+bun src/cli.ts generate-controller --config case-studies/transhrimpment/entity_configurations/camaron-corriente.json --out case-studies/transhrimpment/controllers/camaron-corriente-controller.json
+
+bun src/cli.ts generate-controller --config case-studies/transhrimpment/entity_configurations/legit-shrimp.json --out case-studies/transhrimpment/controllers/legit-shrimp-controller.json
+
+# Generate controllers for fraudulent entities (they have legitimate keys but commit fraud)
+bun src/cli.ts generate-controller --config case-studies/transhrimpment/entity_configurations/shady-carrier.json --out case-studies/transhrimpment/controllers/shady-carrier-controller.json
+
+bun src/cli.ts generate-controller --config case-studies/transhrimpment/entity_configurations/shady-distributor.json --out case-studies/transhrimpment/controllers/shady-distributor-controller.json
+```
+
+🔒 **Security Note**: The entity configuration files (chompchomp.json, etc.) contain private keys and should be treated as highly sensitive. In a real scenario, these would be stored securely and never shared. Only the generated controller documents contain public information.
+
+### Step 3: Sign Supply Chain Credentials
+
+Following the timeline of the fraud, sign each credential with the appropriate entity's keys:
+
+#### 3.1 Purchase Order (Chompchomp → Camarón Corriente)
+```bash
+# Extract PUBLIC key from PRIVATE entity configuration for verification
+bun src/cli.ts extract-public-key --key case-studies/transhrimpment/entity_configurations/chompchomp.json --out case-studies/transhrimpment/keys/chompchomp-public.json
+
+# Sign using PRIVATE entity configuration
+bun src/cli.ts sign-credential --key case-studies/transhrimpment/entity_configurations/chompchomp.json --cred case-studies/transhrimpment/credentials/purchase-order.json --out case-studies/transhrimpment/signed/purchase-order-signed.json
+```
+
+#### 3.2 Commercial Invoice (Camarón Corriente → Chompchomp)
+```bash
+# Extract PUBLIC key from PRIVATE entity configuration
+bun src/cli.ts extract-public-key --key case-studies/transhrimpment/entity_configurations/camaron-corriente.json --out case-studies/transhrimpment/keys/camaron-corriente-public.json
+
+# Sign using PRIVATE entity configuration
+bun src/cli.ts sign-credential --key case-studies/transhrimpment/entity_configurations/camaron-corriente.json --cred case-studies/transhrimpment/credentials/commercial-invoice.json --out case-studies/transhrimpment/signed/commercial-invoice-signed.json
+```
+
+#### 3.3 Bill of Lading (Shady Carrier - FRAUDULENT)
+```bash
+# Extract PUBLIC key from PRIVATE entity configuration
+bun src/cli.ts extract-public-key --key case-studies/transhrimpment/entity_configurations/shady-carrier.json --out case-studies/transhrimpment/keys/shady-carrier-public.json
+
+# Sign fraudulent bill of lading using Shady Carrier's PRIVATE keys (with forged cargo quantities)
+bun src/cli.ts sign-credential --key case-studies/transhrimpment/entity_configurations/shady-carrier.json --cred case-studies/transhrimpment/credentials/bill-of-lading.json --out case-studies/transhrimpment/signed/bill-of-lading-signed.json
+```
+
+#### 3.4 Certificate of Origin (Shady Distributor forging Legit Shrimp identity)
+```bash
+# Extract Legit Shrimp's PUBLIC key (the entity being impersonated)
+bun src/cli.ts extract-public-key --key case-studies/transhrimpment/entity_configurations/legit-shrimp.json --out case-studies/transhrimpment/keys/legit-shrimp-public.json
+
+# FRAUD: Shady Distributor uses their own PRIVATE keys but claims to be Legit Shrimp
+# This will create a valid signature from Shady Distributor, but verification will fail
+# when we try to verify it against Legit Shrimp's PUBLIC key
+bun src/cli.ts sign-credential --key case-studies/transhrimpment/entity_configurations/shady-distributor.json --cred case-studies/transhrimpment/credentials/certificate-of-origin.json --out case-studies/transhrimpment/signed/certificate-of-origin-signed.json
+```
+
+🔒 **Key Security Note**:
+- **PRIVATE entity configurations** (entity_configurations/*.json) are used for signing - these contain sensitive private keys
+- **PUBLIC keys** (keys/*-public.json) are extracted for verification only
+- **PUBLIC controller documents** (controllers/*-controller.json) contain only public information
+
+### Step 4: Create Supply Chain Presentation
+
+Compile all signed credentials into a presentation for investigation:
+
+```bash
+# Note: This would be done by the investigator using their PRIVATE entity configuration
+# The investigator creates a presentation containing all the supply chain evidence
+bun src/cli.ts sign-presentation --key case-studies/transhrimpment/entity_configurations/final-consumer.json --pres case-studies/transhrimpment/presentations/supply-chain-presentation.json --out case-studies/transhrimpment/signed/supply-chain-presentation-signed.json
+```
+
+### Step 5: Verification and Fraud Detection
+
+Verify each credential to detect the fraud:
+
+#### 5.1 Verify Legitimate Credentials
+```bash
+# Verify purchase order using Chompchomp's PUBLIC key (should pass)
+bun src/cli.ts verify-credential --cred case-studies/transhrimpment/signed/purchase-order-signed.json --key case-studies/transhrimpment/keys/chompchomp-public.json
+
+# Verify commercial invoice using Camarón Corriente's PUBLIC key (should pass)
+bun src/cli.ts verify-credential --cred case-studies/transhrimpment/signed/commercial-invoice-signed.json --key case-studies/transhrimpment/keys/camaron-corriente-public.json
+```
+
+#### 5.2 Detect Fraudulent Credentials
+```bash
+# Verify bill of lading using Shady Carrier's PUBLIC key
+# (signature will pass, but quantities reveal fraud: 800kg vs 1000kg)
+bun src/cli.ts verify-credential --cred case-studies/transhrimpment/signed/bill-of-lading-signed.json --key case-studies/transhrimpment/keys/shady-carrier-public.json
+
+# FRAUD DETECTION: Verify certificate of origin using Legit Shrimp's PUBLIC key
+# This SHOULD FAIL because document was signed by Shady Distributor, not Legit Shrimp
+bun src/cli.ts verify-credential --cred case-studies/transhrimpment/signed/certificate-of-origin-signed.json --key case-studies/transhrimpment/keys/legit-shrimp-public.json
+```
+
+#### 5.3 Full Presentation Verification
+```bash
+# Verify complete presentation using resolver (maps entity IDs to PUBLIC controller documents)
+bun src/cli.ts verify-presentation --pres case-studies/transhrimpment/signed/supply-chain-presentation-signed.json --resolver case-studies/transhrimpment/resolver.json
+```
+
+💡 **Verification Process**:
+- Signed credentials are verified using **PUBLIC keys** only
+- **PRIVATE keys** are never shared and only used for signing
+- The resolver maps entity identifiers to **PUBLIC controller documents** (not private configs)
+
+### Step 6: Analysis Results
+
+The CLI investigation reveals:
+
+1. **Quantity Discrepancy**: Commercial Invoice shows 1000kg, but Bill of Lading reports 800kg with "200kg destroyed" - evidence of theft
+2. **Signature Mismatch**: Certificate of Origin claims to be from Legit Shrimp Ltd but signature verification fails
+3. **Route Analysis**: GeoJSON coordinates show suspicious route through Aruba (Shady Carrier location)
+4. **Chain of Custody Break**: Digital signatures reveal where legitimate supply chain was compromised
+
+### Investigation Conclusion
+
+The digital forensics workflow using verifiable credentials successfully:
+- Identified the exact point where the supply chain was compromised (at carrier level)
+- Revealed forged documentation through signature verification failures
+- Quantified the theft (200kg diverted)
+- Traced the fraudulent goods through geographic route analysis
+- Provided cryptographic proof of fraud for legal proceedings
+
+This demonstrates how verifiable supply chains with digital signatures can detect and prove fraud that would be difficult to uncover with traditional paper-based documentation.
+
+## File Structure
+
+```
+case-studies/transhrimpment/
+├── README.md                          # This file
+├── entity_configurations/             # 🔒 PRIVATE entity configurations (contains PRIVATE KEYS!)
+│   ├── chompchomp.json               #    ⚠️ SENSITIVE: Private keys for signing
+│   ├── camaron-corriente.json        #    ⚠️ SENSITIVE: Private keys for signing
+│   ├── legit-shrimp.json            #    ⚠️ SENSITIVE: Private keys for signing
+│   ├── shady-carrier.json           #    ⚠️ SENSITIVE: Private keys for signing
+│   ├── shady-distributor.json       #    ⚠️ SENSITIVE: Private keys for signing
+│   ├── final-consumer.json          #    ⚠️ SENSITIVE: Private keys for signing
+│   └── transit-authority.json       #    ⚠️ SENSITIVE: Private keys for signing
+├── schemas/                           # Credential schemas (public)
+│   ├── purchase-order-credential.yaml
+│   ├── commercial-invoice-credential.yaml
+│   ├── certificate-of-origin-credential.yaml
+│   └── bill-of-lading-credential.yaml
+├── credentials/                       # Unsigned credential templates (public)
+│   ├── purchase-order.json
+│   ├── commercial-invoice.json
+│   ├── certificate-of-origin.json
+│   └── bill-of-lading.json
+├── presentations/                     # Presentation templates (public)
+│   └── supply-chain-presentation.json
+├── signed/                           # Generated signed documents (public)
+│   └── (created by CLI commands)
+├── controllers/                      # 🌐 PUBLIC controller documents (generated from configs)
+│   └── (created by CLI commands)    #    ✅ SAFE: Only contains public keys
+├── keys/                            # 🌐 PUBLIC keys extracted for verification
+│   └── (created by CLI commands)    #    ✅ SAFE: Only public keys
+├── resolver.json                    # Entity resolver (maps to PUBLIC controllers)
+└── demo.sh                          # Demonstration script
+```
+
+### 🔐 Security Classification:
+
+**🔒 PRIVATE/SENSITIVE** (never share):
+- `/entity_configurations/` - Contains private keys for signing
+- Must be stored securely in production
+
+**🌐 PUBLIC** (safe to share):
+- `/controllers/` - Generated public controller documents
+- `/keys/` - Extracted public keys
+- `/signed/` - Signed credentials (contain only public signatures)
+- `/schemas/`, `/credentials/`, `/presentations/` - Templates and schemas
+- `resolver.json` - Maps to public controller documents only
