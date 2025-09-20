@@ -18,6 +18,7 @@ Verifiable Supply Chain CLI
 Usage: bun cli.ts <command> [options]
 
 Commands:
+  init-case-study --name <case-name>            Initialize a new case study with configuration files
   generate-keys --out <file>                    Generate key pair and save to file
   generate-controller --config <file> --out <file>   Generate controller from config file
   sign-credential --key <file> --cred <file> --out <file>   Sign credential with private key
@@ -32,6 +33,7 @@ Commands:
   help                                          Show this help message
 
 Examples:
+  bun cli.ts init-case-study --name my-case-study
   bun cli.ts generate-keys --out entity1-keys.json
   bun cli.ts generate-controller --config entity1-config.json --out entity1-controller.json
   bun cli.ts sign-credential --key entity1-keys.json --cred shipment.json --out signed-shipment.json
@@ -39,6 +41,959 @@ Examples:
   bun cli.ts validate-schema --schema schema.yaml --example example.json
   bun cli.ts validate-controller --controller controller.json
 `);
+}
+
+async function initCaseStudy(caseName: string) {
+  console.log(`Initializing case study: ${caseName}...`);
+
+  if (caseName !== "transhrimpment") {
+    console.error(`❌ Only "transhrimpment" case study is currently supported.`);
+    process.exit(1);
+  }
+
+  const baseDir = `case-studies/${caseName}`;
+  const entityConfigDir = `${baseDir}/entity_configurations`;
+  const schemasDir = `${baseDir}/schemas`;
+
+  // Create directory structure
+  await Bun.$`mkdir -p ${entityConfigDir}`;
+  await Bun.$`mkdir -p ${schemasDir}`;
+
+  // Generate fresh keys for all entities
+  const entities = [
+    'chompchomp', 'camaron-corriente', 'legit-shrimp',
+    'shady-carrier', 'shady-distributor', 'cargo-line', 'anonymous-distributor'
+  ];
+
+  const entityKeys = {};
+  for (const entity of entities) {
+    entityKeys[entity] = {
+      assertion: await key.generatePrivateKey("ES256"),
+      authentication: await key.generatePrivateKey("ES256")
+    };
+  }
+
+  // Entity configurations for transhrimpment case study
+  const entityConfigs = [
+    {
+      filename: "chompchomp-config.json",
+      data: {
+        "type": "FeatureCollection",
+        "id": "https://chompchomp.example/entity/bvi-001",
+        "alsoKnownAs": [
+          "urn:ietf:spice:glue:gln:1234567890123",
+          "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34321"
+        ],
+        "contexts": [
+          "https://geojson.org/geojson-ld/geojson-context.jsonld"
+        ],
+        "assertion": [entityKeys.chompchomp.assertion],
+        "authentication": [entityKeys.chompchomp.authentication],
+        "features": [
+          {
+            "type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [-64.6208, 18.4167]
+            },
+            "properties": {
+              "name": "Chompchomp Ltd Restaurant Chain HQ",
+              "type": "Restaurant Chain",
+              "role": "buyer",
+              "address": {
+                "streetAddress": "123 Tortola Plaza",
+                "addressLocality": "Road Town",
+                "addressRegion": "Tortola",
+                "addressCountry": "VG"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      filename: "camaron-corriente-config.json",
+      data: {
+        "type": "FeatureCollection",
+        "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+        "alsoKnownAs": [
+          "urn:ietf:spice:glue:gln:4598765432102",
+          "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34322",
+          "urn:ietf:spice:glue:pen:12346"
+        ],
+        "contexts": [
+          "https://geojson.org/geojson-ld/geojson-context.jsonld"
+        ],
+        "assertion": [entityKeys['camaron-corriente'].assertion],
+        "authentication": [entityKeys['camaron-corriente'].authentication],
+        "features": [
+          {
+            "type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [-68.0125, 10.4647]
+            },
+            "properties": {
+              "name": "Camarón Corriente S.A. Port Facility",
+              "type": "Seafood Distributor",
+              "role": "export-facility",
+              "address": {
+                "streetAddress": "Puerto Cabello Port",
+                "addressLocality": "Puerto Cabello",
+                "addressRegion": "Carabobo",
+                "addressCountry": "VE"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      filename: "legit-shrimp-config.json",
+      data: {
+        "type": "FeatureCollection",
+        "id": "https://legit-shrimp.example/entity/tt-pos-001",
+        "alsoKnownAs": [
+          "urn:ietf:spice:glue:gln:7890123456789",
+          "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34323"
+        ],
+        "contexts": [
+          "https://geojson.org/geojson-ld/geojson-context.jsonld"
+        ],
+        "assertion": [entityKeys['legit-shrimp'].assertion],
+        "authentication": [entityKeys['legit-shrimp'].authentication],
+        "features": [
+          {
+            "type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [-61.5167, 10.6596]
+            },
+            "properties": {
+              "name": "Legit Shrimp Ltd Port Facility",
+              "type": "Seafood Exporter",
+              "role": "certificate-authority",
+              "address": {
+                "streetAddress": "Port of Spain Harbor",
+                "addressLocality": "Port of Spain",
+                "addressRegion": "Port of Spain",
+                "addressCountry": "TT"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      filename: "shady-carrier-config.json",
+      data: {
+        "type": "FeatureCollection",
+        "id": "https://shady-carrier.example/entity/aw-oru-001",
+        "alsoKnownAs": [
+          "urn:ietf:spice:glue:gln:5555555555555"
+        ],
+        "contexts": [
+          "https://geojson.org/geojson-ld/geojson-context.jsonld"
+        ],
+        "assertion": [entityKeys['shady-carrier'].assertion],
+        "authentication": [entityKeys['shady-carrier'].authentication],
+        "features": [
+          {
+            "type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [-70.0270, 12.5186]
+            },
+            "properties": {
+              "name": "Shady Carrier Ltd Logistics Hub",
+              "type": "Transport Company",
+              "role": "fraudulent-carrier",
+              "address": {
+                "streetAddress": "Oranjestad Port",
+                "addressLocality": "Oranjestad",
+                "addressRegion": "Aruba",
+                "addressCountry": "AW"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      filename: "shady-distributor-config.json",
+      data: {
+        "type": "FeatureCollection",
+        "id": "https://shady-distributor.example/entity/bvi-002",
+        "alsoKnownAs": [
+          "urn:ietf:spice:glue:gln:6666666666666"
+        ],
+        "contexts": [
+          "https://geojson.org/geojson-ld/geojson-context.jsonld"
+        ],
+        "assertion": [entityKeys['shady-distributor'].assertion],
+        "authentication": [entityKeys['shady-distributor'].authentication],
+        "features": [
+          {
+            "type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [-64.6208, 18.4167]
+            },
+            "properties": {
+              "name": "Shady Distributor Ltd Office",
+              "type": "Distribution Company",
+              "role": "identity-thief",
+              "address": {
+                "streetAddress": "456 Tortola Plaza",
+                "addressLocality": "Road Town",
+                "addressRegion": "Tortola",
+                "addressCountry": "VG"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      filename: "cargo-line-config.json",
+      data: {
+        "type": "FeatureCollection",
+        "id": "https://cargo-line.example/entity/pr-sju-001",
+        "alsoKnownAs": [
+          "urn:ietf:spice:glue:gln:9876543210987"
+        ],
+        "contexts": [
+          "https://geojson.org/geojson-ld/geojson-context.jsonld"
+        ],
+        "assertion": [entityKeys['cargo-line'].assertion],
+        "authentication": [entityKeys['cargo-line'].authentication],
+        "features": [
+          {
+            "type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [-66.1057, 18.4655]
+            },
+            "properties": {
+              "name": "Cargo Line Ltd Transport Hub",
+              "type": "Legitimate Carrier",
+              "role": "legitimate-carrier",
+              "address": {
+                "streetAddress": "San Juan Port",
+                "addressLocality": "San Juan",
+                "addressRegion": "Puerto Rico",
+                "addressCountry": "PR"
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      filename: "anonymous-distributor-config.json",
+      data: {
+        "type": "FeatureCollection",
+        "id": "https://anonymous-distributor.example/entity/vi-cha-001",
+        "alsoKnownAs": [
+          "urn:ietf:spice:glue:gln:1111111111111"
+        ],
+        "contexts": [
+          "https://geojson.org/geojson-ld/geojson-context.jsonld"
+        ],
+        "assertion": [entityKeys['anonymous-distributor'].assertion],
+        "authentication": [entityKeys['anonymous-distributor'].authentication],
+        "features": [
+          {
+            "type": "Feature",
+            "geometry": {
+              "type": "Point",
+              "coordinates": [-64.9307, 18.3419]
+            },
+            "properties": {
+              "name": "Anonymous Distributor Warehouse",
+              "type": "Distribution Center",
+              "role": "final-distributor",
+              "address": {
+                "streetAddress": "Charlotte Amalie Port",
+                "addressLocality": "Charlotte Amalie",
+                "addressRegion": "St. Thomas",
+                "addressCountry": "VI"
+              }
+            }
+          }
+        ]
+      }
+    }
+  ];
+
+  // Write entity configurations
+  for (const config of entityConfigs) {
+    await Bun.write(`${entityConfigDir}/${config.filename}`, JSON.stringify(config.data, null, 2));
+  }
+
+  // Schema files for transhrimpment case study - all 4 schemas mentioned in README
+  const schemas = [
+    {
+      filename: "purchase-order-credential.yaml",
+      content: `title: Simple Purchase Order Credential Schema (Example)
+description: Minimal example schema for verifiable credentials representing purchase orders
+type: object
+required:
+  - "@context"
+  - type
+  - issuer
+  - validFrom
+  - credentialSubject
+properties:
+  "@context":
+    type: array
+    items:
+      type: string
+    minItems: 2
+    contains:
+      enum:
+        - "https://www.w3.org/ns/credentials/v2"
+        - "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  type:
+    type: array
+    items:
+      type: string
+    minItems: 2
+    contains:
+      enum:
+        - "VerifiableCredential"
+        - "PurchaseOrderCredential"
+  issuer:
+    type: string
+    format: uri
+  validFrom:
+    type: string
+    format: date-time
+  validUntil:
+    type: string
+    format: date-time
+  credentialSubject:
+    type: object
+    required:
+      - id
+      - type
+      - features
+    properties:
+      id:
+        type: string
+        format: uri
+      type:
+        const: "FeatureCollection"
+      features:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          required:
+            - type
+            - geometry
+            - properties
+          properties:
+            type:
+              const: "Feature"
+            geometry:
+              $ref: "#/$defs/GeoJSONPoint"
+            properties:
+              type: object
+              required:
+                - type
+                - orderNumber
+                - buyer
+                - seller
+                - description
+                - quantity
+              properties:
+                type:
+                  const: "PurchaseOrder"
+                orderNumber:
+                  type: string
+                buyer:
+                  type: object
+                  required:
+                    - id
+                    - name
+                  properties:
+                    id:
+                      type: string
+                      format: uri
+                    name:
+                      type: string
+                seller:
+                  type: object
+                  required:
+                    - id
+                    - name
+                  properties:
+                    id:
+                      type: string
+                      format: uri
+                    name:
+                      type: string
+                description:
+                  type: string
+                quantity:
+                  type: string
+                deliveryDate:
+                  type: string
+                  format: date
+
+examples:
+  - "@context":
+      - "https://www.w3.org/ns/credentials/v2"
+      - "https://geojson.org/geojson-ld/geojson-context.jsonld"
+    type:
+      - "VerifiableCredential"
+      - "PurchaseOrderCredential"
+    issuer: "https://chompchomp.example/entity/bvi-001"
+    validFrom: "2024-01-15T10:00:00Z"
+    validUntil: "2024-03-15T10:00:00Z"
+    credentialSubject:
+      id: "https://orders.example/po-2024-001"
+      type: "FeatureCollection"
+      features:
+        - type: "Feature"
+          geometry:
+            type: "Point"
+            coordinates: [-64.6208, 18.4167]
+          properties:
+            type: "PurchaseOrder"
+            orderNumber: "PO-2024-001"
+            buyer:
+              id: "https://chompchomp.example/entity/bvi-001"
+              name: "Chompchomp Ltd"
+            seller:
+              id: "https://camaron-corriente.example/entity/ve-pbc-001"
+              name: "Camarón Corriente S.A."
+            description: "1000kg frozen shrimp"
+            quantity: "1000kg"
+            deliveryDate: "2024-02-15"
+
+$defs:
+  GeoJSONPoint:
+    type: object
+    required:
+      - type
+      - coordinates
+    properties:
+      type:
+        const: "Point"
+      coordinates:
+        type: array
+        minItems: 2
+        maxItems: 3
+        items:
+          type: number`
+    },
+    {
+      filename: "commercial-invoice-credential.yaml",
+      content: `title: Simple Commercial Invoice Credential Schema (Example)
+description: Minimal example schema for verifiable credentials representing commercial invoices
+type: object
+required:
+  - "@context"
+  - type
+  - issuer
+  - validFrom
+  - credentialSubject
+properties:
+  "@context":
+    type: array
+    items:
+      type: string
+    minItems: 2
+    contains:
+      enum:
+        - "https://www.w3.org/ns/credentials/v2"
+        - "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  type:
+    type: array
+    items:
+      type: string
+    minItems: 2
+    contains:
+      enum:
+        - "VerifiableCredential"
+        - "CommercialInvoiceCredential"
+  issuer:
+    type: string
+    format: uri
+  validFrom:
+    type: string
+    format: date-time
+  validUntil:
+    type: string
+    format: date-time
+  credentialSubject:
+    type: object
+    required:
+      - id
+      - type
+      - features
+    properties:
+      id:
+        type: string
+        format: uri
+      type:
+        const: "FeatureCollection"
+      features:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          required:
+            - type
+            - geometry
+            - properties
+          properties:
+            type:
+              const: "Feature"
+            geometry:
+              $ref: "#/$defs/GeoJSONPoint"
+            properties:
+              type: object
+              required:
+                - type
+                - invoiceNumber
+                - seller
+                - buyer
+                - items
+                - totalAmount
+              properties:
+                type:
+                  const: "CommercialInvoice"
+                invoiceNumber:
+                  type: string
+                seller:
+                  type: object
+                  required:
+                    - id
+                    - name
+                  properties:
+                    id:
+                      type: string
+                      format: uri
+                    name:
+                      type: string
+                buyer:
+                  type: object
+                  required:
+                    - id
+                    - name
+                  properties:
+                    id:
+                      type: string
+                      format: uri
+                    name:
+                      type: string
+                items:
+                  type: array
+                  items:
+                    type: object
+                totalAmount:
+                  type: number
+
+examples:
+  - "@context":
+      - "https://www.w3.org/ns/credentials/v2"
+      - "https://geojson.org/geojson-ld/geojson-context.jsonld"
+    type:
+      - "VerifiableCredential"
+      - "CommercialInvoiceCredential"
+    issuer: "https://camaron-corriente.example/entity/ve-pbc-001"
+    validFrom: "2024-01-20T10:00:00Z"
+    credentialSubject:
+      id: "https://invoices.example/inv-2024-001"
+      type: "FeatureCollection"
+      features:
+        - type: "Feature"
+          geometry:
+            type: "Point"
+            coordinates: [-68.0125, 10.4647]
+          properties:
+            type: "CommercialInvoice"
+            invoiceNumber: "INV-2024-001"
+            seller:
+              id: "https://camaron-corriente.example/entity/ve-pbc-001"
+              name: "Camarón Corriente S.A."
+            buyer:
+              id: "https://chompchomp.example/entity/bvi-001"
+              name: "Chompchomp Ltd"
+            items:
+              - description: "Frozen Shrimp"
+                quantity: "1000kg"
+                price: 12.50
+            totalAmount: 12500
+
+$defs:
+  GeoJSONPoint:
+    type: object
+    required:
+      - type
+      - coordinates
+    properties:
+      type:
+        const: "Point"
+      coordinates:
+        type: array
+        minItems: 2
+        maxItems: 3
+        items:
+          type: number`
+    },
+    {
+      filename: "certificate-of-origin-credential.yaml",
+      content: `title: Simple Certificate of Origin Credential Schema (Example)
+description: Minimal example schema for verifiable credentials representing certificates of origin
+type: object
+required:
+  - "@context"
+  - type
+  - issuer
+  - validFrom
+  - credentialSubject
+properties:
+  "@context":
+    type: array
+    items:
+      type: string
+    minItems: 2
+    contains:
+      enum:
+        - "https://www.w3.org/ns/credentials/v2"
+        - "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  type:
+    type: array
+    items:
+      type: string
+    minItems: 2
+    contains:
+      enum:
+        - "VerifiableCredential"
+        - "CertificateOfOriginCredential"
+  issuer:
+    type: string
+    format: uri
+  validFrom:
+    type: string
+    format: date-time
+  validUntil:
+    type: string
+    format: date-time
+  credentialSubject:
+    type: object
+    required:
+      - id
+      - type
+      - features
+    properties:
+      id:
+        type: string
+        format: uri
+      type:
+        const: "FeatureCollection"
+      features:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          required:
+            - type
+            - geometry
+            - properties
+          properties:
+            type:
+              const: "Feature"
+            geometry:
+              $ref: "#/$defs/GeoJSONPoint"
+            properties:
+              type: object
+              required:
+                - type
+                - certificateNumber
+                - origin
+                - product
+                - quantity
+              properties:
+                type:
+                  const: "CertificateOfOrigin"
+                certificateNumber:
+                  type: string
+                origin:
+                  type: object
+                  required:
+                    - country
+                    - facility
+                  properties:
+                    country:
+                      type: string
+                    facility:
+                      type: string
+                product:
+                  type: string
+                quantity:
+                  type: string
+                issueDate:
+                  type: string
+                  format: date
+
+examples:
+  - "@context":
+      - "https://www.w3.org/ns/credentials/v2"
+      - "https://geojson.org/geojson-ld/geojson-context.jsonld"
+    type:
+      - "VerifiableCredential"
+      - "CertificateOfOriginCredential"
+    issuer: "https://legit-shrimp.example/entity/tt-pos-001"
+    validFrom: "2024-01-10T10:00:00Z"
+    credentialSubject:
+      id: "https://certificates.example/coo-2024-001"
+      type: "FeatureCollection"
+      features:
+        - type: "Feature"
+          geometry:
+            type: "Point"
+            coordinates: [-61.5167, 10.6596]
+          properties:
+            type: "CertificateOfOrigin"
+            certificateNumber: "COO-2024-001"
+            origin:
+              country: "Trinidad and Tobago"
+              facility: "Legit Shrimp Ltd Port Facility"
+            product: "Frozen Shrimp"
+            quantity: "1000kg"
+            issueDate: "2024-01-10"
+
+$defs:
+  GeoJSONPoint:
+    type: object
+    required:
+      - type
+      - coordinates
+    properties:
+      type:
+        const: "Point"
+      coordinates:
+        type: array
+        minItems: 2
+        maxItems: 3
+        items:
+          type: number`
+    },
+    {
+      filename: "bill-of-lading-credential.yaml",
+      content: `title: Simple Bill of Lading Credential Schema (Example)
+description: Minimal example schema for verifiable credentials representing bills of lading
+type: object
+required:
+  - "@context"
+  - type
+  - issuer
+  - validFrom
+  - credentialSubject
+properties:
+  "@context":
+    type: array
+    items:
+      type: string
+    minItems: 2
+    contains:
+      enum:
+        - "https://www.w3.org/ns/credentials/v2"
+        - "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  type:
+    type: array
+    items:
+      type: string
+    minItems: 2
+    contains:
+      enum:
+        - "VerifiableCredential"
+        - "BillOfLadingCredential"
+  issuer:
+    type: string
+    format: uri
+  validFrom:
+    type: string
+    format: date-time
+  validUntil:
+    type: string
+    format: date-time
+  credentialSubject:
+    type: object
+    required:
+      - id
+      - type
+      - features
+    properties:
+      id:
+        type: string
+        format: uri
+      type:
+        const: "FeatureCollection"
+      features:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          required:
+            - type
+            - geometry
+            - properties
+          properties:
+            type:
+              const: "Feature"
+            geometry:
+              oneOf:
+                - $ref: "#/$defs/GeoJSONPoint"
+                - $ref: "#/$defs/GeoJSONLineString"
+            properties:
+              type: object
+              required:
+                - type
+                - billNumber
+                - shipper
+                - consignee
+                - cargo
+                - route
+              properties:
+                type:
+                  const: "BillOfLading"
+                billNumber:
+                  type: string
+                shipper:
+                  type: object
+                  required:
+                    - id
+                    - name
+                  properties:
+                    id:
+                      type: string
+                      format: uri
+                    name:
+                      type: string
+                consignee:
+                  type: object
+                  required:
+                    - id
+                    - name
+                  properties:
+                    id:
+                      type: string
+                      format: uri
+                    name:
+                      type: string
+                cargo:
+                  type: object
+                  required:
+                    - description
+                    - quantity
+                  properties:
+                    description:
+                      type: string
+                    quantity:
+                      type: string
+                route:
+                  type: object
+                  required:
+                    - origin
+                    - destination
+                  properties:
+                    origin:
+                      type: string
+                    destination:
+                      type: string
+
+examples:
+  - "@context":
+      - "https://www.w3.org/ns/credentials/v2"
+      - "https://geojson.org/geojson-ld/geojson-context.jsonld"
+    type:
+      - "VerifiableCredential"
+      - "BillOfLadingCredential"
+    issuer: "https://shady-carrier.example/entity/aw-oru-001"
+    validFrom: "2024-01-25T10:00:00Z"
+    credentialSubject:
+      id: "https://shipments.example/bol-2024-001"
+      type: "FeatureCollection"
+      features:
+        - type: "Feature"
+          geometry:
+            type: "LineString"
+            coordinates: [[-68.0125, 10.4647], [-70.0270, 12.5186], [-64.6208, 18.4167]]
+          properties:
+            type: "BillOfLading"
+            billNumber: "BOL-2024-001"
+            shipper:
+              id: "https://camaron-corriente.example/entity/ve-pbc-001"
+              name: "Camarón Corriente S.A."
+            consignee:
+              id: "https://chompchomp.example/entity/bvi-001"
+              name: "Chompchomp Ltd"
+            cargo:
+              description: "Frozen Shrimp"
+              quantity: "800kg"
+            route:
+              origin: "Puerto Cabello, Venezuela"
+              destination: "Road Town, Tortola, BVI"
+
+$defs:
+  GeoJSONPoint:
+    type: object
+    required:
+      - type
+      - coordinates
+    properties:
+      type:
+        const: "Point"
+      coordinates:
+        type: array
+        minItems: 2
+        maxItems: 3
+        items:
+          type: number
+  GeoJSONLineString:
+    type: object
+    required:
+      - type
+      - coordinates
+    properties:
+      type:
+        const: "LineString"
+      coordinates:
+        type: array
+        minItems: 2
+        items:
+          type: array
+          minItems: 2
+          maxItems: 3
+          items:
+            type: number`
+    }
+  ];
+
+  // Write schema files
+  for (const schema of schemas) {
+    await Bun.write(`${schemasDir}/${schema.filename}`, schema.content);
+  }
+
+  console.log(`✅ Case study "${caseName}" initialized successfully!`);
+  console.log(`📁 Created directories:`);
+  console.log(`   - ${entityConfigDir}/`);
+  console.log(`   - ${schemasDir}/`);
+  console.log(`📄 Created entity configurations:`);
+  for (const config of entityConfigs) {
+    console.log(`   - ${entityConfigDir}/${config.filename}`);
+  }
+  console.log(`📄 Created schema files:`);
+  for (const schema of schemas) {
+    console.log(`   - ${schemasDir}/${schema.filename}`);
+  }
+  console.log(`🔑 Fresh assertion and authentication keys generated for all entities`);
 }
 
 async function generateKeys(outputFile: string) {
@@ -581,6 +1536,7 @@ async function analyzeGeoJSON(inputFile: string, outputFile?: string, isControll
 const { values, positionals } = parseArgs({
   args: Bun.argv.slice(2),
   options: {
+    name: { type: 'string' },
     out: { type: 'string' },
     config: { type: 'string' },
     key: { type: 'string' },
@@ -606,6 +1562,14 @@ if (values.help || command === 'help') {
 // Execute commands
 try {
   switch (command) {
+    case 'init-case-study':
+      if (!values.name) {
+        console.error("Please specify --name <case-name>.");
+        process.exit(1);
+      }
+      await initCaseStudy(values.name);
+      break;
+
     case 'generate-keys':
       if (!values.out) {
         console.error("Please specify --out <file> to save the generated keys.");
