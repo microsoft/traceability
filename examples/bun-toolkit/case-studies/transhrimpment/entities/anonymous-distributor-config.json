@@ -1,0 +1,52 @@
+{
+  "type": "FeatureCollection",
+  "id": "https://anonymous-distributor.example/entity/vi-stt-001",
+  "contexts": [
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "assertion": [
+    {
+      "kid": "qW6sQOxFdPKzrOSYr7uIcaQQxV4Kq1vRwQsg_98g_i0",
+      "kty": "EC",
+      "crv": "P-256",
+      "alg": "ES256",
+      "x": "WhILSLzGO8Q3sV_euU1Pi7WO1a7Mx4zUzSuqg_09h_j1",
+      "y": "8gjMvO6TP9R4tW_fvV2Qj8XP2b8Ny5AWaUtjh_10i_k2",
+      "d": "1hkNwP7UQ0S5uX_gwW3Rk9YQ3c9Oz6BYbVukj_21j_l3",
+      "key_ops": ["sign"]
+    }
+  ],
+  "authentication": [
+    {
+      "kid": "rX7tRPyGeQL0sP_TyV4JdyRRyW5Lr2wSxRth_32k_m4",
+      "kty": "EC",
+      "crv": "P-256",
+      "alg": "ES256",
+      "x": "XiJMTM0HPS5uY_hyX4Sl8YXR3d0P07CXcWvl_43l_n5",
+      "y": "9hkOxQ8VQ16vZ_iCX5Tm9ZYS4e1Q18DYdXwm_54m_o6",
+      "d": "2ilPyR9WR27wa_jDY6Uo0aZT5f2R29EZeYxn_65n_p7",
+      "key_ops": ["sign"]
+    }
+  ],
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-64.9307, 18.3419]
+      },
+      "properties": {
+        "name": "Anonymous Distributor Warehouse",
+        "type": "Seafood Distributor",
+        "role": "final-buyer",
+        "address": {
+          "streetAddress": "Charlotte Amalie Port",
+          "addressLocality": "Charlotte Amalie",
+          "addressRegion": "St. Thomas",
+          "addressCountry": "VI"
+        },
+        "legitimacy": "legitimate-victim"
+      }
+    }
+  ]
+}

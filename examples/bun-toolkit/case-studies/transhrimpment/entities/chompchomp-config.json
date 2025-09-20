@@ -1,0 +1,64 @@
+{
+  "type": "FeatureCollection",
+  "id": "https://chompchomp.example/entity/bvi-001",
+  "contexts": [
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "assertion": [
+    {
+      "kid": "4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE",
+      "kty": "EC",
+      "crv": "P-256",
+      "alg": "ES256",
+      "x": "TXYRYgX8eZTx4m7OkMRy_kLdaBIq9hCEQmODECNGSMw",
+      "y": "rQ9q1YQHb8YTd6i6EaLYf_ycb9vQpN6VkLaFWlI5T_o",
+      "d": "8Hl9KzVKyA1o4YLuRr6Kz5K6OGQBYb8fv4nHE65bBTw",
+      "key_ops": ["sign"]
+    }
+  ],
+  "authentication": [
+    {
+      "kid": "qBhsQ0LhFhVhC1JQNFK6Ru1Z6WowUfVkfb0nYRa3AW8",
+      "kty": "EC",
+      "crv": "P-256",
+      "alg": "ES256",
+      "x": "HhRkROcdJCyTvh7GNQQu0rYTKjSjE6lrNS4gLaJmOdw",
+      "y": "xM6JzqjKbq7lRvHCYgWwKm5RZ8oY3d9-Oo4CwYxbCeI",
+      "d": "jHErmXC0-ZvgGJAJPZzWJIoMmZBrKcKhOz0o1CWFDLw",
+      "key_ops": ["sign"]
+    }
+  ],
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-64.6208, 18.4167]
+      },
+      "properties": {
+        "name": "Chompchomp Ltd Main Office",
+        "type": "Seafood Importer",
+        "role": "headquarters",
+        "address": {
+          "streetAddress": "Main Street",
+          "addressLocality": "Road Town",
+          "addressRegion": "Tortola",
+          "addressCountry": "VG"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-64.6150, 18.4180]
+      },
+      "properties": {
+        "name": "Chompchomp Ltd Warehouse",
+        "type": "Storage Facility",
+        "role": "cold-storage",
+        "capacity": "10000kg"
+      }
+    }
+  ]
+}

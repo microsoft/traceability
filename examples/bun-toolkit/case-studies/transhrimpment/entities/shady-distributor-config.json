@@ -1,0 +1,52 @@
+{
+  "type": "FeatureCollection",
+  "id": "https://shady-distributor.example/entity/bvi-002",
+  "contexts": [
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "assertion": [
+    {
+      "kid": "jP2oMLtBZKGvmKNTl3qDXWKFsO6Dh3mKoBfbUQxv_U4",
+      "kty": "EC",
+      "crv": "P-256",
+      "alg": "ES256",
+      "x": "SdE3PHvCL4IxnLOUm4rEYXLGtP7Ej4nLpCgcVRyw_V5",
+      "y": "4ZWCqIzKL5JzoO_WnMsGZYMHuQ8Fk5oMqDhdWTzx_W6",
+      "d": "7aXDrJ0NM6KzpP_XoNtHaZOIvR9Gl6pNrEifXU0y_X7",
+      "key_ops": ["sign"]
+    }
+  ],
+  "authentication": [
+    {
+      "kid": "mS3pNMuCaMHwnLOVo4sEZXMGtQ8Dk4nMqChdVSzw_W8",
+      "kty": "EC",
+      "crv": "P-256",
+      "alg": "ES256",
+      "x": "TeFIPIwDM5JyoL_ZnNsHaZNIvS0Hm6qOrEjgYV1z_Y9",
+      "y": "5bYEsJ4NNLKzoQ_YoOuIb0PIwT1Im7rPsFlhZW2y_Z0",
+      "d": "8cZFuK1OM7L0qR_ZpPvJc1QJxU2Io8sPtGmiZ31z_a1",
+      "key_ops": ["sign"]
+    }
+  ],
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-64.6208, 18.4167]
+      },
+      "properties": {
+        "name": "Shady Distributor Ltd Office",
+        "type": "Seafood Distributor",
+        "role": "intermediary",
+        "address": {
+          "streetAddress": "Offshore Building",
+          "addressLocality": "Road Town",
+          "addressRegion": "Tortola",
+          "addressCountry": "VG"
+        },
+        "legitimacy": "fraudulent"
+      }
+    }
+  ]
+}

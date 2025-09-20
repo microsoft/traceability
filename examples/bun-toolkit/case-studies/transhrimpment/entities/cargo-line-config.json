@@ -1,0 +1,52 @@
+{
+  "type": "FeatureCollection",
+  "id": "https://cargo-line.example/entity/pr-sju-001",
+  "contexts": [
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "assertion": [
+    {
+      "kid": "etyZu7mIp_kh49rDNa26o7zjJrFKO5rBt7leFWKygtQ",
+      "kty": "EC",
+      "crv": "P-256",
+      "alg": "ES256",
+      "x": "iZz7QBrBDr0zlBkwjLI5rqiXt6LRvBmKrGi-h8qXo8Q",
+      "y": "0a2HkM_6MXw5lCozjOJ6s1jYu7MRwCoLsHj-i9rYp9R",
+      "d": "w7jMlO_7NYx6mDp0kPK7t2kZv8NSxDpMtIk-j0sZq0S",
+      "key_ops": ["sign"]
+    }
+  ],
+  "authentication": [
+    {
+      "kid": "jFx2KE3qAjY8lOaDFG6VTkV8OnDMsJTj3dRnUNfUuWE",
+      "kty": "EC",
+      "crv": "P-256",
+      "alg": "ES256",
+      "x": "OaT8RCsREtqKoReFHJ7WTnE9QoEOtKUk4eSmVQgVvYF",
+      "y": "1bU9RDtSFurLpSgGIK8XUoF0RpGPuLVl5fToWRhWwZG",
+      "d": "x8kNmQ_8OZy7nEq1lQL8u3lav9OTyEqOuJl-k1taq1T",
+      "key_ops": ["sign"]
+    }
+  ],
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [-66.1057, 18.4655]
+      },
+      "properties": {
+        "name": "Cargo Line Ltd Terminal",
+        "type": "Carrier",
+        "role": "shipping-terminal",
+        "address": {
+          "streetAddress": "San Juan Port",
+          "addressLocality": "San Juan",
+          "addressRegion": "San Juan",
+          "addressCountry": "PR"
+        },
+        "status": "fleet-repairs"
+      }
+    }
+  ]
+}
