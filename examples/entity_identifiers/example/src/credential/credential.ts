@@ -1,4 +1,9 @@
 // Verifiable Credential interfaces based on W3C VC Data Model v2
+export interface CredentialSchema {
+  id: string;
+  type: string;
+}
+
 export interface VerifiableCredential {
   "@context": string | string[];
   id?: string;
@@ -7,6 +12,7 @@ export interface VerifiableCredential {
   validFrom?: string;
   validUntil?: string;
   credentialSubject: CredentialSubject;
+  credentialSchema?: CredentialSchema[];
   cnf?: {
     kid: string;
   };

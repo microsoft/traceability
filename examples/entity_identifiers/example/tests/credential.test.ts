@@ -385,3 +385,141 @@ test("credential with invalid validUntil fails verification", async () => {
   // Should fail verification because NaN became null in JSON serialization
   await expect(verifier.verify(signedCredential)).rejects.toThrow("Invalid exp claim: must be a number");
 });
+
+test("sign and verify credential with credentialSchema", async () => {
+  // Generate key pair
+  const privateKey = await key.generatePrivateKey("ES256");
+  const publicKey = await key.exportPublicKey(privateKey);
+
+  const signer = await credential.signer(privateKey);
+  const verifier = await credential.verifier(publicKey);
+
+  // Create credential with credentialSchema
+  const credentialWithSchema: VerifiableCredential = {
+    "@context": [
+      "https://www.w3.org/ns/credentials/v2",
+      "https://www.w3.org/ns/credentials/examples/v2"
+    ],
+    type: ["VerifiableCredential", "DegreeCredential"],
+    issuer: "https://university.example/issuer/123",
+    credentialSchema: [
+      {
+        "id": "https://example.org/examples/degree.json",
+        "type": "JsonSchema"
+      },
+      {
+        "id": "https://example.org/examples/alumni.json",
+        "type": "JsonSchema"
+      }
+    ],
+    credentialSubject: {
+      id: "https://student.example/students/alice",
+      type: "Student",
+      name: "Alice Smith",
+      degree: {
+        type: "BachelorDegree",
+        name: "Bachelor of Science in Computer Science"
+      }
+    }
+  };
+
+  const signedCredential = await signer.sign(credentialWithSchema);
+  const verifiedCredential = await verifier.verify(signedCredential);
+
+  // Check core credential properties
+  expect(verifiedCredential["@context"]).toEqual(credentialWithSchema["@context"]);
+  expect(verifiedCredential.type).toEqual(credentialWithSchema.type);
+  expect(verifiedCredential.issuer).toBe(credentialWithSchema.issuer);
+  expect(verifiedCredential.credentialSubject).toEqual(credentialWithSchema.credentialSubject);
+
+  // Check credentialSchema is preserved
+  expect(verifiedCredential.credentialSchema).toBeDefined();
+  expect(verifiedCredential.credentialSchema).toHaveLength(2);
+  expect(verifiedCredential.credentialSchema![0]).toEqual({
+    "id": "https://example.org/examples/degree.json",
+    "type": "JsonSchema"
+  });
+  expect(verifiedCredential.credentialSchema![1]).toEqual({
+    "id": "https://example.org/examples/alumni.json",
+    "type": "JsonSchema"
+  });
+
+  // Check JWT claims are added
+  expect(verifiedCredential.iat).toBeDefined();
+  expect(typeof verifiedCredential.iat).toBe('number');
+});
+
+test("sign and verify credential with single credentialSchema", async () => {
+  // Generate key pair
+  const privateKey = await key.generatePrivateKey("ES256");
+  const publicKey = await key.exportPublicKey(privateKey);
+
+  const signer = await credential.signer(privateKey);
+  const verifier = await credential.verifier(publicKey);
+
+  // Create credential with single credentialSchema
+  const credentialWithSingleSchema: VerifiableCredential = {
+    "@context": ["https://www.w3.org/ns/credentials/v2"],
+    type: ["VerifiableCredential", "EmployeeCredential"],
+    issuer: "https://company.example/hr",
+    credentialSchema: [
+      {
+        "id": "https://company.example/schemas/employee.json",
+        "type": "JsonSchema"
+      }
+    ],
+    credentialSubject: {
+      id: "https://company.example/employees/bob",
+      type: "Employee",
+      name: "Bob Johnson",
+      jobTitle: "Software Engineer"
+    }
+  };
+
+  const signedCredential = await signer.sign(credentialWithSingleSchema);
+  const verifiedCredential = await verifier.verify(signedCredential);
+
+  // Check core credential properties
+  expect(verifiedCredential["@context"]).toEqual(credentialWithSingleSchema["@context"]);
+  expect(verifiedCredential.type).toEqual(credentialWithSingleSchema.type);
+  expect(verifiedCredential.issuer).toBe(credentialWithSingleSchema.issuer);
+  expect(verifiedCredential.credentialSubject).toEqual(credentialWithSingleSchema.credentialSubject);
+
+  // Check credentialSchema is preserved
+  expect(verifiedCredential.credentialSchema).toBeDefined();
+  expect(verifiedCredential.credentialSchema).toHaveLength(1);
+  expect(verifiedCredential.credentialSchema![0]).toEqual({
+    "id": "https://company.example/schemas/employee.json",
+    "type": "JsonSchema"
+  });
+
+  // Check JWT claims are added
+  expect(verifiedCredential.iat).toBeDefined();
+  expect(typeof verifiedCredential.iat).toBe('number');
+});
+
+test("sign and verify credential without credentialSchema (optional property)", async () => {
+  // Generate key pair
+  const privateKey = await key.generatePrivateKey("ES256");
+  const publicKey = await key.exportPublicKey(privateKey);
+
+  const signer = await credential.signer(privateKey);
+  const verifier = await credential.verifier(publicKey);
+
+  // Use the existing sampleCredential which doesn't have credentialSchema
+  const signedCredential = await signer.sign(sampleCredential);
+  const verifiedCredential = await verifier.verify(signedCredential);
+
+  // Check core credential properties
+  expect(verifiedCredential["@context"]).toEqual(sampleCredential["@context"]);
+  expect(verifiedCredential.type).toEqual(sampleCredential.type);
+  expect(verifiedCredential.issuer).toBe(sampleCredential.issuer);
+  expect(verifiedCredential.credentialSubject).toEqual(sampleCredential.credentialSubject);
+
+  // Check credentialSchema is undefined (not present)
+  expect(verifiedCredential.credentialSchema).toBeUndefined();
+
+  // Check JWT claims are added
+  expect(verifiedCredential.iat).toBeDefined();
+  expect(typeof verifiedCredential.iat).toBe('number');
+});
