@@ -1,6 +1,11 @@
 {
   "type": "FeatureCollection",
   "id": "https://chompchomp.example/entity/bvi-001",
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432101",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34321",
+    "urn:ietf:spice:glue:pen:12345"
+  ],
   "contexts": [
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],

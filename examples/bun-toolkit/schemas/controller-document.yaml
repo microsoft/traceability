@@ -22,6 +22,12 @@ properties:
         type: string
         format: uri
         description: "The controller identifier"
+      alsoKnownAs:
+        type: array
+        items:
+          type: string
+          format: uri
+        description: "Alternative identifiers for this controller (e.g., different geohash precisions, subsidiary IDs)"
       verificationMethod:
         type: array
         minItems: 1
@@ -146,6 +152,9 @@ examples:
         - "https://www.w3.org/ns/cid/v1"
         - "https://geojson.org/geojson-ld/geojson-context.jsonld"
       id: "https://example.com/entity/test-001"
+      alsoKnownAs:
+        - "https://example.com/geo/9q8yyk"
+        - "https://example.com/geo/9q8yy"
       verificationMethod:
         - id: "https://example.com/entity/test-001#4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE"
           type: "JsonWebKey"

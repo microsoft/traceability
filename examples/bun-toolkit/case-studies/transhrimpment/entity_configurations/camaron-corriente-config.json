@@ -1,6 +1,11 @@
 {
   "type": "FeatureCollection",
   "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432102",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34322",
+    "urn:ietf:spice:glue:pen:12346"
+  ],
   "contexts": [
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],

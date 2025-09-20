@@ -62,6 +62,11 @@ async function generateController(configFile: string, outputFile: string) {
     const builder = createControllerBuilder()
       .id(configData.id);
 
+    // Add alsoKnownAs if specified
+    if (configData.alsoKnownAs && Array.isArray(configData.alsoKnownAs)) {
+      builder.alsoKnownAs(...configData.alsoKnownAs);
+    }
+
     // Add contexts if specified
     if (configData.contexts) {
       configData.contexts.forEach((ctx: string) => builder.context(ctx));

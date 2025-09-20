@@ -1,0 +1,76 @@
+{
+  "controller": {
+    "@context": [
+      "https://www.w3.org/ns/cid/v1",
+      "https://geojson.org/geojson-ld/geojson-context.jsonld"
+    ],
+    "id": "https://shady-carrier.example/entity/aw-oru-001",
+    "verificationMethod": [
+      {
+        "id": "https://shady-carrier.example/entity/aw-oru-001#vu5_0n9e33HnOmYfOYSc7N8w3JcKh2xAtJJjVqZDhSI",
+        "type": "JsonWebKey",
+        "controller": "https://shady-carrier.example/entity/aw-oru-001",
+        "publicKeyJwk": {
+          "kid": "vu5_0n9e33HnOmYfOYSc7N8w3JcKh2xAtJJjVqZDhSI",
+          "kty": "EC",
+          "crv": "P-256",
+          "alg": "ES256",
+          "x": "RaC2MDuCD1TmBbQpF6Vr_fAy4EjNi3yBuOPlWzaHiTO",
+          "y": "3WUAoGwFE2UpCcRqG7Ws_gBz5FkOj4zCvPQmX0bIjUQ",
+          "key_ops": [
+            "verify"
+          ]
+        }
+      },
+      {
+        "id": "https://shady-carrier.example/entity/aw-oru-001#FY2w6r0u57LrSqcoSceM_bM04PmWl6dGxPVsY4eQmYs",
+        "type": "JsonWebKey",
+        "controller": "https://shady-carrier.example/entity/aw-oru-001",
+        "publicKeyJwk": {
+          "kid": "FY2w6r0u57LrSqcoSceM_bM04PmWl6dGxPVsY4eQmYs",
+          "kty": "EC",
+          "crv": "P-256",
+          "alg": "ES256",
+          "x": "McF8NGxHG7XtGfduG9dP_cD15QoXm7eHyQWtZ5fRnZT",
+          "y": "4YVBoHyIF4YrEdVvH0eQ_dE26RpYn8fIzRXua6gSoaU",
+          "key_ops": [
+            "verify"
+          ]
+        }
+      }
+    ],
+    "assertionMethod": [
+      "https://shady-carrier.example/entity/aw-oru-001#vu5_0n9e33HnOmYfOYSc7N8w3JcKh2xAtJJjVqZDhSI"
+    ],
+    "authentication": [
+      "https://shady-carrier.example/entity/aw-oru-001#FY2w6r0u57LrSqcoSceM_bM04PmWl6dGxPVsY4eQmYs"
+    ],
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -70.027,
+            12.5186
+          ]
+        },
+        "properties": {
+          "name": "Shady Carrier Ltd Operations",
+          "type": "Carrier",
+          "role": "substitute-carrier",
+          "address": {
+            "streetAddress": "Harbor District",
+            "addressLocality": "Oranjestad",
+            "addressRegion": "Aruba",
+            "addressCountry": "AW"
+          },
+          "legitimacy": "fraudulent"
+        }
+      }
+    ]
+  },
+  "generatedKeys": {},
+  "generated": "2025-09-20T20:31:58.572Z"
+}
