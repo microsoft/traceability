@@ -45,11 +45,11 @@ As the auditor, you would discover the fraud by:
 2. **Comparing with Legitimate Documents**: By checking what legitimate documents should have been issued (as shown in the table above), you can identify discrepancies:
    - The fraudulent bill of lading claims only 800kg was delivered, but the original purchase order was for 1000kg
    - The fraudulent certificate of origin claims Legit Shrimp Ltd as the source, but Legit Shrimp Ltd never issued such a certificate
-   - The legitimate Cargo Line Ltd bill of lading was never issued due to hurricane damage
+   - No legitimate bill of lading was ever issued for the original shipment due to Cargo Line Ltd's hurricane damage
 
 3. **Tracing the Supply Chain**: The legitimate documents would show the intended flow:
    - Chompchomp Ltd → Camarón Corriente S.A. (legitimate)
-   - Camarón Corriente S.A. → Cargo Line Ltd → Chompchomp Ltd (should have been legitimate)
+   - Camarón Corriente S.A. → Cargo Line Ltd → Chompchomp Ltd (should have been legitimate, but never happened due to hurricane)
    - Anonymous Distributor → Shady Distributor Ltd → Cargo Line Ltd (legitimate but to fraudulent entity)
 
 4. **Identifying the Fraud**: The investigation reveals:
@@ -104,23 +104,23 @@ The investigation reveals a complex web of document forgery, cargo theft, and id
 
 These are the original documents, because they are digitally signed, they cannot be altered without being detected.
 
-| Document | Schema | From (Issuer) | To (Holder) | Status |
+| Document | Schema | From (Issuer) | To (Holder) | 
 |---------------|--------|---------------|-------------|---------|
-| **Purchase Order** | `purchase-order-credential.yaml` | `https://chompchomp.example/entity/bvi-001` | `https://camaron-corriente.example/entity/ve-pbc-001` | ✅ Legitimate |
-| **Commercial Invoice** | `commercial-invoice-credential.yaml` | `https://camaron-corriente.example/entity/ve-pbc-001` | `https://chompchomp.example/entity/bvi-001` | ✅ Legitimate |
-| **Bill of Lading** | `bill-of-lading-credential.yaml` | `https://cargo-line.example/entity/pr-sju-001` | `https://chompchomp.example/entity/bvi-001` | ✅ **Should Have Been** (1000kg complete) |
-| **Certificate of Origin** | `certificate-of-origin-credential.yaml` | `https://legit-shrimp.example/entity/tt-pos-001` | `https://camaron-corriente.example/entity/ve-pbc-001` | ✅ **Should Have Been** (actual Legit Shrimp supply) |
-| **Secondary Purchase Order** | `purchase-order-credential.yaml` | `https://anonymous-distributor.example/entity/vi-stt-001` | `https://shady-distributor.example/entity/bvi-002` | ✅ Legitimate (but to fraudulent entity) |
-| **Secondary Commercial Invoice** | `commercial-invoice-credential.yaml` | `https://shady-distributor.example/entity/bvi-002` | `https://anonymous-distributor.example/entity/vi-stt-001` | ✅ Legitimate (but from fraudulent entity) |
-| **Secondary Bill of Lading** | `bill-of-lading-credential.yaml` | `https://cargo-line.example/entity/pr-sju-001` | `https://anonymous-distributor.example/entity/vi-stt-001` | ✅ Legitimate (post-repair delivery) |
+| **Purchase Order** | `purchase-order-credential.yaml` | `https://chompchomp.example/entity/bvi-001` | `https://camaron-corriente.example/entity/ve-pbc-001` |
+| **Commercial Invoice** | `commercial-invoice-credential.yaml` | `https://camaron-corriente.example/entity/ve-pbc-001` | `https://chompchomp.example/entity/bvi-001` |
+| **Certificate of Origin** | `certificate-of-origin-credential.yaml` | `https://camaron-corriente.example/entity/ve-pbc-001` | `https://chompchomp.example/entity/bvi-001` |
+| **Bill of Lading** | `bill-of-lading-credential.yaml` | `https://shady-carrier.example/entity/aw-oru-001` | `https://chompchomp.example/entity/bvi-001` |
+| **Secondary Purchase Order** | `purchase-order-credential.yaml` | `https://anonymous-distributor.example/entity/vi-stt-001` | `https://shady-distributor.example/entity/bvi-002` |
+| **Secondary Commercial Invoice** | `commercial-invoice-credential.yaml` | `https://shady-distributor.example/entity/bvi-002` | `https://anonymous-distributor.example/entity/vi-stt-001` |
+| **Secondary Bill of Lading** | `bill-of-lading-credential.yaml` | `https://cargo-line.example/entity/pr-sju-001` | `https://anonymous-distributor.example/entity/vi-stt-001`  |
 
 ### Fraudulent Documents 
 
-These are the fraudulent documents. They appear completely legitimate in all ways except for being signed by the wrong entity.
+These are the fraudulent documents. 
 These documents are substitutes for the original documents, and they are used to cover up the fraud.
 
-| Document | Schema | From (Issuer) | To (Holder) | Status |
+| Document | Schema | From (Issuer) | To (Holder) |
 |---------------|--------|---------------|-------------|---------|
-| **Fraudulent Bill of Lading** | `bill-of-lading-credential.yaml` | `https://shady-carrier.example/entity/aw-oru-001` | `https://chompchomp.example/entity/bvi-001` | ⚠️ **Suspicious** (quantity discrepancy) |
-| **Fraudulent Certificate of Origin** | `certificate-of-origin-credential.yaml` | `https://legit-shrimp.example/entity/tt-pos-001` (forged) | `https://shady-distributor.example/entity/bvi-002` | 🚨 **Fraudulent** (forged signature) |
+| **Fraudulent Bill of Lading** | `bill-of-lading-credential.yaml` | `https://shady-carrier.example/entity/aw-oru-001` | `https://chompchomp.example/entity/bvi-001` |
+| **Fraudulent Certificate of Origin** | `certificate-of-origin-credential.yaml` | `https://legit-shrimp.example/entity/tt-pos-001` (forged) | `https://shady-distributor.example/entity/bvi-002` |
 
