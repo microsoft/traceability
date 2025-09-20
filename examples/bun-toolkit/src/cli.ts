@@ -8,7 +8,7 @@ import type { VerifiablePresentation } from "./presentation/presentation";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
 import * as yaml from "js-yaml";
-import { detectCredentialGeoJSON } from "./geojson/detector";
+import { detectCredentialGeoJSON, detectControllerGeoJSON } from "./geojson/detector";
 import { geoJSONToMarkdown, generateMapPreviewURL } from "./geojson/markdown";
 
 function printHelp() {
@@ -27,7 +27,8 @@ Commands:
   extract-public-key --key <file> --out <file>           Extract public key from private key
   validate-schema --schema <file> [--example <file>]      Validate YAML schema and optional example
   validate-controller --controller <file>                 Validate controller document (security + schema)
-  analyze-geojson --cred <file> [--out <file>]           Analyze GeoJSON in credential and export markdown
+  analyze-geojson --credential <file> [--out <file>]     Analyze GeoJSON in credential and export markdown
+  analyze-geojson --controller <file> [--out <file>]    Analyze GeoJSON in controller and export markdown
   help                                          Show this help message
 
 Examples:
@@ -436,6 +437,29 @@ async function validateController(controllerFile: string) {
       }
 
       console.log(`\n✅ Controller document validation completed successfully`);
+
+      // Check for GeoJSON content in controller document
+      const geoJSONAnalysis = detectControllerGeoJSON(controllerData);
+      if (geoJSONAnalysis) {
+        console.log(`\n🗺️ Geographic data detected in controller:`);
+
+        // Generate markdown preview
+        const controllerGeoData = controllerData.controller || controllerData;
+        const markdownPreview = geoJSONToMarkdown(
+          controllerGeoData,
+          geoJSONAnalysis,
+          { title: "Entity Geographic Information" }
+        );
+
+        // Generate map preview URL if possible
+        const mapURL = generateMapPreviewURL(geoJSONAnalysis);
+        if (mapURL) {
+          console.log(`📍 Map Preview: ${mapURL}`);
+        }
+
+        console.log(`\n${markdownPreview}`);
+      }
+
     } else {
       console.error(`❌ Controller document is invalid:`);
       console.error(JSON.stringify(validate.errors, null, 2));
@@ -448,17 +472,30 @@ async function validateController(controllerFile: string) {
   }
 }
 
-async function analyzeGeoJSON(credentialFile: string, outputFile?: string) {
-  console.log(`Analyzing GeoJSON in credential ${credentialFile}...`);
+async function analyzeGeoJSON(inputFile: string, outputFile?: string, isController: boolean = false) {
+  const docType = isController ? 'controller' : 'credential';
+  console.log(`Analyzing GeoJSON in ${docType} ${inputFile}...`);
 
   try {
-    const credentialData = await Bun.file(credentialFile).json();
+    const documentData = await Bun.file(inputFile).json();
 
-    // Detect GeoJSON content
-    const geoJSONAnalysis = detectCredentialGeoJSON(credentialData);
+    // Detect GeoJSON content based on document type
+    let geoJSONAnalysis: any;
+    let geoData: any;
+    let title: string;
+
+    if (isController) {
+      geoJSONAnalysis = detectControllerGeoJSON(documentData);
+      geoData = documentData.controller || documentData;
+      title = "Entity Geographic Information";
+    } else {
+      geoJSONAnalysis = detectCredentialGeoJSON(documentData);
+      geoData = documentData.credentialSubject;
+      title = "Supply Chain Geographic Data";
+    }
 
     if (!geoJSONAnalysis) {
-      console.log(`❌ No valid GeoJSON found in credential subject`);
+      console.log(`❌ No valid GeoJSON found in ${docType} ${isController ? 'document' : 'subject'}`);
       return;
     }
 
@@ -466,10 +503,10 @@ async function analyzeGeoJSON(credentialFile: string, outputFile?: string) {
 
     // Generate markdown output
     const markdownContent = geoJSONToMarkdown(
-      credentialData.credentialSubject,
+      geoData,
       geoJSONAnalysis,
       {
-        title: "Supply Chain Geographic Data",
+        title,
         showAnalysis: true,
         showCoordinates: true,
         showProperties: true,
@@ -497,6 +534,7 @@ async function analyzeGeoJSON(credentialFile: string, outputFile?: string) {
   }
 }
 
+
 // Parse command line arguments
 const { values, positionals } = parseArgs({
   args: Bun.argv.slice(2),
@@ -505,6 +543,7 @@ const { values, positionals } = parseArgs({
     config: { type: 'string' },
     key: { type: 'string' },
     cred: { type: 'string' },
+    credential: { type: 'string' },
     pres: { type: 'string' },
     resolver: { type: 'string' },
     schema: { type: 'string' },
@@ -598,11 +637,15 @@ try {
       break;
 
     case 'analyze-geojson':
-      if (!values.cred) {
-        console.error("Please specify --cred <file>.");
+      const credFile = values.cred || values.credential;
+      if (credFile) {
+        await analyzeGeoJSON(credFile, values.out, false);
+      } else if (values.controller) {
+        await analyzeGeoJSON(values.controller, values.out, true);
+      } else {
+        console.error("Please specify either --credential <file> or --controller <file>.");
         process.exit(1);
       }
-      await analyzeGeoJSON(values.cred, values.out);
       break;
 
     default:

@@ -240,6 +240,43 @@ export function detectCredentialGeoJSON(credential: any): GeoJSONAnalysis | null
 }
 
 /**
+ * Detects GeoJSON in controller documents
+ */
+export function detectControllerGeoJSON(controllerDoc: any): GeoJSONAnalysis | null {
+  // Controller document might be nested under 'controller' property
+  const controller = controllerDoc.controller || controllerDoc;
+
+  if (!controller) return null;
+
+  // Check if the controller document itself is GeoJSON (common pattern)
+  if (isValidGeoJSON(controller)) {
+    return analyzeGeoJSON(controller);
+  }
+
+  // Check specific properties that might contain GeoJSON
+  const geoProperties = ['features', 'geometry', 'location', 'address', 'serviceArea'];
+
+  for (const prop of geoProperties) {
+    if (controller[prop] && isValidGeoJSON(controller[prop])) {
+      const analysis = analyzeGeoJSON(controller[prop]);
+      analysis.description = `${prop}: ${analysis.description}`;
+      return analysis;
+    }
+  }
+
+  // Check if any top-level property is GeoJSON
+  for (const [key, value] of Object.entries(controller)) {
+    if (isValidGeoJSON(value)) {
+      const analysis = analyzeGeoJSON(value);
+      analysis.description = `${key}: ${analysis.description}`;
+      return analysis;
+    }
+  }
+
+  return null;
+}
+
+/**
  * Formats coordinates for display
  */
 export function formatCoordinates(coordinates: number[]): string {
