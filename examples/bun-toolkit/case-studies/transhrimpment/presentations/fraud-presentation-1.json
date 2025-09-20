@@ -1,0 +1,16 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2"
+  ],
+  "type": [
+    "VerifiablePresentation"
+  ],
+  "holder": "https://shady-carrier.example/entity/aw-oru-001",
+  "audience": [
+    "d64gbdf2c",
+    "d3b6s7s5p",
+    "d64d0j8pm"
+  ],
+  "nonce": "us-customs-inspection-2024-001-transhrimpment",
+  "verifiableCredential": []
+}

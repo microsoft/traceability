@@ -11,26 +11,30 @@
   ],
   "assertion": [
     {
-      "kid": "4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE",
+      "kid": "JJLQuv5HCsmJtRFBAhd1otTp_G8uUZehznZ_g6pYsI8",
       "kty": "EC",
       "crv": "P-256",
       "alg": "ES256",
-      "x": "TXYRYgX8eZTx4m7OkMRy_kLdaBIq9hCEQmODECNGSMw",
-      "y": "rQ9q1YQHb8YTd6i6EaLYf_ycb9vQpN6VkLaFWlI5T_o",
-      "d": "8Hl9KzVKyA1o4YLuRr6Kz5K6OGQBYb8fv4nHE65bBTw",
-      "key_ops": ["sign"]
+      "x": "e10k1xEbBj6kJvIplo94ngH3rkZcOn__3dVtdpQp5Wc",
+      "y": "g8AkqO5Seaq2KurPIwjDtyNDrxp0UtPuEmT5a7u5ucY",
+      "d": "7Pt9iJAI151GEQmGMM0d8gTyJqo649CA6tFnnkZXOpI",
+      "key_ops": [
+        "sign"
+      ]
     }
   ],
   "authentication": [
     {
-      "kid": "qBhsQ0LhFhVhC1JQNFK6Ru1Z6WowUfVkfb0nYRa3AW8",
+      "kid": "3x3wtmcEPGhwgApfVA9vivaN6IEEvrmsmQ9Ly4ZQCT0",
       "kty": "EC",
       "crv": "P-256",
       "alg": "ES256",
-      "x": "HhRkROcdJCyTvh7GNQQu0rYTKjSjE6lrNS4gLaJmOdw",
-      "y": "xM6JzqjKbq7lRvHCYgWwKm5RZ8oY3d9-Oo4CwYxbCeI",
-      "d": "jHErmXC0-ZvgGJAJPZzWJIoMmZBrKcKhOz0o1CWFDLw",
-      "key_ops": ["sign"]
+      "x": "M7gnjRPYwRZTgbQzQZ6fVnXzqgmRYKidG-aUEW_ejuc",
+      "y": "Tr_9jIyrJmoAJWM5b7F-XTt9HeVdLAYFzSG56cZUx0s",
+      "d": "bAB6msK-us9Xpj18UIMV8V9Rqb_HHJr8Ykj3COtlL78",
+      "key_ops": [
+        "sign"
+      ]
     }
   ],
   "features": [
@@ -38,7 +42,10 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [-64.6208, 18.4167]
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
       },
       "properties": {
         "name": "Chompchomp Ltd Main Office",
@@ -56,7 +63,10 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [-64.6150, 18.4180]
+        "coordinates": [
+          -64.615,
+          18.418
+        ]
       },
       "properties": {
         "name": "Chompchomp Ltd Warehouse",

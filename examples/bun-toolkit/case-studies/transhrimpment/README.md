@@ -1,51 +1,81 @@
-# Transhrimpment
+# Transhrimpment: Supply Chain Fraud Investigation Case Study
 
-In this hypothetical scenario, we explore a location and route based analysis of transhipped and relabelled frozen shrimp product.
-This scenario helps us explore some of the key features of verifiable supply chains in the context of a cold chain.
-Many of the techniques we will use for this scenario are applicable for pharmaceuticals and other cold chain products.
-These techniques can also be applied to microelectronics supply chains.
+A comprehensive demonstration of supply chain fraud detection using verifiable credentials with CNF claims and GeoJSON geographic analysis.
 
-In our scenario, we have a small seafood importer called `Chompchomp Ltd` based in `Road Town, Tortola, British Virgin Islands`.
-`Chompchomp Ltd` has just signed a new contract with a small seafood distributor called `Camarón Corriente S.A.` based in `Puerto Cabello, Venezuela`.
+## Case Overview
 
-Lets say `Chompchomp Ltd` submits a purchase order to `Camarón Corriente S.A.` for 1000kg of frozen shrimp, and after some time `Camarón Corriente S.A.` sends a commercial invoice to `Chompchomp Ltd`.
+This case study demonstrates how a fraudulent shrimp import operation ("Transhrimpment") can be detected using verifiable credentials with cryptographic proof and geographic tracking. The fraud involves quantity manipulation and identity theft across multiple jurisdictions.
 
-`Camarón Corriente S.A.`'s usual carrier is `Cargo Line Ltd` based out of `San Juan, Puerto Rico`, but due to a recent hurricane they have been forced to make repairs to their fleet, and are currently unable to deliver the goods.
+## Entities Involved
 
-`Camarón Corriente S.A.` scrambled to find a new carrier, and rushes their normal vetting process for an organization called `Shady Carrier Ltd` based out of `Oranjestad, Aruba`.
+### Legitimate Parties
+- **Chompchomp Ltd** (BVI) - Seafood importer and buyer
+- **Camarón Corriente S.A.** (Venezuela) - Shrimp supplier
+- **Legit Shrimp Ltd** (Trinidad & Tobago) - Original certificate holder
 
+### Fraudulent Parties
+- **Shady Carrier Ltd** (Aruba) - Transport company manipulating quantities
+- **Shady Distributor Ltd** (BVI) - Identity thief forging certificates
 
-`Shady Carrier Ltd` quickly delivers the goods but forges critical supply chain documentation to make it appear that part of the frozen shrimp was destroyed during transit.
+## Credential Types
 
-`Shady Carrier Ltd` then sells the goods to another small seafood distributor called `Shady Distributor Ltd` who is also based in `Road Town, Tortola, British Virgin Islands`.
+| Credential Type | Schema | Issuer | Holder |
+|---|---|---|---|
+| **PurchaseOrderCredential** | `schemas/purchase-order-credential.yaml` | Chompchomp Ltd (`https://chompchomp.example/entity/bvi-001`) | Chompchomp Ltd (`https://chompchomp.example/entity/bvi-001`) |
+| **CommercialInvoiceCredential** | `schemas/commercial-invoice-credential.yaml` | Camarón Corriente S.A. (`https://camaron-corriente.example/entity/ve-pbc-001`) | Chompchomp Ltd (`https://chompchomp.example/entity/bvi-001`) |
+| **BillOfLadingCredential** | `schemas/bill-of-lading-credential.yaml` | Shady Carrier Ltd (`https://shady-carrier.example/entity/aw-oru-001`) ⚠️ | Chompchomp Ltd (`https://chompchomp.example/entity/bvi-001`) |
+| **CertificateOfOriginCredential** | `schemas/certificate-of-origin-credential.yaml` | Legit Shrimp Ltd (`https://legit-shrimp.example/entity/tt-pos-001`) 🚨 | Shady Distributor Ltd (`https://shady-distributor.example/entity/bvi-002`) |
 
-`Shady Distributor Ltd` forges fresh certifcates of origin that say the frozen shrimp was sourced from a legitimate supplier called `Legit Shrimp Ltd` based out of `Port of Spain, Trinidad and Tobago`.
+### Fraud Indicators
+- ⚠️ **Bill of Lading**: Shows suspicious quantity discrepancy (1000kg → 800kg, claiming 200kg "lost")
+- 🚨 **Certificate of Origin**: Fraudulent signature (Shady Distributor impersonating Legit Shrimp)
 
-A seafood distributor in `Charlotte Amalie, St. Thomas, U.S. Virgin Islands` places an order for 500kg of frozen shrimp from `Shady Distributor Ltd`, who happens to use `Cargo Line Ltd`, and after their repairs to their fleet, the carrier is able to deliver the goods.
+## Running the Demo
 
+Execute the complete fraud investigation workflow:
 
-The importer's customs broker files all the paper work for the imported shrimp as hs code 0306.17, originating from `Trinidad and Tobago`.
-Lab tests on the shrimp reveal chemical contamination, and an investigation is launched.
+```bash
+bash demo.sh
+```
 
-You are an an auditor called in to help with the investigation.
+### Demo Phases
 
-In this scenario, all the supply chain paperwork was also digitally protected, and by verifying the digital sigantures, you are able to uncover the fraud.
+1. **Schema Validation**: Validate all credential schemas
+2. **Controller Generation**: Create public controller documents from private keys
+3. **Key Extraction**: Extract public keys for verification
+4. **Credential Signing**: Sign documents with respective entity keys
+5. **Geographic Analysis**: Analyze GeoJSON shipping routes
+6. **Fraud Detection**: Verify credentials and detect forgeries
+7. **Challenge-Response**: US Customs presentation workflow with CNF verification
 
-## Initial Investigation - Entity Analysis
+## Key Features Demonstrated
 
-As the first step in our digital forensic investigation, we need to catalog all entities involved in the supply chain and their controller identifiers. This gives us a baseline for verifying the authenticity of digital signatures on supply chain documents.
+### CNF Claims & Presentation Security
+- **Credential Binding**: Credentials bound to holder's authentication key via CNF claims
+- **Theft Prevention**: Stolen credentials cannot be presented by unauthorized parties
+- **Cross-Entity Binding**: Camarón Corriente issues credentials for Chompchomp to present
 
-### Supply Chain Entities
+### Challenge-Response Protocol
+1. **Challenge**: US Customs provides audience (geohash) and nonce
+2. **Response**: Holder creates presentation signed with authentication key
+3. **Verification**: CNF claims validated against presentation signature
 
-| Entity Name | Type | Controller Identifier | Base Location | Country/Territory | Role | Status |
-|-------------|------|-----------------------|---------------|-------------------|------|---------|
-| Chompchomp Ltd | Seafood Importer | `https://chompchomp.example/entity/bvi-001` | Road Town, Tortola | British Virgin Islands | Buyer/Importer | Legitimate |
-| Camarón Corriente S.A. | Seafood Distributor | `https://camaron-corriente.example/entity/ve-pbc-001` | Puerto Cabello | Venezuela | Seller/Exporter | Legitimate |
-| Cargo Line Ltd | Carrier | `https://cargo-line.example/entity/pr-sju-001` | San Juan | Puerto Rico | Primary Carrier | Legitimate (fleet repairs) |
-| Shady Carrier Ltd | Carrier | `https://shady-carrier.example/entity/aw-oru-001` | Oranjestad | Aruba | Substitute Carrier | **Fraudulent** |
-| Shady Distributor Ltd | Seafood Distributor | `https://shady-distributor.example/entity/bvi-002` | Road Town, Tortola | British Virgin Islands | Intermediary | **Fraudulent** |
-| Legit Shrimp Ltd | Seafood Supplier | `https://legit-shrimp.example/entity/tt-pos-001` | Port of Spain | Trinidad and Tobago | Original Supplier (forged) | Legitimate (identity stolen) |
-| Anonymous Distributor | Seafood Distributor | `https://anonymous-distributor.example/entity/vi-stt-001` | Charlotte Amalie, St. Thomas | U.S. Virgin Islands | Final Buyer | Legitimate (victim) |
+### Geographic Tracking
+All credentials contain GeoJSON FeatureCollections for geographic analysis:
+- **Points**: Entity locations (offices, facilities)
+- **LineStrings**: Shipping routes between jurisdictions
+- **Analysis**: Coordinate validation, route mapping, geographic context
+
+## Investigation Results
+
+The demo proves that:
+1. ✅ **Quantity Fraud Detected**: Bill of Lading shows 200kg shortage
+2. ✅ **Identity Theft Detected**: Certificate signature verification fails
+3. ✅ **CNF Binding Works**: Only legitimate holder can present credentials
+4. ✅ **Geographic Tracking**: Full supply chain route mapped from Venezuela → Aruba → BVI
+5. ✅ **Presentation Security**: Stolen credentials cannot be fraudulently presented
+
+This case study demonstrates how verifiable credentials with CNF claims provide robust protection against supply chain fraud through cryptographic proof and geographic traceability.
 
 ### Geographic Coordinates
 

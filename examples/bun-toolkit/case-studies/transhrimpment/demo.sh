@@ -346,28 +346,61 @@ echo "**Result: FRAUD DETECTED** - Wrong private key used to sign certificate!" 
 echo "</details>" >> "$REPORT_FILE"
 
 echo ""
-echo "📋 Step 7: Verifiable Presentation Creation and Verification"
-echo "=========================================================="
-echo "📦 Creating verifiable presentations to package evidence..."
+echo "📋 Step 7: US Customs Challenge-Response Presentation Flow"
+echo "========================================================"
+echo "🏛️ Implementing complete verifier challenge-response workflow..."
 
 # Add presentation section to report
 cat >> "$REPORT_FILE" << 'EOF'
 
 ---
 
-## Step 7: Evidence Packaging with Verifiable Presentations
+## Step 7: US Customs Challenge-Response Presentation Flow
 
-Creating verifiable presentations to package all collected evidence for legal and audit purposes:
+Demonstrating complete verifiable presentation workflow with challenge-response protocol, cnf claims, and fraud detection:
 
-### Evidence Collection
+### Phase 1: US Customs Issues Challenge
 
 EOF
 
-# Create a comprehensive presentation with all signed credentials
-echo "Creating comprehensive evidence presentation..."
+# PHASE 1: US Customs creates a challenge with audience and nonce
+echo "PHASE 1: US Customs creates presentation challenge..."
 
-# First, let's create a resolver for the presentation verification
-echo "Building resolver with all controller documents..."
+cat > "case-studies/transhrimpment/customs-challenge.json" << 'CHALLENGE_EOF'
+{
+  "verifier": "https://customs.gov.us/port/miami",
+  "challenge_id": "customs-2024-transhrimpment-001",
+  "audience": [
+    "d64gbdf2c",
+    "d3b6s7s5p",
+    "d64d0j8pm"
+  ],
+  "nonce": "us-customs-inspection-2024-001-transhrimpment",
+  "requested_credentials": [
+    "PurchaseOrderCredential",
+    "CommercialInvoiceCredential",
+    "BillOfLadingCredential",
+    "CertificateOfOriginCredential"
+  ],
+  "geohash_zones": {
+    "d64gbdf2c": "Venezuela (shipper location)",
+    "d3b6s7s5p": "Aruba (transit location)",
+    "d64d0j8pm": "BVI (consignee location)"
+  }
+}
+CHALLENGE_EOF
+
+run_command_and_report \
+    "US Customs Issues Presentation Challenge" \
+    "echo 'Challenge created with audience and nonce for customs inspection'" \
+    "🏛️"
+
+# PHASE 2: Create credentials with proper cnf claims
+echo ""
+echo "PHASE 2: Creating credentials with cnf claims..."
+
+# Create resolver first
+echo "Building controller resolver..."
 cat > "case-studies/transhrimpment/resolver.json" << 'RESOLVER_EOF'
 {
   "https://chompchomp.example/entity/bvi-001": null,
@@ -377,12 +410,8 @@ cat > "case-studies/transhrimpment/resolver.json" << 'RESOLVER_EOF'
 }
 RESOLVER_EOF
 
-# Update the resolver with actual controller documents
-echo "Populating resolver with controller documents..."
+# Populate resolver with controller documents
 for controller_file in case-studies/transhrimpment/controllers/*.json; do
-  controller_id=$(bun -e "console.log(JSON.parse(require('fs').readFileSync('$controller_file', 'utf8')).controller.id)")
-  # Update resolver JSON with controller content
-  temp_file=$(mktemp)
   bun -e "
     const fs = require('fs');
     const resolver = JSON.parse(fs.readFileSync('case-studies/transhrimpment/resolver.json', 'utf8'));
@@ -392,21 +421,142 @@ for controller_file in case-studies/transhrimpment/controllers/*.json; do
   "
 done
 
-# Create legitimate presentation for US Customs (Chompchomp presenting to customs)
-echo "Creating legitimate presentation for US Customs..."
-echo "Using geohash audiences for customs inspection locations:"
-echo "  - d64gbdf2c: Venezuela customs (shipper location)"
-echo "  - d3b6s7s5p: Aruba customs (transit location)"
-echo "  - d64d0j8pm: BVI customs (consignee location)"
+# Create credentials with cnf claims - ISSUER binds credential to HOLDER's authentication key
+echo "Creating credential with cnf claim binding to holder's authentication key..."
 
-# Get Chompchomp's authentication key ID for cnf
+# Get Chompchomp's authentication key ID (holder's authentication key)
 CHOMPCHOMP_AUTH_KEY_ID=$(bun -e "
-  const controller = JSON.parse(require('fs').readFileSync('case-studies/transhrimpment/controllers/chompchomp-controller.json', 'utf8')).controller;
+  const controller = JSON.parse(fs.readFileSync('case-studies/transhrimpment/controllers/chompchomp-controller.json', 'utf8')).controller;
   const authMethod = controller.verificationMethod.find(vm => controller.authentication.includes(vm.id));
   console.log(authMethod.id);
 ")
 
-cat > "case-studies/transhrimpment/presentations/customs-presentation.json" << 'PRES_EOF'
+echo "📋 ISSUER: Chompchomp (using assertion key for signing)"
+echo "🔐 CNF Binding: Credential bound to Chompchomp's authentication key: $CHOMPCHOMP_AUTH_KEY_ID"
+echo "🔑 PRESENTATION: Only Chompchomp's authentication key can present this credential"
+
+# Create purchase order with cnf claim - ISSUER creates credential and binds it to HOLDER's key
+cat > "case-studies/transhrimpment/credentials/purchase-order-with-cnf.json" << 'CNF_CRED_EOF'
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "PurchaseOrderCredential"
+  ],
+  "issuer": "https://chompchomp.example/entity/bvi-001",
+  "validFrom": "2024-01-15T10:00:00Z",
+  "validUntil": "2024-03-15T10:00:00Z",
+  "cnf": {
+    "kid": "$CHOMPCHOMP_AUTH_KEY_ID"
+  },
+  "credentialSubject": {
+    "id": "https://orders.example/po-2024-001",
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-64.6208, 18.4167]
+        },
+        "properties": {
+          "type": "PurchaseOrder",
+          "orderNumber": "PO-2024-001",
+          "buyer": {
+            "id": "https://chompchomp.example/entity/bvi-001",
+            "name": "Chompchomp Ltd"
+          },
+          "seller": {
+            "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+            "name": "Camarón Corriente S.A."
+          },
+          "description": "1000kg frozen shrimp",
+          "quantity": "1000kg",
+          "deliveryDate": "2024-02-15"
+        }
+      }
+    ]
+  }
+}
+CNF_CRED_EOF
+
+# Sign the credential with cnf claim using ISSUER's assertion key
+run_command_and_report \
+    "Sign Purchase Order with CNF Claim (Chompchomp Issuer using Assertion Key)" \
+    "bun src/cli.ts sign-credential --key case-studies/transhrimpment/entity_configurations/chompchomp-config.json --cred case-studies/transhrimpment/credentials/purchase-order-with-cnf.json --out case-studies/transhrimpment/signed/purchase-order-cnf-signed.json" \
+    "🔐"
+
+# Create a more complex scenario: Camarón Corriente (ISSUER) creates credential for Chompchomp (HOLDER)
+echo ""
+echo "🏭 CROSS-ENTITY CNF SCENARIO: Camarón Corriente issues credential for Chompchomp..."
+
+# Create commercial invoice where Camarón Corriente (issuer) binds credential to Chompchomp's (holder) auth key
+cat > "case-studies/transhrimpment/credentials/commercial-invoice-cnf.json" << 'CROSS_CNF_EOF'
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "CommercialInvoiceCredential"
+  ],
+  "issuer": "https://camaron-corriente.example/entity/ve-pbc-001",
+  "validFrom": "2024-01-20T14:00:00Z",
+  "validUntil": "2024-03-20T14:00:00Z",
+  "cnf": {
+    "kid": "$CHOMPCHOMP_AUTH_KEY_ID"
+  },
+  "credentialSubject": {
+    "id": "https://invoices.example/inv-2024-001",
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-68.0125, 10.4647]
+        },
+        "properties": {
+          "type": "CommercialInvoice",
+          "invoiceNumber": "INV-2024-001",
+          "seller": {
+            "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+            "name": "Camarón Corriente S.A."
+          },
+          "buyer": {
+            "id": "https://chompchomp.example/entity/bvi-001",
+            "name": "Chompchomp Ltd"
+          },
+          "description": "1000kg frozen shrimp export",
+          "quantity": "1000kg",
+          "amount": "$15,000 USD",
+          "invoiceDate": "2024-01-20"
+        }
+      }
+    ]
+  }
+}
+CROSS_CNF_EOF
+
+echo "📋 ISSUER: Camarón Corriente (using their assertion key for signing)"
+echo "🔐 CNF Binding: Credential bound to CHOMPCHOMP's authentication key: $CHOMPCHOMP_AUTH_KEY_ID"
+echo "🔑 PRESENTATION: Only CHOMPCHOMP can present this credential (not Camarón Corriente)"
+
+# Sign with Camarón Corriente's ASSERTION key
+run_command_and_report \
+    "Sign Commercial Invoice with CNF (Camarón Corriente Issuer → Chompchomp Holder)" \
+    "bun src/cli.ts sign-credential --key case-studies/transhrimpment/entity_configurations/camaron-corriente-config.json --cred case-studies/transhrimpment/credentials/commercial-invoice-cnf.json --out case-studies/transhrimpment/signed/commercial-invoice-cnf-signed.json" \
+    "🔐"
+
+# PHASE 3: Chompchomp creates legitimate presentation response
+echo ""
+echo "PHASE 3: Chompchomp creates presentation response to challenge..."
+
+cat > "case-studies/transhrimpment/presentations/chompchomp-response.json" << 'RESPONSE_EOF'
 {
   "@context": [
     "https://www.w3.org/ns/credentials/v2"
@@ -423,42 +573,47 @@ cat > "case-studies/transhrimpment/presentations/customs-presentation.json" << '
   "nonce": "us-customs-inspection-2024-001-transhrimpment",
   "verifiableCredential": []
 }
-PRES_EOF
+RESPONSE_EOF
 
-# Populate presentation with available signed credentials
-echo "Adding signed credentials to customs presentation..."
-for cred_file in case-studies/transhrimpment/signed/*.json; do
+# Add signed credentials with cnf claims to presentation
+echo "Adding credentials with cnf claims to presentation..."
+for cred_file in "case-studies/transhrimpment/signed/purchase-order-cnf-signed.json" "case-studies/transhrimpment/signed/commercial-invoice-cnf-signed.json"; do
   if [[ -f "$cred_file" ]]; then
+    echo "Adding $(basename "$cred_file") to Chompchomp's presentation..."
     bun -e "
       const fs = require('fs');
-      const presentation = JSON.parse(fs.readFileSync('case-studies/transhrimpment/presentations/customs-presentation.json', 'utf8'));
+      const presentation = JSON.parse(fs.readFileSync('case-studies/transhrimpment/presentations/chompchomp-response.json', 'utf8'));
       const credential = JSON.parse(fs.readFileSync('$cred_file', 'utf8'));
       presentation.verifiableCredential.push(credential);
-      fs.writeFileSync('case-studies/transhrimpment/presentations/customs-presentation.json', JSON.stringify(presentation, null, 2));
+      fs.writeFileSync('case-studies/transhrimpment/presentations/chompchomp-response.json', JSON.stringify(presentation, null, 2));
     "
   fi
 done
 
-# Sign legitimate presentation with Chompchomp's keys
+echo "📋 HOLDER: Chompchomp presenting credentials bound to their authentication key"
+echo "🔐 PRESENTATION SIGNING: Using Chompchomp's AUTHENTICATION key (must match CNF claims)"
+
+# Sign presentation with Chompchomp's authentication key (matching cnf claim)
 run_command_and_report \
-    "Sign Legitimate Customs Presentation (Chompchomp)" \
-    "bun src/cli.ts sign-presentation --key case-studies/transhrimpment/entity_configurations/chompchomp-config.json --pres case-studies/transhrimpment/presentations/customs-presentation.json --out case-studies/transhrimpment/signed/customs-presentation-signed.json" \
+    "Chompchomp Signs Response Presentation (Matching CNF Key)" \
+    "bun src/cli.ts sign-presentation --key case-studies/transhrimpment/entity_configurations/chompchomp-config.json --pres case-studies/transhrimpment/presentations/chompchomp-response.json --out case-studies/transhrimpment/signed/chompchomp-response-signed.json" \
     "✅"
 
-# Verify the legitimate presentation
-run_command_and_report \
-    "US Customs: Verify Legitimate Presentation" \
-    "bun src/cli.ts verify-presentation --pres case-studies/transhrimpment/signed/customs-presentation-signed.json --resolver case-studies/transhrimpment/resolver.json" \
-    "✅"
-
-# NOW CREATE FRAUDULENT PRESENTATION SCENARIOS
-
-# Scenario 1: Shady Carrier trying to present Chompchomp's credentials
+# PHASE 4: US Customs verifies presentation and cnf claims
 echo ""
-echo "🚨 FRAUD SCENARIO 1: Shady Carrier attempting identity theft..."
-echo "Shady Carrier tries to present Chompchomp's credentials as their own"
+echo "PHASE 4: US Customs verifies presentation and cnf claims..."
 
-cat > "case-studies/transhrimpment/presentations/fraud-presentation-1.json" << 'FRAUD_PRES_EOF'
+run_command_and_report \
+    "US Customs: Verify Legitimate Presentation with CNF" \
+    "bun src/cli.ts verify-presentation --pres case-studies/transhrimpment/signed/chompchomp-response-signed.json --resolver case-studies/transhrimpment/resolver.json" \
+    "✅"
+
+# PHASE 5: FRAUD SCENARIO - Shady Carrier attempts to present credential with wrong keys
+echo ""
+echo "PHASE 5: FRAUD SCENARIO - Shady Carrier attempts credential theft..."
+
+# Create fraudulent presentation where Shady Carrier tries to present Chompchomp's credential
+cat > "case-studies/transhrimpment/presentations/fraud-response.json" << 'FRAUD_EOF'
 {
   "@context": [
     "https://www.w3.org/ns/credentials/v2"
@@ -475,42 +630,47 @@ cat > "case-studies/transhrimpment/presentations/fraud-presentation-1.json" << '
   "nonce": "us-customs-inspection-2024-001-transhrimpment",
   "verifiableCredential": []
 }
-FRAUD_PRES_EOF
+FRAUD_EOF
 
-# Add Chompchomp's credentials to fraudulent presentation
-for cred_file in case-studies/transhrimpment/signed/*.json; do
+# Add Chompchomp's credentials (with cnf claims) to Shady Carrier's fraudulent presentation
+echo "🚨 FRAUD ATTEMPT: Shady Carrier steals Chompchomp's credentials..."
+for cred_file in "case-studies/transhrimpment/signed/purchase-order-cnf-signed.json" "case-studies/transhrimpment/signed/commercial-invoice-cnf-signed.json"; do
   if [[ -f "$cred_file" ]]; then
+    echo "Shady Carrier adding stolen $(basename "$cred_file") to their presentation..."
     bun -e "
       const fs = require('fs');
-      const presentation = JSON.parse(fs.readFileSync('case-studies/transhrimpment/presentations/fraud-presentation-1.json', 'utf8'));
+      const presentation = JSON.parse(fs.readFileSync('case-studies/transhrimpment/presentations/fraud-response.json', 'utf8'));
       const credential = JSON.parse(fs.readFileSync('$cred_file', 'utf8'));
       presentation.verifiableCredential.push(credential);
-      fs.writeFileSync('case-studies/transhrimpment/presentations/fraud-presentation-1.json', JSON.stringify(presentation, null, 2));
+      fs.writeFileSync('case-studies/transhrimpment/presentations/fraud-response.json', JSON.stringify(presentation, null, 2));
     "
   fi
 done
 
-# Sign with Shady Carrier's keys (FRAUD!)
+echo "🚨 FRAUD: Shady Carrier has stolen credentials but CNF claims require Chompchomp's auth key!"
+echo "🔐 MISMATCH: Shady Carrier will sign with THEIR authentication key (wrong key for CNF)"
+
+# Sign presentation with Shady Carrier's key (WRONG KEY - should fail cnf check)
 run_command_and_report \
-    "Sign Fraudulent Presentation (Shady Carrier using wrong keys)" \
-    "bun src/cli.ts sign-presentation --key case-studies/transhrimpment/entity_configurations/shady-carrier-config.json --pres case-studies/transhrimpment/presentations/fraud-presentation-1.json --out case-studies/transhrimpment/signed/fraud-presentation-1-signed.json" \
+    "Shady Carrier Signs Fraudulent Presentation (WRONG KEY)" \
+    "bun src/cli.ts sign-presentation --key case-studies/transhrimpment/entity_configurations/shady-carrier-config.json --pres case-studies/transhrimpment/presentations/fraud-response.json --out case-studies/transhrimpment/signed/fraud-response-signed.json" \
     "🚨"
 
-# This should fail when US Customs verifies
-echo "🚨 US Customs attempting to verify fraudulent presentation..."
+# This should fail due to cnf claim mismatch
+echo "🚨 US Customs verifies fraudulent presentation - CNF MISMATCH expected..."
 echo "" >> "$REPORT_FILE"
 echo "<details>" >> "$REPORT_FILE"
-echo "<summary>🚨 US Customs: Verify Fraudulent Presentation (SHOULD FAIL)</summary>" >> "$REPORT_FILE"
+echo "<summary>🚨 US Customs: Verify Fraudulent Presentation - CNF Claim Mismatch</summary>" >> "$REPORT_FILE"
 echo "" >> "$REPORT_FILE"
 echo '```bash' >> "$REPORT_FILE"
-echo "$ bun src/cli.ts verify-presentation --pres case-studies/transhrimpment/signed/fraud-presentation-1-signed.json --resolver case-studies/transhrimpment/resolver.json" >> "$REPORT_FILE"
+echo "$ bun src/cli.ts verify-presentation --pres case-studies/transhrimpment/signed/fraud-response-signed.json --resolver case-studies/transhrimpment/resolver.json" >> "$REPORT_FILE"
 echo '```' >> "$REPORT_FILE"
 echo "" >> "$REPORT_FILE"
 echo '```' >> "$REPORT_FILE"
-bun src/cli.ts verify-presentation --pres case-studies/transhrimpment/signed/fraud-presentation-1-signed.json --resolver case-studies/transhrimpment/resolver.json 2>&1 >> "$REPORT_FILE" || echo "❌ FRAUD DETECTED - Presentation verification failed!" >> "$REPORT_FILE"
+bun src/cli.ts verify-presentation --pres case-studies/transhrimpment/signed/fraud-response-signed.json --resolver case-studies/transhrimpment/resolver.json 2>&1 >> "$REPORT_FILE" || echo "❌ FRAUD DETECTED - CNF claim requires different key than presentation signer!" >> "$REPORT_FILE"
 echo '```' >> "$REPORT_FILE"
 echo "" >> "$REPORT_FILE"
-echo "**Result: FRAUD DETECTED** - Shady Carrier cannot present Chompchomp's credentials!" >> "$REPORT_FILE"
+echo "**Result: FRAUD DETECTED** - CNF claim validation prevented credential theft!" >> "$REPORT_FILE"
 echo "</details>" >> "$REPORT_FILE"
 
 # Add presentation results to report

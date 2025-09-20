@@ -143,7 +143,18 @@ async function signCredential(keyFile: string, credentialFile: string, outputFil
       }
     }
 
-    const privateKey = keyData.privateKey || keyData; // Support both formats
+    // CREDENTIAL ISSUANCE: Use ASSERTION key for signing credentials
+    let privateKey;
+    if (keyData.privateKey) {
+      privateKey = keyData.privateKey;
+    } else if (keyData.assertion && Array.isArray(keyData.assertion) && keyData.assertion.length > 0) {
+      privateKey = keyData.assertion[0]; // ASSERTION key for credential issuance
+      console.log(`🔐 Using assertion key for credential issuance`);
+    } else if (keyData.authentication && Array.isArray(keyData.authentication) && keyData.authentication.length > 0) {
+      privateKey = keyData.authentication[0]; // Fall back to auth key if no assertion key
+    } else {
+      privateKey = keyData; // Fall back to direct key format
+    }
     const signer = await credential.signer(privateKey);
     const signedCredential = await signer.sign(unsignedCredential);
 
@@ -162,7 +173,18 @@ async function signPresentation(keyFile: string, presentationFile: string, outpu
     const keyData = await Bun.file(keyFile).json();
     const unsignedPresentation = await Bun.file(presentationFile).json();
 
-    const privateKey = keyData.privateKey || keyData; // Support both formats
+    // PRESENTATION SIGNING: Use AUTHENTICATION key for signing presentations
+    let privateKey;
+    if (keyData.privateKey) {
+      privateKey = keyData.privateKey;
+    } else if (keyData.authentication && Array.isArray(keyData.authentication) && keyData.authentication.length > 0) {
+      privateKey = keyData.authentication[0]; // AUTHENTICATION key for presentation signing
+      console.log(`🔐 Using authentication key for presentation signing`);
+    } else if (keyData.assertion && Array.isArray(keyData.assertion) && keyData.assertion.length > 0) {
+      privateKey = keyData.assertion[0]; // Fall back to assertion key if no auth key
+    } else {
+      privateKey = keyData; // Fall back to direct key format
+    }
     const signer = await presentation.signer(privateKey);
     const signedPresentation = await signer.sign(unsignedPresentation);
 
@@ -181,7 +203,17 @@ async function verifyCredential(credentialFile: string, keyFile: string) {
     const signedCredential = await Bun.file(credentialFile).text();
     const keyData = await Bun.file(keyFile).json();
 
-    const publicKey = keyData.publicKey || keyData; // Support both formats
+    // Support multiple key formats
+    let publicKey;
+    if (keyData.publicKey) {
+      publicKey = keyData.publicKey;
+    } else if (keyData.assertion && Array.isArray(keyData.assertion) && keyData.assertion.length > 0) {
+      publicKey = await key.exportPublicKey(keyData.assertion[0]); // Export public from first assertion key
+    } else if (keyData.authentication && Array.isArray(keyData.authentication) && keyData.authentication.length > 0) {
+      publicKey = await key.exportPublicKey(keyData.authentication[0]); // Export public from first auth key
+    } else {
+      publicKey = keyData; // Fall back to direct key format
+    }
     const verifier = await credential.verifier(publicKey);
     const result = await verifier.verify(signedCredential);
 
@@ -245,7 +277,17 @@ async function extractPublicKey(keyFile: string, outputFile: string) {
 
   try {
     const keyData = await Bun.file(keyFile).json();
-    const privateKey = keyData.privateKey || keyData; // Support both formats
+    // Support multiple key formats
+    let privateKey;
+    if (keyData.privateKey) {
+      privateKey = keyData.privateKey;
+    } else if (keyData.assertion && Array.isArray(keyData.assertion) && keyData.assertion.length > 0) {
+      privateKey = keyData.assertion[0]; // Use first assertion key for signing
+    } else if (keyData.authentication && Array.isArray(keyData.authentication) && keyData.authentication.length > 0) {
+      privateKey = keyData.authentication[0]; // Use first auth key for signing
+    } else {
+      privateKey = keyData; // Fall back to direct key format
+    }
     const publicKey = await key.exportPublicKey(privateKey);
 
     await Bun.write(outputFile, JSON.stringify(publicKey, null, 2));
