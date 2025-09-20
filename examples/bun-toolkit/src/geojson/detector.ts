@@ -111,27 +111,6 @@ function extractCoordinates(geometry: any): number[][] {
 }
 
 /**
- * Calculates bounding box from coordinates
- */
-function calculateBoundingBox(coordinates: number[][]): [number, number, number, number] {
-  if (coordinates.length === 0) return [0, 0, 0, 0];
-
-  let minLon = coordinates[0][0];
-  let minLat = coordinates[0][1];
-  let maxLon = coordinates[0][0];
-  let maxLat = coordinates[0][1];
-
-  coordinates.forEach(([lon, lat]) => {
-    minLon = Math.min(minLon, lon);
-    minLat = Math.min(minLat, lat);
-    maxLon = Math.max(maxLon, lon);
-    maxLat = Math.max(maxLat, lat);
-  });
-
-  return [minLon, minLat, maxLon, maxLat];
-}
-
-/**
  * Analyzes GeoJSON structure and content
  */
 export function analyzeGeoJSON(obj: any): GeoJSONAnalysis {
@@ -183,10 +162,6 @@ export function analyzeGeoJSON(obj: any): GeoJSONAnalysis {
 
   analysis.geometryTypes = Array.from(geometryTypes);
   analysis.properties = properties;
-
-  if (allCoordinates.length > 0) {
-    analysis.boundingBox = calculateBoundingBox(allCoordinates);
-  }
 
   // Generate human-readable description
   analysis.description = generateDescription(analysis);
@@ -276,15 +251,3 @@ export function detectControllerGeoJSON(controllerDoc: any): GeoJSONAnalysis | n
   return null;
 }
 
-/**
- * Formats coordinates for display
- */
-export function formatCoordinates(coordinates: number[]): string {
-  if (coordinates.length >= 2) {
-    const [lon, lat] = coordinates;
-    const latStr = lat >= 0 ? `${lat.toFixed(4)}°N` : `${Math.abs(lat).toFixed(4)}°S`;
-    const lonStr = lon >= 0 ? `${lon.toFixed(4)}°E` : `${Math.abs(lon).toFixed(4)}°W`;
-    return `${latStr}, ${lonStr}`;
-  }
-  return coordinates.join(', ');
-}

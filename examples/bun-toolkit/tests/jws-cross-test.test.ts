@@ -10,8 +10,6 @@ import { base64url } from "../src/encoding";
  */
 
 test("JWS Cross-Compatibility: Our signer, jose verifier", async () => {
-  console.log("🔍 Testing: Our implementation signs, jose verifies");
-
   // Generate a key pair using our implementation
   const privateKey = await key.generatePrivateKey("ES256");
   const publicKey = await key.exportPublicKey(privateKey);
@@ -31,16 +29,12 @@ test("JWS Cross-Compatibility: Our signer, jose verifier", async () => {
   const ourSigner = await credential.signer(privateKey);
   const ourJWS = await ourSigner.sign(testCredential);
 
-  console.log("✅ Our implementation generated JWS");
-
   // Parse the JWS to extract components
   const [protectedHeader, payload, signature] = ourJWS.split('.');
 
   // Decode header to verify structure
   const headerBytes = base64url.decode(protectedHeader);
   const header = JSON.parse(new TextDecoder().decode(headerBytes));
-
-  console.log("📋 JWS Header:", header);
 
   // Convert our JWK to jose-compatible format
   const josePublicKey = await jose.importJWK({
@@ -52,28 +46,17 @@ test("JWS Cross-Compatibility: Our signer, jose verifier", async () => {
   });
 
   // Verify using jose library
-  try {
-    const joseResult = await jose.jwtVerify(ourJWS, josePublicKey, {
-      algorithms: [publicKey.alg]
-    });
+  const joseResult = await jose.jwtVerify(ourJWS, josePublicKey, {
+    algorithms: [publicKey.alg]
+  });
 
-    console.log("✅ Jose successfully verified our JWS");
-    console.log("📋 Jose decoded payload:", joseResult.payload);
-
-    // The payloads should match (accounting for JWT time claims)
-    expect(joseResult.payload.credentialSubject).toEqual(testCredential.credentialSubject);
-    expect(joseResult.payload.issuer).toBe(testCredential.issuer);
-    expect(joseResult.payload.type).toEqual(testCredential.type);
-
-  } catch (error) {
-    console.error("❌ Jose failed to verify our JWS:", error);
-    throw error;
-  }
+  // The payloads should match (accounting for JWT time claims)
+  expect(joseResult.payload.credentialSubject).toEqual(testCredential.credentialSubject);
+  expect(joseResult.payload.issuer).toBe(testCredential.issuer);
+  expect(joseResult.payload.type).toEqual(testCredential.type);
 });
 
 test("JWS Cross-Compatibility: Jose signer, our verifier", async () => {
-  console.log("🔍 Testing: Jose signs, our implementation verifies");
-
   // Generate a key pair using jose with extractable flag
   const joseKeyPair = await jose.generateKeyPair("ES256", { extractable: true });
 
@@ -103,8 +86,6 @@ test("JWS Cross-Compatibility: Jose signer, our verifier", async () => {
     .setIssuedAt()
     .sign(joseKeyPair.privateKey);
 
-  console.log("✅ Jose generated JWS");
-
   // Convert jose JWK to our format for verification
   const ourPublicKey = {
     kid,
@@ -117,28 +98,17 @@ test("JWS Cross-Compatibility: Jose signer, our verifier", async () => {
   };
 
   // Verify using our implementation
-  try {
-    const ourVerifier = await credential.verifier(ourPublicKey);
-    const ourResult = await ourVerifier.verify(joseJWS);
+  const ourVerifier = await credential.verifier(ourPublicKey);
+  const ourResult = await ourVerifier.verify(joseJWS);
 
-    console.log("✅ Our implementation successfully verified jose JWS");
-    console.log("📋 Our decoded payload:", ourResult);
-
-    // The payloads should match
-    expect(ourResult.credentialSubject).toEqual(testCredential.credentialSubject);
-    expect(ourResult.issuer).toBe(testCredential.issuer);
-    expect(ourResult.type).toEqual(testCredential.type);
-    expect(typeof ourResult.iat).toBe("number"); // JWT issued at time should be present
-
-  } catch (error) {
-    console.error("❌ Our implementation failed to verify jose JWS:", error);
-    throw error;
-  }
+  // The payloads should match
+  expect(ourResult.credentialSubject).toEqual(testCredential.credentialSubject);
+  expect(ourResult.issuer).toBe(testCredential.issuer);
+  expect(ourResult.type).toEqual(testCredential.type);
+  expect(typeof ourResult.iat).toBe("number"); // JWT issued at time should be present
 });
 
 test("JWS Cross-Compatibility: Round-trip compatibility", async () => {
-  console.log("🔍 Testing: Round-trip compatibility (our sign -> their verify -> their sign -> our verify)");
-
   // Use the same key for both implementations
   const ourPrivateKey = await key.generatePrivateKey("ES256");
   const ourPublicKey = await key.exportPublicKey(ourPrivateKey);
@@ -179,8 +149,6 @@ test("JWS Cross-Compatibility: Round-trip compatibility", async () => {
     algorithms: ["ES256"]
   });
 
-  console.log("✅ Step 1: Our sign -> Jose verify successful");
-
   // Step 2: Jose sign -> Our verify
   const joseJWS = await new jose.SignJWT(testCredential)
     .setProtectedHeader({ alg: "ES256", typ: "vc+jwt", kid: ourPublicKey.kid })
@@ -190,16 +158,12 @@ test("JWS Cross-Compatibility: Round-trip compatibility", async () => {
   const ourVerifier = await credential.verifier(ourPublicKey);
   const ourResult2 = await ourVerifier.verify(joseJWS);
 
-  console.log("✅ Step 2: Jose sign -> Our verify successful");
-
   // Both should have decoded the same core credential data
   expect(joseResult1.payload.credentialSubject).toEqual(testCredential.credentialSubject);
   expect(ourResult2.credentialSubject).toEqual(testCredential.credentialSubject);
 });
 
 test("JWS Signature Format Compatibility", async () => {
-  console.log("🔍 Testing: Raw signature format compatibility");
-
   // Generate key pair
   const privateKey = await key.generatePrivateKey("ES256");
   const publicKey = await key.exportPublicKey(privateKey);
@@ -237,7 +201,6 @@ test("JWS Signature Format Compatibility", async () => {
     testData
   );
 
-  console.log("✅ Our signature verified by Web Crypto API:", isValidInJose);
   expect(isValidInJose).toBe(true);
 
   // Generate an extractable version for raw signing
@@ -266,13 +229,10 @@ test("JWS Signature Format Compatibility", async () => {
   const ourVerifier = await key.verifier(extractablePublicKey);
   const isValidInOurs = await ourVerifier.verify(testData, new Uint8Array(cryptoSignature));
 
-  console.log("✅ Web Crypto API signature verified by our implementation:", isValidInOurs);
   expect(isValidInOurs).toBe(true);
 });
 
 test("JWT Time Claims Compatibility", async () => {
-  console.log("🔍 Testing: JWT time claims handling compatibility");
-
   const privateKey = await key.generatePrivateKey("ES256");
   const publicKey = await key.exportPublicKey(privateKey);
 
@@ -305,13 +265,6 @@ test("JWT Time Claims Compatibility", async () => {
 
   const joseResult = await jose.jwtVerify(ourJWS, josePublicKey, {
     algorithms: ["ES256"]
-  });
-
-  console.log("✅ Jose verified credential with time claims");
-  console.log("📋 JWT claims:", {
-    iat: joseResult.payload.iat,
-    nbf: joseResult.payload.nbf,
-    exp: joseResult.payload.exp
   });
 
   // Verify time claims were converted correctly

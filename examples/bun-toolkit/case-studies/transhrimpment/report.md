@@ -8,170 +8,118 @@ This report documents a digital forensic investigation of the "Transhrimpment" s
 
 ---
 
-## Step 1: Controller Document Generation and Validation
+## Step 1: Identify Entities
 
-Converting private entity configurations to public controller documents and validating their security:
+Identifying supply chain entities through their geographic locations and validating their controller documents:
 
-### Supply Chain Entity Controllers
 
+### ✅ Chompchomp Ltd
+
+**Controller Document Status:** ✅ Valid
 
 <details>
-<summary>✅ Generate Chompchomp Controller</summary>
+<summary>📄 View Controller Document</summary>
 
-```bash
-$ bun src/cli.ts generate-controller --config case-studies/transhrimpment/entity_configurations/chompchomp-config.json --out case-studies/transhrimpment/controllers/chompchomp-controller.json
+```json
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://chompchomp.example/entity/bvi-001",
+  "verificationMethod": [
+    {
+      "id": "https://chompchomp.example/entity/bvi-001#nx62J6beWOO6mIavpWEQCg_GoOi8zfAECZ8p-zHxEvI",
+      "type": "JsonWebKey",
+      "controller": "https://chompchomp.example/entity/bvi-001",
+      "publicKeyJwk": {
+        "kid": "nx62J6beWOO6mIavpWEQCg_GoOi8zfAECZ8p-zHxEvI",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "vb8xKTNFwYM4t1fjAfTPQBsbWPjkfUH60Q0mo9z4LQE",
+        "y": "FBgWNv3E6G-RaCyXdSkl__I2Lk8x2hwqQH50LJ3ODY4",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://chompchomp.example/entity/bvi-001#5kl6Gvq9Jvvvy5UJzVVeIWKf6UWwmOylEUTn1VAX6wE",
+      "type": "JsonWebKey",
+      "controller": "https://chompchomp.example/entity/bvi-001",
+      "publicKeyJwk": {
+        "kid": "5kl6Gvq9Jvvvy5UJzVVeIWKf6UWwmOylEUTn1VAX6wE",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "6hRvSeHlwjSC-0LKnVoo3jmiK8C4tdLCA-rD0qymYKQ",
+        "y": "bBP5TVaRr_pQArvHw5T8lT-So6wLaCGZ0vxHIaf0TzY",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://chompchomp.example/entity/bvi-001#nx62J6beWOO6mIavpWEQCg_GoOi8zfAECZ8p-zHxEvI"
+  ],
+  "authentication": [
+    "https://chompchomp.example/entity/bvi-001#5kl6Gvq9Jvvvy5UJzVVeIWKf6UWwmOylEUTn1VAX6wE"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432101",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34321",
+    "urn:ietf:spice:glue:pen:12345"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
+      },
+      "properties": {
+        "name": "Chompchomp Ltd Main Office",
+        "type": "Seafood Importer",
+        "role": "headquarters",
+        "address": {
+          "streetAddress": "Main Street",
+          "addressLocality": "Road Town",
+          "addressRegion": "Tortola",
+          "addressCountry": "VG"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.615,
+          18.418
+        ]
+      },
+      "properties": {
+        "name": "Chompchomp Ltd Warehouse",
+        "type": "Storage Facility",
+        "role": "cold-storage",
+        "capacity": "10000kg"
+      }
+    }
+  ]
+}
 ```
 
-```
-Generating controller from config case-studies/transhrimpment/entity_configurations/chompchomp-config.json and saving to case-studies/transhrimpment/controllers/chompchomp-controller.json...
-✅ Controller saved to case-studies/transhrimpment/controllers/chompchomp-controller.json
-```
-
-Exit code: 0
 </details>
 
 <details>
-<summary>✅ Generate Camarón Corriente Controller</summary>
+<summary>📍 View Geographic Analysis</summary>
 
-```bash
-$ bun src/cli.ts generate-controller --config case-studies/transhrimpment/entity_configurations/camaron-corriente-config.json --out case-studies/transhrimpment/controllers/camaron-corriente-controller.json
-```
-
-```
-Generating controller from config case-studies/transhrimpment/entity_configurations/camaron-corriente-config.json and saving to case-studies/transhrimpment/controllers/camaron-corriente-controller.json...
-✅ Controller saved to case-studies/transhrimpment/controllers/camaron-corriente-controller.json
-```
-
-Exit code: 0
-</details>
-
-<details>
-<summary>✅ Generate Legit Shrimp Controller</summary>
-
-```bash
-$ bun src/cli.ts generate-controller --config case-studies/transhrimpment/entity_configurations/legit-shrimp-config.json --out case-studies/transhrimpment/controllers/legit-shrimp-controller.json
-```
-
-```
-Generating controller from config case-studies/transhrimpment/entity_configurations/legit-shrimp-config.json and saving to case-studies/transhrimpment/controllers/legit-shrimp-controller.json...
-✅ Controller saved to case-studies/transhrimpment/controllers/legit-shrimp-controller.json
-```
-
-Exit code: 0
-</details>
-
-<details>
-<summary>✅ Generate Shady Carrier Controller</summary>
-
-```bash
-$ bun src/cli.ts generate-controller --config case-studies/transhrimpment/entity_configurations/shady-carrier-config.json --out case-studies/transhrimpment/controllers/shady-carrier-controller.json
-```
-
-```
-Generating controller from config case-studies/transhrimpment/entity_configurations/shady-carrier-config.json and saving to case-studies/transhrimpment/controllers/shady-carrier-controller.json...
-✅ Controller saved to case-studies/transhrimpment/controllers/shady-carrier-controller.json
-```
-
-Exit code: 0
-</details>
-
-<details>
-<summary>✅ Generate Shady Distributor Controller</summary>
-
-```bash
-$ bun src/cli.ts generate-controller --config case-studies/transhrimpment/entity_configurations/shady-distributor-config.json --out case-studies/transhrimpment/controllers/shady-distributor-controller.json
-```
-
-```
-Generating controller from config case-studies/transhrimpment/entity_configurations/shady-distributor-config.json and saving to case-studies/transhrimpment/controllers/shady-distributor-controller.json...
-✅ Controller saved to case-studies/transhrimpment/controllers/shady-distributor-controller.json
-```
-
-Exit code: 0
-</details>
-
-<details>
-<summary>✅ Generate Cargo Line Controller</summary>
-
-```bash
-$ bun src/cli.ts generate-controller --config case-studies/transhrimpment/entity_configurations/cargo-line-config.json --out case-studies/transhrimpment/controllers/cargo-line-controller.json
-```
-
-```
-Generating controller from config case-studies/transhrimpment/entity_configurations/cargo-line-config.json and saving to case-studies/transhrimpment/controllers/cargo-line-controller.json...
-✅ Controller saved to case-studies/transhrimpment/controllers/cargo-line-controller.json
-```
-
-Exit code: 0
-</details>
-
-<details>
-<summary>✅ Generate Anonymous Distributor Controller</summary>
-
-```bash
-$ bun src/cli.ts generate-controller --config case-studies/transhrimpment/entity_configurations/anonymous-distributor-config.json --out case-studies/transhrimpment/controllers/anonymous-distributor-controller.json
-```
-
-```
-Generating controller from config case-studies/transhrimpment/entity_configurations/anonymous-distributor-config.json and saving to case-studies/transhrimpment/controllers/anonymous-distributor-controller.json...
-✅ Controller saved to case-studies/transhrimpment/controllers/anonymous-distributor-controller.json
-```
-
-Exit code: 0
-</details>
-
-### Controller Document Validation
-
-Validating all generated controller documents for security compliance and structural integrity:
-
-
-<details>
-<summary>✅ Validate Chompchomp Controller</summary>
-
-```bash
-$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/chompchomp-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml
-```
-
-```
-Validating controller document case-studies/transhrimpment/controllers/chompchomp-controller.json...
-✅ Security check passed - no private keys detected
-✅ Controller document structure is valid
-
-✅ Controller document validation completed successfully
-
-🗺️ Geographic data detected in controller:
-📍 Map Preview: https://www.openstreetmap.org/#map=15/18.4173/-64.6179
-
-<details>
-<summary>📍 Entity Geographic Information - Feature collection with 2 features containing Point</summary>
-
-### 📊 Geographic Analysis
-
-- **Type**: FeatureCollection
-- **Features**: 2
-- **Geometry Types**: Point
-- **Bounding Box**: 18.4167°N, 64.6208°W to 18.4180°N, 64.6150°W
-
-### 🏷️ Feature Properties
-
-**Feature 1:**
-  - **name**: Chompchomp Ltd Main Office
-  - **type**: Seafood Importer
-  - **role**: headquarters
-  - **address**: {"streetAddress":"Main Street","addressLocality":"Road Town","addressRegion":"Tortola","addressCountry":"VG"}
-
-**Feature 2:**
-  - **name**: Chompchomp Ltd Warehouse
-  - **type**: Storage Facility
-  - **role**: cold-storage
-  - **capacity**: 10000kg
-
-### 📍 Coordinates
-
-1. 18.4167°N, 64.6208°W
-2. 18.4180°N, 64.6150°W
-
-### 📄 Raw GeoJSON
 
 ```geojson
 {
@@ -268,52 +216,101 @@ Validating controller document case-studies/transhrimpment/controllers/chompchom
 }
 ```
 
+
 </details>
+
+
+### ✅ Camarón Corriente S.A.
+
+**Controller Document Status:** ✅ Valid
+
+<details>
+<summary>📄 View Controller Document</summary>
+
+```json
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+  "verificationMethod": [
+    {
+      "id": "https://camaron-corriente.example/entity/ve-pbc-001#wCgZYzU2U073ubVOEp7wcNHxwEIGuiEoY42b2tuKwfY",
+      "type": "JsonWebKey",
+      "controller": "https://camaron-corriente.example/entity/ve-pbc-001",
+      "publicKeyJwk": {
+        "kid": "wCgZYzU2U073ubVOEp7wcNHxwEIGuiEoY42b2tuKwfY",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "od157huUldxEgWY06BgwPXoRP-3mBvVGrg2aM09-eY0",
+        "y": "9-NhMiNgOh2-lgsOGvzUKZXxAj-9Xw_QtpvvOt2LhSk",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://camaron-corriente.example/entity/ve-pbc-001#G5OJWJPRMVV4EQBPnv5Y2zHhV8lb13hzccIeLNFR9nU",
+      "type": "JsonWebKey",
+      "controller": "https://camaron-corriente.example/entity/ve-pbc-001",
+      "publicKeyJwk": {
+        "kid": "G5OJWJPRMVV4EQBPnv5Y2zHhV8lb13hzccIeLNFR9nU",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "z5Hry9ABSN60szLVg9ScUJb3W-Q6sdoGOUN5sl9lXI8",
+        "y": "lChjGkAl5o1Iu7WI2YcbyC71qZtluj6ecILxqQeKUVo",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://camaron-corriente.example/entity/ve-pbc-001#wCgZYzU2U073ubVOEp7wcNHxwEIGuiEoY42b2tuKwfY"
+  ],
+  "authentication": [
+    "https://camaron-corriente.example/entity/ve-pbc-001#G5OJWJPRMVV4EQBPnv5Y2zHhV8lb13hzccIeLNFR9nU"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432102",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34322",
+    "urn:ietf:spice:glue:pen:12346"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -68.0125,
+          10.4647
+        ]
+      },
+      "properties": {
+        "name": "Camarón Corriente S.A. Port Facility",
+        "type": "Seafood Distributor",
+        "role": "export-facility",
+        "address": {
+          "streetAddress": "Puerto Cabello Port",
+          "addressLocality": "Puerto Cabello",
+          "addressRegion": "Carabobo",
+          "addressCountry": "VE"
+        }
+      }
+    }
+  ]
+}
 ```
 
-Exit code: 0
 </details>
 
 <details>
-<summary>✅ Validate Camarón Corriente Controller</summary>
+<summary>📍 View Geographic Analysis</summary>
 
-```bash
-$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/camaron-corriente-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml
-```
-
-```
-Validating controller document case-studies/transhrimpment/controllers/camaron-corriente-controller.json...
-✅ Security check passed - no private keys detected
-✅ Controller document structure is valid
-
-✅ Controller document validation completed successfully
-
-🗺️ Geographic data detected in controller:
-📍 Map Preview: https://www.openstreetmap.org/#map=15/10.4647/-68.0125
-
-<details>
-<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
-
-### 📊 Geographic Analysis
-
-- **Type**: FeatureCollection
-- **Features**: 1
-- **Geometry Types**: Point
-- **Bounding Box**: 10.4647°N, 68.0125°W to 10.4647°N, 68.0125°W
-
-### 🏷️ Feature Properties
-
-**Feature 1:**
-  - **name**: Camarón Corriente S.A. Port Facility
-  - **type**: Seafood Distributor
-  - **role**: export-facility
-  - **address**: {"streetAddress":"Puerto Cabello Port","addressLocality":"Puerto Cabello","addressRegion":"Carabobo","addressCountry":"VE"}
-
-### 📍 Coordinates
-
-1. 10.4647°N, 68.0125°W
-
-### 📄 Raw GeoJSON
 
 ```geojson
 {
@@ -394,53 +391,102 @@ Validating controller document case-studies/transhrimpment/controllers/camaron-c
 }
 ```
 
+
 </details>
+
+
+### ✅ Legit Shrimp Ltd
+
+**Controller Document Status:** ✅ Valid
+
+<details>
+<summary>📄 View Controller Document</summary>
+
+```json
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://legit-shrimp.example/entity/tt-pos-001",
+  "verificationMethod": [
+    {
+      "id": "https://legit-shrimp.example/entity/tt-pos-001#LrQ5E8KeOiQ62VVIc_iDcCU1xMwcIOzk1DciPI8DdpU",
+      "type": "JsonWebKey",
+      "controller": "https://legit-shrimp.example/entity/tt-pos-001",
+      "publicKeyJwk": {
+        "kid": "LrQ5E8KeOiQ62VVIc_iDcCU1xMwcIOzk1DciPI8DdpU",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "xUZYceKR-OI4MtundtRaGWgMI1jJomJHbfuLgA4LOTQ",
+        "y": "N8Fy9f3kMZbobXnzb-c6AOKrj543m1bsyaxksFI-tvc",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://legit-shrimp.example/entity/tt-pos-001#nr94L4yhi4eGBtPD8QUeYXgi78sbEihzUJ4rvqr8Tls",
+      "type": "JsonWebKey",
+      "controller": "https://legit-shrimp.example/entity/tt-pos-001",
+      "publicKeyJwk": {
+        "kid": "nr94L4yhi4eGBtPD8QUeYXgi78sbEihzUJ4rvqr8Tls",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "7Dufa0VGHTZ0nw2q7peGgT8OfOsz8E8PCiwJ6oZRQgM",
+        "y": "3Z6wxNXfxASzeARkpJIeMZLXyt1ThccwG1t0ob8BvgY",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://legit-shrimp.example/entity/tt-pos-001#LrQ5E8KeOiQ62VVIc_iDcCU1xMwcIOzk1DciPI8DdpU"
+  ],
+  "authentication": [
+    "https://legit-shrimp.example/entity/tt-pos-001#nr94L4yhi4eGBtPD8QUeYXgi78sbEihzUJ4rvqr8Tls"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432103",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34323",
+    "urn:ietf:spice:glue:pen:12347"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -61.5167,
+          10.6596
+        ]
+      },
+      "properties": {
+        "name": "Legit Shrimp Ltd Facility",
+        "type": "Seafood Supplier",
+        "role": "supplier",
+        "address": {
+          "streetAddress": "Port of Spain Harbor",
+          "addressLocality": "Port of Spain",
+          "addressRegion": "Port of Spain",
+          "addressCountry": "TT"
+        },
+        "legitimacy": "legitimate-identity-stolen"
+      }
+    }
+  ]
+}
 ```
 
-Exit code: 0
 </details>
 
 <details>
-<summary>✅ Validate Legit Shrimp Controller</summary>
+<summary>📍 View Geographic Analysis</summary>
 
-```bash
-$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/legit-shrimp-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml
-```
-
-```
-Validating controller document case-studies/transhrimpment/controllers/legit-shrimp-controller.json...
-✅ Security check passed - no private keys detected
-✅ Controller document structure is valid
-
-✅ Controller document validation completed successfully
-
-🗺️ Geographic data detected in controller:
-📍 Map Preview: https://www.openstreetmap.org/#map=15/10.6596/-61.5167
-
-<details>
-<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
-
-### 📊 Geographic Analysis
-
-- **Type**: FeatureCollection
-- **Features**: 1
-- **Geometry Types**: Point
-- **Bounding Box**: 10.6596°N, 61.5167°W to 10.6596°N, 61.5167°W
-
-### 🏷️ Feature Properties
-
-**Feature 1:**
-  - **name**: Legit Shrimp Ltd Facility
-  - **type**: Seafood Supplier
-  - **role**: supplier
-  - **address**: {"streetAddress":"Port of Spain Harbor","addressLocality":"Port of Spain","addressRegion":"Port of Spain","addressCountry":"TT"}
-  - **legitimacy**: legitimate-identity-stolen
-
-### 📍 Coordinates
-
-1. 10.6596°N, 61.5167°W
-
-### 📄 Raw GeoJSON
 
 ```geojson
 {
@@ -522,53 +568,97 @@ Validating controller document case-studies/transhrimpment/controllers/legit-shr
 }
 ```
 
+
 </details>
+
+
+### ✅ Shady Carrier Ltd
+
+**Controller Document Status:** ✅ Valid
+
+<details>
+<summary>📄 View Controller Document</summary>
+
+```json
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://shady-carrier.example/entity/aw-oru-001",
+  "verificationMethod": [
+    {
+      "id": "https://shady-carrier.example/entity/aw-oru-001#n7GWD9LbqAZQy1Wt5XdYiy81GofxhJgFnIu8iduEMmE",
+      "type": "JsonWebKey",
+      "controller": "https://shady-carrier.example/entity/aw-oru-001",
+      "publicKeyJwk": {
+        "kid": "n7GWD9LbqAZQy1Wt5XdYiy81GofxhJgFnIu8iduEMmE",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "O8_j4yCoKKJMNapSfWEN37QJkeT3DYAdhgyHtnyF-Dg",
+        "y": "cnlKpR7AMTtTjPTmMRWfy1xTZ8B_gu4BS7oVU8DQL5E",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://shady-carrier.example/entity/aw-oru-001#wZ4jnnC68M3NScMKDJfRs9tmYZYm7SYkrnEDjELvd8U",
+      "type": "JsonWebKey",
+      "controller": "https://shady-carrier.example/entity/aw-oru-001",
+      "publicKeyJwk": {
+        "kid": "wZ4jnnC68M3NScMKDJfRs9tmYZYm7SYkrnEDjELvd8U",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "oabo-YwYLrj4PM2RofODEtaFBbX5F1xfeoC5lSm_d-o",
+        "y": "yV7oJnA7Jg7eMTg1mGMq0Goqo9o0MdjQpeF9clic1jM",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://shady-carrier.example/entity/aw-oru-001#n7GWD9LbqAZQy1Wt5XdYiy81GofxhJgFnIu8iduEMmE"
+  ],
+  "authentication": [
+    "https://shady-carrier.example/entity/aw-oru-001#wZ4jnnC68M3NScMKDJfRs9tmYZYm7SYkrnEDjELvd8U"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -70.027,
+          12.5186
+        ]
+      },
+      "properties": {
+        "name": "Shady Carrier Ltd Operations",
+        "type": "Carrier",
+        "role": "substitute-carrier",
+        "address": {
+          "streetAddress": "Harbor District",
+          "addressLocality": "Oranjestad",
+          "addressRegion": "Aruba",
+          "addressCountry": "AW"
+        },
+        "legitimacy": "fraudulent"
+      }
+    }
+  ]
+}
 ```
 
-Exit code: 0
 </details>
 
 <details>
-<summary>✅ Validate Shady Carrier Controller</summary>
+<summary>📍 View Geographic Analysis</summary>
 
-```bash
-$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/shady-carrier-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml
-```
-
-```
-Validating controller document case-studies/transhrimpment/controllers/shady-carrier-controller.json...
-✅ Security check passed - no private keys detected
-✅ Controller document structure is valid
-
-✅ Controller document validation completed successfully
-
-🗺️ Geographic data detected in controller:
-📍 Map Preview: https://www.openstreetmap.org/#map=15/12.5186/-70.0270
-
-<details>
-<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
-
-### 📊 Geographic Analysis
-
-- **Type**: FeatureCollection
-- **Features**: 1
-- **Geometry Types**: Point
-- **Bounding Box**: 12.5186°N, 70.0270°W to 12.5186°N, 70.0270°W
-
-### 🏷️ Feature Properties
-
-**Feature 1:**
-  - **name**: Shady Carrier Ltd Operations
-  - **type**: Carrier
-  - **role**: substitute-carrier
-  - **address**: {"streetAddress":"Harbor District","addressLocality":"Oranjestad","addressRegion":"Aruba","addressCountry":"AW"}
-  - **legitimacy**: fraudulent
-
-### 📍 Coordinates
-
-1. 12.5186°N, 70.0270°W
-
-### 📄 Raw GeoJSON
 
 ```geojson
 {
@@ -645,53 +735,97 @@ Validating controller document case-studies/transhrimpment/controllers/shady-car
 }
 ```
 
+
 </details>
+
+
+### ✅ Shady Distributor Ltd
+
+**Controller Document Status:** ✅ Valid
+
+<details>
+<summary>📄 View Controller Document</summary>
+
+```json
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://shady-distributor.example/entity/bvi-002",
+  "verificationMethod": [
+    {
+      "id": "https://shady-distributor.example/entity/bvi-002#HViV1wlQgzXXbdahjyFDVbU_RxPUVCLQCf51fyGatEc",
+      "type": "JsonWebKey",
+      "controller": "https://shady-distributor.example/entity/bvi-002",
+      "publicKeyJwk": {
+        "kid": "HViV1wlQgzXXbdahjyFDVbU_RxPUVCLQCf51fyGatEc",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "mcpc4991vFrddVHW3wYersLW68Ej_pULgV1pMQDugB4",
+        "y": "xFS824TLI3lEqdpOhO1SM03yCTiwhTI5YkfDcSpjd-s",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://shady-distributor.example/entity/bvi-002#6Clq3Dk2UwwBaMsN2Qw2h1QGL5ARbPuAuKwgDUf8ubo",
+      "type": "JsonWebKey",
+      "controller": "https://shady-distributor.example/entity/bvi-002",
+      "publicKeyJwk": {
+        "kid": "6Clq3Dk2UwwBaMsN2Qw2h1QGL5ARbPuAuKwgDUf8ubo",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "24LjV4gWuQp58pNhUJRR94QH5CoQsIJFIVovJiEYmiI",
+        "y": "x_AtZ0vLLiOZgwAGUTBUndyYnOtsA_cDvKWvyWNFeCk",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://shady-distributor.example/entity/bvi-002#HViV1wlQgzXXbdahjyFDVbU_RxPUVCLQCf51fyGatEc"
+  ],
+  "authentication": [
+    "https://shady-distributor.example/entity/bvi-002#6Clq3Dk2UwwBaMsN2Qw2h1QGL5ARbPuAuKwgDUf8ubo"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
+      },
+      "properties": {
+        "name": "Shady Distributor Ltd Office",
+        "type": "Seafood Distributor",
+        "role": "intermediary",
+        "address": {
+          "streetAddress": "Offshore Building",
+          "addressLocality": "Road Town",
+          "addressRegion": "Tortola",
+          "addressCountry": "VG"
+        },
+        "legitimacy": "fraudulent"
+      }
+    }
+  ]
+}
 ```
 
-Exit code: 0
 </details>
 
 <details>
-<summary>✅ Validate Shady Distributor Controller</summary>
+<summary>📍 View Geographic Analysis</summary>
 
-```bash
-$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/shady-distributor-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml
-```
-
-```
-Validating controller document case-studies/transhrimpment/controllers/shady-distributor-controller.json...
-✅ Security check passed - no private keys detected
-✅ Controller document structure is valid
-
-✅ Controller document validation completed successfully
-
-🗺️ Geographic data detected in controller:
-📍 Map Preview: https://www.openstreetmap.org/#map=15/18.4167/-64.6208
-
-<details>
-<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
-
-### 📊 Geographic Analysis
-
-- **Type**: FeatureCollection
-- **Features**: 1
-- **Geometry Types**: Point
-- **Bounding Box**: 18.4167°N, 64.6208°W to 18.4167°N, 64.6208°W
-
-### 🏷️ Feature Properties
-
-**Feature 1:**
-  - **name**: Shady Distributor Ltd Office
-  - **type**: Seafood Distributor
-  - **role**: intermediary
-  - **address**: {"streetAddress":"Offshore Building","addressLocality":"Road Town","addressRegion":"Tortola","addressCountry":"VG"}
-  - **legitimacy**: fraudulent
-
-### 📍 Coordinates
-
-1. 18.4167°N, 64.6208°W
-
-### 📄 Raw GeoJSON
 
 ```geojson
 {
@@ -768,53 +902,102 @@ Validating controller document case-studies/transhrimpment/controllers/shady-dis
 }
 ```
 
+
 </details>
+
+
+### ✅ Cargo Line Ltd
+
+**Controller Document Status:** ✅ Valid
+
+<details>
+<summary>📄 View Controller Document</summary>
+
+```json
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://cargo-line.example/entity/pr-sju-001",
+  "verificationMethod": [
+    {
+      "id": "https://cargo-line.example/entity/pr-sju-001#CYpN-W1EXc6cLPov7axBHMfDv3a_PZoj0LmDjFuP20M",
+      "type": "JsonWebKey",
+      "controller": "https://cargo-line.example/entity/pr-sju-001",
+      "publicKeyJwk": {
+        "kid": "CYpN-W1EXc6cLPov7axBHMfDv3a_PZoj0LmDjFuP20M",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "CyAeJJM3QVXqkVYdLn1E41p8WlJY9KVXcSe4w9bu810",
+        "y": "-ozUpC6b5F8kv_AFylZz2iAjwxzJjD463y73Ghd3OHU",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://cargo-line.example/entity/pr-sju-001#40DqwP_7Q5vg1FIWbH-OfbSvP6S6gmIxhXlhFRusLSw",
+      "type": "JsonWebKey",
+      "controller": "https://cargo-line.example/entity/pr-sju-001",
+      "publicKeyJwk": {
+        "kid": "40DqwP_7Q5vg1FIWbH-OfbSvP6S6gmIxhXlhFRusLSw",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "RlhbAC1nBWvI1-OUyedXQgIqbmZH1B-Vc6M0y34S1K0",
+        "y": "5NDUXAzfPJSFqDSmWzajXkNKuTMsnY6x9cS1vMuZkOM",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://cargo-line.example/entity/pr-sju-001#CYpN-W1EXc6cLPov7axBHMfDv3a_PZoj0LmDjFuP20M"
+  ],
+  "authentication": [
+    "https://cargo-line.example/entity/pr-sju-001#40DqwP_7Q5vg1FIWbH-OfbSvP6S6gmIxhXlhFRusLSw"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432105",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34325",
+    "urn:ietf:spice:glue:pen:12349"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -66.1057,
+          18.4655
+        ]
+      },
+      "properties": {
+        "name": "Cargo Line Ltd Terminal",
+        "type": "Carrier",
+        "role": "shipping-terminal",
+        "address": {
+          "streetAddress": "San Juan Port",
+          "addressLocality": "San Juan",
+          "addressRegion": "San Juan",
+          "addressCountry": "PR"
+        },
+        "status": "fleet-repairs"
+      }
+    }
+  ]
+}
 ```
 
-Exit code: 0
 </details>
 
 <details>
-<summary>✅ Validate Cargo Line Controller</summary>
+<summary>📍 View Geographic Analysis</summary>
 
-```bash
-$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/cargo-line-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml
-```
-
-```
-Validating controller document case-studies/transhrimpment/controllers/cargo-line-controller.json...
-✅ Security check passed - no private keys detected
-✅ Controller document structure is valid
-
-✅ Controller document validation completed successfully
-
-🗺️ Geographic data detected in controller:
-📍 Map Preview: https://www.openstreetmap.org/#map=15/18.4655/-66.1057
-
-<details>
-<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
-
-### 📊 Geographic Analysis
-
-- **Type**: FeatureCollection
-- **Features**: 1
-- **Geometry Types**: Point
-- **Bounding Box**: 18.4655°N, 66.1057°W to 18.4655°N, 66.1057°W
-
-### 🏷️ Feature Properties
-
-**Feature 1:**
-  - **name**: Cargo Line Ltd Terminal
-  - **type**: Carrier
-  - **role**: shipping-terminal
-  - **address**: {"streetAddress":"San Juan Port","addressLocality":"San Juan","addressRegion":"San Juan","addressCountry":"PR"}
-  - **status**: fleet-repairs
-
-### 📍 Coordinates
-
-1. 18.4655°N, 66.1057°W
-
-### 📄 Raw GeoJSON
 
 ```geojson
 {
@@ -896,53 +1079,102 @@ Validating controller document case-studies/transhrimpment/controllers/cargo-lin
 }
 ```
 
+
 </details>
+
+
+### ✅ Anonymous Distributor
+
+**Controller Document Status:** ✅ Valid
+
+<details>
+<summary>📄 View Controller Document</summary>
+
+```json
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://anonymous-distributor.example/entity/vi-stt-001",
+  "verificationMethod": [
+    {
+      "id": "https://anonymous-distributor.example/entity/vi-stt-001#FIqtv3VJ5UBHnM12mGc0X5ebDP0kvRCWOH2rt4BsZ3I",
+      "type": "JsonWebKey",
+      "controller": "https://anonymous-distributor.example/entity/vi-stt-001",
+      "publicKeyJwk": {
+        "kid": "FIqtv3VJ5UBHnM12mGc0X5ebDP0kvRCWOH2rt4BsZ3I",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "epiVTdrRJ7_oCgBVC9CENFQMATouDkFdgjEZ_fv0hno",
+        "y": "Q676uMpDwdLZaNnvTx6ITGAz7ROtqfeTwjOnEGMxRFY",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://anonymous-distributor.example/entity/vi-stt-001#0JiKwGYOUs2kjcvt4r0r7TPOdj50u8Qiy6iC-msCpbU",
+      "type": "JsonWebKey",
+      "controller": "https://anonymous-distributor.example/entity/vi-stt-001",
+      "publicKeyJwk": {
+        "kid": "0JiKwGYOUs2kjcvt4r0r7TPOdj50u8Qiy6iC-msCpbU",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "1s9zQp3vIeDcaWt5LLIVD71QjvAVHx14tW9T8NCb02A",
+        "y": "pOFO3eSARH_ifdEUAWSRtGuotEwlg9xMULir7G93aDA",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://anonymous-distributor.example/entity/vi-stt-001#FIqtv3VJ5UBHnM12mGc0X5ebDP0kvRCWOH2rt4BsZ3I"
+  ],
+  "authentication": [
+    "https://anonymous-distributor.example/entity/vi-stt-001#0JiKwGYOUs2kjcvt4r0r7TPOdj50u8Qiy6iC-msCpbU"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432106",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34326",
+    "urn:ietf:spice:glue:pen:12350"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.9307,
+          18.3419
+        ]
+      },
+      "properties": {
+        "name": "Anonymous Distributor Warehouse",
+        "type": "Seafood Distributor",
+        "role": "final-buyer",
+        "address": {
+          "streetAddress": "Charlotte Amalie Port",
+          "addressLocality": "Charlotte Amalie",
+          "addressRegion": "St. Thomas",
+          "addressCountry": "VI"
+        },
+        "legitimacy": "legitimate-victim"
+      }
+    }
+  ]
+}
 ```
 
-Exit code: 0
 </details>
 
 <details>
-<summary>✅ Validate Anonymous Distributor Controller</summary>
+<summary>📍 View Geographic Analysis</summary>
 
-```bash
-$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/anonymous-distributor-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml
-```
-
-```
-Validating controller document case-studies/transhrimpment/controllers/anonymous-distributor-controller.json...
-✅ Security check passed - no private keys detected
-✅ Controller document structure is valid
-
-✅ Controller document validation completed successfully
-
-🗺️ Geographic data detected in controller:
-📍 Map Preview: https://www.openstreetmap.org/#map=15/18.3419/-64.9307
-
-<details>
-<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
-
-### 📊 Geographic Analysis
-
-- **Type**: FeatureCollection
-- **Features**: 1
-- **Geometry Types**: Point
-- **Bounding Box**: 18.3419°N, 64.9307°W to 18.3419°N, 64.9307°W
-
-### 🏷️ Feature Properties
-
-**Feature 1:**
-  - **name**: Anonymous Distributor Warehouse
-  - **type**: Seafood Distributor
-  - **role**: final-buyer
-  - **address**: {"streetAddress":"Charlotte Amalie Port","addressLocality":"Charlotte Amalie","addressRegion":"St. Thomas","addressCountry":"VI"}
-  - **legitimacy**: legitimate-victim
-
-### 📍 Coordinates
-
-1. 18.3419°N, 64.9307°W
-
-### 📄 Raw GeoJSON
 
 ```geojson
 {
@@ -1024,909 +1256,31 @@ Validating controller document case-studies/transhrimpment/controllers/anonymous
 }
 ```
 
-</details>
-```
-
-Exit code: 0
-</details>
-
-### GeoJSON Rendering for Controller Documents
-
-Rendering geographic data from controller documents to visualize entity locations:
-
-
-<details>
-<summary>✅ Analyze GeoJSON for anonymous-distributor</summary>
-
-```bash
-$ bun src/cli.ts analyze-geojson --controller case-studies/transhrimpment/controllers/anonymous-distributor-controller.json
-```
-
-```
-Analyzing GeoJSON in controller case-studies/transhrimpment/controllers/anonymous-distributor-controller.json...
-✅ GeoJSON detected: Feature collection with 1 features containing Point
-📍 Map Preview: https://www.openstreetmap.org/#map=15/18.3419/-64.9307
-
-<details>
-<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
-
-### 📊 Geographic Analysis
-
-- **Type**: FeatureCollection
-- **Features**: 1
-- **Geometry Types**: Point
-- **Bounding Box**: 18.3419°N, 64.9307°W to 18.3419°N, 64.9307°W
-
-### 🏷️ Feature Properties
-
-**Feature 1:**
-  - **name**: Anonymous Distributor Warehouse
-  - **type**: Seafood Distributor
-  - **role**: final-buyer
-  - **address**: {"streetAddress":"Charlotte Amalie Port","addressLocality":"Charlotte Amalie","addressRegion":"St. Thomas","addressCountry":"VI"}
-  - **legitimacy**: legitimate-victim
-
-### 📍 Coordinates
-
-1. 18.3419°N, 64.9307°W
-
-### 📄 Raw GeoJSON
-
-```geojson
-{
-  "@context": [
-    "https://www.w3.org/ns/cid/v1",
-    "https://geojson.org/geojson-ld/geojson-context.jsonld"
-  ],
-  "id": "https://anonymous-distributor.example/entity/vi-stt-001",
-  "verificationMethod": [
-    {
-      "id": "https://anonymous-distributor.example/entity/vi-stt-001#FIqtv3VJ5UBHnM12mGc0X5ebDP0kvRCWOH2rt4BsZ3I",
-      "type": "JsonWebKey",
-      "controller": "https://anonymous-distributor.example/entity/vi-stt-001",
-      "publicKeyJwk": {
-        "kid": "FIqtv3VJ5UBHnM12mGc0X5ebDP0kvRCWOH2rt4BsZ3I",
-        "kty": "EC",
-        "crv": "P-256",
-        "alg": "ES256",
-        "x": "epiVTdrRJ7_oCgBVC9CENFQMATouDkFdgjEZ_fv0hno",
-        "y": "Q676uMpDwdLZaNnvTx6ITGAz7ROtqfeTwjOnEGMxRFY",
-        "key_ops": [
-          "verify"
-        ]
-      }
-    },
-    {
-      "id": "https://anonymous-distributor.example/entity/vi-stt-001#0JiKwGYOUs2kjcvt4r0r7TPOdj50u8Qiy6iC-msCpbU",
-      "type": "JsonWebKey",
-      "controller": "https://anonymous-distributor.example/entity/vi-stt-001",
-      "publicKeyJwk": {
-        "kid": "0JiKwGYOUs2kjcvt4r0r7TPOdj50u8Qiy6iC-msCpbU",
-        "kty": "EC",
-        "crv": "P-256",
-        "alg": "ES256",
-        "x": "1s9zQp3vIeDcaWt5LLIVD71QjvAVHx14tW9T8NCb02A",
-        "y": "pOFO3eSARH_ifdEUAWSRtGuotEwlg9xMULir7G93aDA",
-        "key_ops": [
-          "verify"
-        ]
-      }
-    }
-  ],
-  "assertionMethod": [
-    "https://anonymous-distributor.example/entity/vi-stt-001#FIqtv3VJ5UBHnM12mGc0X5ebDP0kvRCWOH2rt4BsZ3I"
-  ],
-  "authentication": [
-    "https://anonymous-distributor.example/entity/vi-stt-001#0JiKwGYOUs2kjcvt4r0r7TPOdj50u8Qiy6iC-msCpbU"
-  ],
-  "alsoKnownAs": [
-    "urn:ietf:spice:glue:gln:4598765432106",
-    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34326",
-    "urn:ietf:spice:glue:pen:12350"
-  ],
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -64.9307,
-          18.3419
-        ]
-      },
-      "properties": {
-        "name": "Anonymous Distributor Warehouse",
-        "type": "Seafood Distributor",
-        "role": "final-buyer",
-        "address": {
-          "streetAddress": "Charlotte Amalie Port",
-          "addressLocality": "Charlotte Amalie",
-          "addressRegion": "St. Thomas",
-          "addressCountry": "VI"
-        },
-        "legitimacy": "legitimate-victim"
-      }
-    }
-  ]
-}
-```
 
 </details>
-```
 
-Exit code: 0
-</details>
-
-<details>
-<summary>✅ Analyze GeoJSON for camaron-corriente</summary>
-
-```bash
-$ bun src/cli.ts analyze-geojson --controller case-studies/transhrimpment/controllers/camaron-corriente-controller.json
-```
-
-```
-Analyzing GeoJSON in controller case-studies/transhrimpment/controllers/camaron-corriente-controller.json...
-✅ GeoJSON detected: Feature collection with 1 features containing Point
-📍 Map Preview: https://www.openstreetmap.org/#map=15/10.4647/-68.0125
-
-<details>
-<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
-
-### 📊 Geographic Analysis
-
-- **Type**: FeatureCollection
-- **Features**: 1
-- **Geometry Types**: Point
-- **Bounding Box**: 10.4647°N, 68.0125°W to 10.4647°N, 68.0125°W
-
-### 🏷️ Feature Properties
-
-**Feature 1:**
-  - **name**: Camarón Corriente S.A. Port Facility
-  - **type**: Seafood Distributor
-  - **role**: export-facility
-  - **address**: {"streetAddress":"Puerto Cabello Port","addressLocality":"Puerto Cabello","addressRegion":"Carabobo","addressCountry":"VE"}
-
-### 📍 Coordinates
-
-1. 10.4647°N, 68.0125°W
-
-### 📄 Raw GeoJSON
-
-```geojson
-{
-  "@context": [
-    "https://www.w3.org/ns/cid/v1",
-    "https://geojson.org/geojson-ld/geojson-context.jsonld"
-  ],
-  "id": "https://camaron-corriente.example/entity/ve-pbc-001",
-  "verificationMethod": [
-    {
-      "id": "https://camaron-corriente.example/entity/ve-pbc-001#wCgZYzU2U073ubVOEp7wcNHxwEIGuiEoY42b2tuKwfY",
-      "type": "JsonWebKey",
-      "controller": "https://camaron-corriente.example/entity/ve-pbc-001",
-      "publicKeyJwk": {
-        "kid": "wCgZYzU2U073ubVOEp7wcNHxwEIGuiEoY42b2tuKwfY",
-        "kty": "EC",
-        "crv": "P-256",
-        "alg": "ES256",
-        "x": "od157huUldxEgWY06BgwPXoRP-3mBvVGrg2aM09-eY0",
-        "y": "9-NhMiNgOh2-lgsOGvzUKZXxAj-9Xw_QtpvvOt2LhSk",
-        "key_ops": [
-          "verify"
-        ]
-      }
-    },
-    {
-      "id": "https://camaron-corriente.example/entity/ve-pbc-001#G5OJWJPRMVV4EQBPnv5Y2zHhV8lb13hzccIeLNFR9nU",
-      "type": "JsonWebKey",
-      "controller": "https://camaron-corriente.example/entity/ve-pbc-001",
-      "publicKeyJwk": {
-        "kid": "G5OJWJPRMVV4EQBPnv5Y2zHhV8lb13hzccIeLNFR9nU",
-        "kty": "EC",
-        "crv": "P-256",
-        "alg": "ES256",
-        "x": "z5Hry9ABSN60szLVg9ScUJb3W-Q6sdoGOUN5sl9lXI8",
-        "y": "lChjGkAl5o1Iu7WI2YcbyC71qZtluj6ecILxqQeKUVo",
-        "key_ops": [
-          "verify"
-        ]
-      }
-    }
-  ],
-  "assertionMethod": [
-    "https://camaron-corriente.example/entity/ve-pbc-001#wCgZYzU2U073ubVOEp7wcNHxwEIGuiEoY42b2tuKwfY"
-  ],
-  "authentication": [
-    "https://camaron-corriente.example/entity/ve-pbc-001#G5OJWJPRMVV4EQBPnv5Y2zHhV8lb13hzccIeLNFR9nU"
-  ],
-  "alsoKnownAs": [
-    "urn:ietf:spice:glue:gln:4598765432102",
-    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34322",
-    "urn:ietf:spice:glue:pen:12346"
-  ],
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -68.0125,
-          10.4647
-        ]
-      },
-      "properties": {
-        "name": "Camarón Corriente S.A. Port Facility",
-        "type": "Seafood Distributor",
-        "role": "export-facility",
-        "address": {
-          "streetAddress": "Puerto Cabello Port",
-          "addressLocality": "Puerto Cabello",
-          "addressRegion": "Carabobo",
-          "addressCountry": "VE"
-        }
-      }
-    }
-  ]
-}
-```
-
-</details>
-```
-
-Exit code: 0
-</details>
-
-<details>
-<summary>✅ Analyze GeoJSON for cargo-line</summary>
-
-```bash
-$ bun src/cli.ts analyze-geojson --controller case-studies/transhrimpment/controllers/cargo-line-controller.json
-```
-
-```
-Analyzing GeoJSON in controller case-studies/transhrimpment/controllers/cargo-line-controller.json...
-✅ GeoJSON detected: Feature collection with 1 features containing Point
-📍 Map Preview: https://www.openstreetmap.org/#map=15/18.4655/-66.1057
-
-<details>
-<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
-
-### 📊 Geographic Analysis
-
-- **Type**: FeatureCollection
-- **Features**: 1
-- **Geometry Types**: Point
-- **Bounding Box**: 18.4655°N, 66.1057°W to 18.4655°N, 66.1057°W
-
-### 🏷️ Feature Properties
-
-**Feature 1:**
-  - **name**: Cargo Line Ltd Terminal
-  - **type**: Carrier
-  - **role**: shipping-terminal
-  - **address**: {"streetAddress":"San Juan Port","addressLocality":"San Juan","addressRegion":"San Juan","addressCountry":"PR"}
-  - **status**: fleet-repairs
-
-### 📍 Coordinates
-
-1. 18.4655°N, 66.1057°W
-
-### 📄 Raw GeoJSON
-
-```geojson
-{
-  "@context": [
-    "https://www.w3.org/ns/cid/v1",
-    "https://geojson.org/geojson-ld/geojson-context.jsonld"
-  ],
-  "id": "https://cargo-line.example/entity/pr-sju-001",
-  "verificationMethod": [
-    {
-      "id": "https://cargo-line.example/entity/pr-sju-001#CYpN-W1EXc6cLPov7axBHMfDv3a_PZoj0LmDjFuP20M",
-      "type": "JsonWebKey",
-      "controller": "https://cargo-line.example/entity/pr-sju-001",
-      "publicKeyJwk": {
-        "kid": "CYpN-W1EXc6cLPov7axBHMfDv3a_PZoj0LmDjFuP20M",
-        "kty": "EC",
-        "crv": "P-256",
-        "alg": "ES256",
-        "x": "CyAeJJM3QVXqkVYdLn1E41p8WlJY9KVXcSe4w9bu810",
-        "y": "-ozUpC6b5F8kv_AFylZz2iAjwxzJjD463y73Ghd3OHU",
-        "key_ops": [
-          "verify"
-        ]
-      }
-    },
-    {
-      "id": "https://cargo-line.example/entity/pr-sju-001#40DqwP_7Q5vg1FIWbH-OfbSvP6S6gmIxhXlhFRusLSw",
-      "type": "JsonWebKey",
-      "controller": "https://cargo-line.example/entity/pr-sju-001",
-      "publicKeyJwk": {
-        "kid": "40DqwP_7Q5vg1FIWbH-OfbSvP6S6gmIxhXlhFRusLSw",
-        "kty": "EC",
-        "crv": "P-256",
-        "alg": "ES256",
-        "x": "RlhbAC1nBWvI1-OUyedXQgIqbmZH1B-Vc6M0y34S1K0",
-        "y": "5NDUXAzfPJSFqDSmWzajXkNKuTMsnY6x9cS1vMuZkOM",
-        "key_ops": [
-          "verify"
-        ]
-      }
-    }
-  ],
-  "assertionMethod": [
-    "https://cargo-line.example/entity/pr-sju-001#CYpN-W1EXc6cLPov7axBHMfDv3a_PZoj0LmDjFuP20M"
-  ],
-  "authentication": [
-    "https://cargo-line.example/entity/pr-sju-001#40DqwP_7Q5vg1FIWbH-OfbSvP6S6gmIxhXlhFRusLSw"
-  ],
-  "alsoKnownAs": [
-    "urn:ietf:spice:glue:gln:4598765432105",
-    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34325",
-    "urn:ietf:spice:glue:pen:12349"
-  ],
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -66.1057,
-          18.4655
-        ]
-      },
-      "properties": {
-        "name": "Cargo Line Ltd Terminal",
-        "type": "Carrier",
-        "role": "shipping-terminal",
-        "address": {
-          "streetAddress": "San Juan Port",
-          "addressLocality": "San Juan",
-          "addressRegion": "San Juan",
-          "addressCountry": "PR"
-        },
-        "status": "fleet-repairs"
-      }
-    }
-  ]
-}
-```
-
-</details>
-```
-
-Exit code: 0
-</details>
-
-<details>
-<summary>✅ Analyze GeoJSON for chompchomp</summary>
-
-```bash
-$ bun src/cli.ts analyze-geojson --controller case-studies/transhrimpment/controllers/chompchomp-controller.json
-```
-
-```
-Analyzing GeoJSON in controller case-studies/transhrimpment/controllers/chompchomp-controller.json...
-✅ GeoJSON detected: Feature collection with 2 features containing Point
-📍 Map Preview: https://www.openstreetmap.org/#map=15/18.4173/-64.6179
-
-<details>
-<summary>📍 Entity Geographic Information - Feature collection with 2 features containing Point</summary>
-
-### 📊 Geographic Analysis
-
-- **Type**: FeatureCollection
-- **Features**: 2
-- **Geometry Types**: Point
-- **Bounding Box**: 18.4167°N, 64.6208°W to 18.4180°N, 64.6150°W
-
-### 🏷️ Feature Properties
-
-**Feature 1:**
-  - **name**: Chompchomp Ltd Main Office
-  - **type**: Seafood Importer
-  - **role**: headquarters
-  - **address**: {"streetAddress":"Main Street","addressLocality":"Road Town","addressRegion":"Tortola","addressCountry":"VG"}
-
-**Feature 2:**
-  - **name**: Chompchomp Ltd Warehouse
-  - **type**: Storage Facility
-  - **role**: cold-storage
-  - **capacity**: 10000kg
-
-### 📍 Coordinates
-
-1. 18.4167°N, 64.6208°W
-2. 18.4180°N, 64.6150°W
-
-### 📄 Raw GeoJSON
-
-```geojson
-{
-  "@context": [
-    "https://www.w3.org/ns/cid/v1",
-    "https://geojson.org/geojson-ld/geojson-context.jsonld"
-  ],
-  "id": "https://chompchomp.example/entity/bvi-001",
-  "verificationMethod": [
-    {
-      "id": "https://chompchomp.example/entity/bvi-001#nx62J6beWOO6mIavpWEQCg_GoOi8zfAECZ8p-zHxEvI",
-      "type": "JsonWebKey",
-      "controller": "https://chompchomp.example/entity/bvi-001",
-      "publicKeyJwk": {
-        "kid": "nx62J6beWOO6mIavpWEQCg_GoOi8zfAECZ8p-zHxEvI",
-        "kty": "EC",
-        "crv": "P-256",
-        "alg": "ES256",
-        "x": "vb8xKTNFwYM4t1fjAfTPQBsbWPjkfUH60Q0mo9z4LQE",
-        "y": "FBgWNv3E6G-RaCyXdSkl__I2Lk8x2hwqQH50LJ3ODY4",
-        "key_ops": [
-          "verify"
-        ]
-      }
-    },
-    {
-      "id": "https://chompchomp.example/entity/bvi-001#5kl6Gvq9Jvvvy5UJzVVeIWKf6UWwmOylEUTn1VAX6wE",
-      "type": "JsonWebKey",
-      "controller": "https://chompchomp.example/entity/bvi-001",
-      "publicKeyJwk": {
-        "kid": "5kl6Gvq9Jvvvy5UJzVVeIWKf6UWwmOylEUTn1VAX6wE",
-        "kty": "EC",
-        "crv": "P-256",
-        "alg": "ES256",
-        "x": "6hRvSeHlwjSC-0LKnVoo3jmiK8C4tdLCA-rD0qymYKQ",
-        "y": "bBP5TVaRr_pQArvHw5T8lT-So6wLaCGZ0vxHIaf0TzY",
-        "key_ops": [
-          "verify"
-        ]
-      }
-    }
-  ],
-  "assertionMethod": [
-    "https://chompchomp.example/entity/bvi-001#nx62J6beWOO6mIavpWEQCg_GoOi8zfAECZ8p-zHxEvI"
-  ],
-  "authentication": [
-    "https://chompchomp.example/entity/bvi-001#5kl6Gvq9Jvvvy5UJzVVeIWKf6UWwmOylEUTn1VAX6wE"
-  ],
-  "alsoKnownAs": [
-    "urn:ietf:spice:glue:gln:4598765432101",
-    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34321",
-    "urn:ietf:spice:glue:pen:12345"
-  ],
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -64.6208,
-          18.4167
-        ]
-      },
-      "properties": {
-        "name": "Chompchomp Ltd Main Office",
-        "type": "Seafood Importer",
-        "role": "headquarters",
-        "address": {
-          "streetAddress": "Main Street",
-          "addressLocality": "Road Town",
-          "addressRegion": "Tortola",
-          "addressCountry": "VG"
-        }
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -64.615,
-          18.418
-        ]
-      },
-      "properties": {
-        "name": "Chompchomp Ltd Warehouse",
-        "type": "Storage Facility",
-        "role": "cold-storage",
-        "capacity": "10000kg"
-      }
-    }
-  ]
-}
-```
-
-</details>
-```
-
-Exit code: 0
-</details>
-
-<details>
-<summary>✅ Analyze GeoJSON for legit-shrimp</summary>
-
-```bash
-$ bun src/cli.ts analyze-geojson --controller case-studies/transhrimpment/controllers/legit-shrimp-controller.json
-```
-
-```
-Analyzing GeoJSON in controller case-studies/transhrimpment/controllers/legit-shrimp-controller.json...
-✅ GeoJSON detected: Feature collection with 1 features containing Point
-📍 Map Preview: https://www.openstreetmap.org/#map=15/10.6596/-61.5167
-
-<details>
-<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
-
-### 📊 Geographic Analysis
-
-- **Type**: FeatureCollection
-- **Features**: 1
-- **Geometry Types**: Point
-- **Bounding Box**: 10.6596°N, 61.5167°W to 10.6596°N, 61.5167°W
-
-### 🏷️ Feature Properties
-
-**Feature 1:**
-  - **name**: Legit Shrimp Ltd Facility
-  - **type**: Seafood Supplier
-  - **role**: supplier
-  - **address**: {"streetAddress":"Port of Spain Harbor","addressLocality":"Port of Spain","addressRegion":"Port of Spain","addressCountry":"TT"}
-  - **legitimacy**: legitimate-identity-stolen
-
-### 📍 Coordinates
-
-1. 10.6596°N, 61.5167°W
-
-### 📄 Raw GeoJSON
-
-```geojson
-{
-  "@context": [
-    "https://www.w3.org/ns/cid/v1",
-    "https://geojson.org/geojson-ld/geojson-context.jsonld"
-  ],
-  "id": "https://legit-shrimp.example/entity/tt-pos-001",
-  "verificationMethod": [
-    {
-      "id": "https://legit-shrimp.example/entity/tt-pos-001#LrQ5E8KeOiQ62VVIc_iDcCU1xMwcIOzk1DciPI8DdpU",
-      "type": "JsonWebKey",
-      "controller": "https://legit-shrimp.example/entity/tt-pos-001",
-      "publicKeyJwk": {
-        "kid": "LrQ5E8KeOiQ62VVIc_iDcCU1xMwcIOzk1DciPI8DdpU",
-        "kty": "EC",
-        "crv": "P-256",
-        "alg": "ES256",
-        "x": "xUZYceKR-OI4MtundtRaGWgMI1jJomJHbfuLgA4LOTQ",
-        "y": "N8Fy9f3kMZbobXnzb-c6AOKrj543m1bsyaxksFI-tvc",
-        "key_ops": [
-          "verify"
-        ]
-      }
-    },
-    {
-      "id": "https://legit-shrimp.example/entity/tt-pos-001#nr94L4yhi4eGBtPD8QUeYXgi78sbEihzUJ4rvqr8Tls",
-      "type": "JsonWebKey",
-      "controller": "https://legit-shrimp.example/entity/tt-pos-001",
-      "publicKeyJwk": {
-        "kid": "nr94L4yhi4eGBtPD8QUeYXgi78sbEihzUJ4rvqr8Tls",
-        "kty": "EC",
-        "crv": "P-256",
-        "alg": "ES256",
-        "x": "7Dufa0VGHTZ0nw2q7peGgT8OfOsz8E8PCiwJ6oZRQgM",
-        "y": "3Z6wxNXfxASzeARkpJIeMZLXyt1ThccwG1t0ob8BvgY",
-        "key_ops": [
-          "verify"
-        ]
-      }
-    }
-  ],
-  "assertionMethod": [
-    "https://legit-shrimp.example/entity/tt-pos-001#LrQ5E8KeOiQ62VVIc_iDcCU1xMwcIOzk1DciPI8DdpU"
-  ],
-  "authentication": [
-    "https://legit-shrimp.example/entity/tt-pos-001#nr94L4yhi4eGBtPD8QUeYXgi78sbEihzUJ4rvqr8Tls"
-  ],
-  "alsoKnownAs": [
-    "urn:ietf:spice:glue:gln:4598765432103",
-    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34323",
-    "urn:ietf:spice:glue:pen:12347"
-  ],
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -61.5167,
-          10.6596
-        ]
-      },
-      "properties": {
-        "name": "Legit Shrimp Ltd Facility",
-        "type": "Seafood Supplier",
-        "role": "supplier",
-        "address": {
-          "streetAddress": "Port of Spain Harbor",
-          "addressLocality": "Port of Spain",
-          "addressRegion": "Port of Spain",
-          "addressCountry": "TT"
-        },
-        "legitimacy": "legitimate-identity-stolen"
-      }
-    }
-  ]
-}
-```
-
-</details>
-```
-
-Exit code: 0
-</details>
-
-<details>
-<summary>✅ Analyze GeoJSON for shady-carrier</summary>
-
-```bash
-$ bun src/cli.ts analyze-geojson --controller case-studies/transhrimpment/controllers/shady-carrier-controller.json
-```
-
-```
-Analyzing GeoJSON in controller case-studies/transhrimpment/controllers/shady-carrier-controller.json...
-✅ GeoJSON detected: Feature collection with 1 features containing Point
-📍 Map Preview: https://www.openstreetmap.org/#map=15/12.5186/-70.0270
-
-<details>
-<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
-
-### 📊 Geographic Analysis
-
-- **Type**: FeatureCollection
-- **Features**: 1
-- **Geometry Types**: Point
-- **Bounding Box**: 12.5186°N, 70.0270°W to 12.5186°N, 70.0270°W
-
-### 🏷️ Feature Properties
-
-**Feature 1:**
-  - **name**: Shady Carrier Ltd Operations
-  - **type**: Carrier
-  - **role**: substitute-carrier
-  - **address**: {"streetAddress":"Harbor District","addressLocality":"Oranjestad","addressRegion":"Aruba","addressCountry":"AW"}
-  - **legitimacy**: fraudulent
-
-### 📍 Coordinates
-
-1. 12.5186°N, 70.0270°W
-
-### 📄 Raw GeoJSON
-
-```geojson
-{
-  "@context": [
-    "https://www.w3.org/ns/cid/v1",
-    "https://geojson.org/geojson-ld/geojson-context.jsonld"
-  ],
-  "id": "https://shady-carrier.example/entity/aw-oru-001",
-  "verificationMethod": [
-    {
-      "id": "https://shady-carrier.example/entity/aw-oru-001#n7GWD9LbqAZQy1Wt5XdYiy81GofxhJgFnIu8iduEMmE",
-      "type": "JsonWebKey",
-      "controller": "https://shady-carrier.example/entity/aw-oru-001",
-      "publicKeyJwk": {
-        "kid": "n7GWD9LbqAZQy1Wt5XdYiy81GofxhJgFnIu8iduEMmE",
-        "kty": "EC",
-        "crv": "P-256",
-        "alg": "ES256",
-        "x": "O8_j4yCoKKJMNapSfWEN37QJkeT3DYAdhgyHtnyF-Dg",
-        "y": "cnlKpR7AMTtTjPTmMRWfy1xTZ8B_gu4BS7oVU8DQL5E",
-        "key_ops": [
-          "verify"
-        ]
-      }
-    },
-    {
-      "id": "https://shady-carrier.example/entity/aw-oru-001#wZ4jnnC68M3NScMKDJfRs9tmYZYm7SYkrnEDjELvd8U",
-      "type": "JsonWebKey",
-      "controller": "https://shady-carrier.example/entity/aw-oru-001",
-      "publicKeyJwk": {
-        "kid": "wZ4jnnC68M3NScMKDJfRs9tmYZYm7SYkrnEDjELvd8U",
-        "kty": "EC",
-        "crv": "P-256",
-        "alg": "ES256",
-        "x": "oabo-YwYLrj4PM2RofODEtaFBbX5F1xfeoC5lSm_d-o",
-        "y": "yV7oJnA7Jg7eMTg1mGMq0Goqo9o0MdjQpeF9clic1jM",
-        "key_ops": [
-          "verify"
-        ]
-      }
-    }
-  ],
-  "assertionMethod": [
-    "https://shady-carrier.example/entity/aw-oru-001#n7GWD9LbqAZQy1Wt5XdYiy81GofxhJgFnIu8iduEMmE"
-  ],
-  "authentication": [
-    "https://shady-carrier.example/entity/aw-oru-001#wZ4jnnC68M3NScMKDJfRs9tmYZYm7SYkrnEDjELvd8U"
-  ],
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -70.027,
-          12.5186
-        ]
-      },
-      "properties": {
-        "name": "Shady Carrier Ltd Operations",
-        "type": "Carrier",
-        "role": "substitute-carrier",
-        "address": {
-          "streetAddress": "Harbor District",
-          "addressLocality": "Oranjestad",
-          "addressRegion": "Aruba",
-          "addressCountry": "AW"
-        },
-        "legitimacy": "fraudulent"
-      }
-    }
-  ]
-}
-```
-
-</details>
-```
-
-Exit code: 0
-</details>
-
-<details>
-<summary>✅ Analyze GeoJSON for shady-distributor</summary>
-
-```bash
-$ bun src/cli.ts analyze-geojson --controller case-studies/transhrimpment/controllers/shady-distributor-controller.json
-```
-
-```
-Analyzing GeoJSON in controller case-studies/transhrimpment/controllers/shady-distributor-controller.json...
-✅ GeoJSON detected: Feature collection with 1 features containing Point
-📍 Map Preview: https://www.openstreetmap.org/#map=15/18.4167/-64.6208
-
-<details>
-<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
-
-### 📊 Geographic Analysis
-
-- **Type**: FeatureCollection
-- **Features**: 1
-- **Geometry Types**: Point
-- **Bounding Box**: 18.4167°N, 64.6208°W to 18.4167°N, 64.6208°W
-
-### 🏷️ Feature Properties
-
-**Feature 1:**
-  - **name**: Shady Distributor Ltd Office
-  - **type**: Seafood Distributor
-  - **role**: intermediary
-  - **address**: {"streetAddress":"Offshore Building","addressLocality":"Road Town","addressRegion":"Tortola","addressCountry":"VG"}
-  - **legitimacy**: fraudulent
-
-### 📍 Coordinates
-
-1. 18.4167°N, 64.6208°W
-
-### 📄 Raw GeoJSON
-
-```geojson
-{
-  "@context": [
-    "https://www.w3.org/ns/cid/v1",
-    "https://geojson.org/geojson-ld/geojson-context.jsonld"
-  ],
-  "id": "https://shady-distributor.example/entity/bvi-002",
-  "verificationMethod": [
-    {
-      "id": "https://shady-distributor.example/entity/bvi-002#HViV1wlQgzXXbdahjyFDVbU_RxPUVCLQCf51fyGatEc",
-      "type": "JsonWebKey",
-      "controller": "https://shady-distributor.example/entity/bvi-002",
-      "publicKeyJwk": {
-        "kid": "HViV1wlQgzXXbdahjyFDVbU_RxPUVCLQCf51fyGatEc",
-        "kty": "EC",
-        "crv": "P-256",
-        "alg": "ES256",
-        "x": "mcpc4991vFrddVHW3wYersLW68Ej_pULgV1pMQDugB4",
-        "y": "xFS824TLI3lEqdpOhO1SM03yCTiwhTI5YkfDcSpjd-s",
-        "key_ops": [
-          "verify"
-        ]
-      }
-    },
-    {
-      "id": "https://shady-distributor.example/entity/bvi-002#6Clq3Dk2UwwBaMsN2Qw2h1QGL5ARbPuAuKwgDUf8ubo",
-      "type": "JsonWebKey",
-      "controller": "https://shady-distributor.example/entity/bvi-002",
-      "publicKeyJwk": {
-        "kid": "6Clq3Dk2UwwBaMsN2Qw2h1QGL5ARbPuAuKwgDUf8ubo",
-        "kty": "EC",
-        "crv": "P-256",
-        "alg": "ES256",
-        "x": "24LjV4gWuQp58pNhUJRR94QH5CoQsIJFIVovJiEYmiI",
-        "y": "x_AtZ0vLLiOZgwAGUTBUndyYnOtsA_cDvKWvyWNFeCk",
-        "key_ops": [
-          "verify"
-        ]
-      }
-    }
-  ],
-  "assertionMethod": [
-    "https://shady-distributor.example/entity/bvi-002#HViV1wlQgzXXbdahjyFDVbU_RxPUVCLQCf51fyGatEc"
-  ],
-  "authentication": [
-    "https://shady-distributor.example/entity/bvi-002#6Clq3Dk2UwwBaMsN2Qw2h1QGL5ARbPuAuKwgDUf8ubo"
-  ],
-  "type": "FeatureCollection",
-  "features": [
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -64.6208,
-          18.4167
-        ]
-      },
-      "properties": {
-        "name": "Shady Distributor Ltd Office",
-        "type": "Seafood Distributor",
-        "role": "intermediary",
-        "address": {
-          "streetAddress": "Offshore Building",
-          "addressLocality": "Road Town",
-          "addressRegion": "Tortola",
-          "addressCountry": "VG"
-        },
-        "legitimacy": "fraudulent"
-      }
-    }
-  ]
-}
-```
-
-</details>
-```
-
-Exit code: 0
-</details>
 
 
 ## Investigation Summary
 
-### Digital Forensics Results
+### Entity Identification Results
 
-The investigation processed all entity controller documents and captured the real CLI command outputs above.
+The investigation successfully identified all supply chain entities through their controller documents and geographic locations.
 
 ### Key Findings
 
-The actual CLI command results show:
-- Controller document generation status for each entity
-- Validation results with real exit codes
-- GeoJSON rendering success/failure for geographic visualization
-- Any error messages or warnings from the actual CLI execution
+- All entities validated successfully with geographic locations confirmed
+- Map previews generated showing entity distribution across the Caribbean region
+- Controller documents contain proper cryptographic verification methods
+- Legitimate and fraudulent entities geographically mapped for analysis
 
 ### Next Steps
 
-The generated controller documents can now be used to:
-- Verify signatures on supply chain credentials
-- Detect identity theft and document forgery
-- Trace geographic movement of goods
-- Validate entity legitimacy through identifier systems
+The identified entities and their geographic information can now be used to:
+- Trace shipment routes and detect deviations
+- Verify entity legitimacy through location analysis
+- Detect suspicious geographic patterns in fraud schemes
+- Validate supply chain documents against known entity locations
 
-**🔐 Controller document generation completed - see actual CLI results above!**
+**🔍 Entity identification completed - geographic fraud detection enabled!**
 
