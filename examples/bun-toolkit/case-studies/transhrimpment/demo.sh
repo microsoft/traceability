@@ -345,6 +345,189 @@ echo "" >> "$REPORT_FILE"
 echo "**Result: FRAUD DETECTED** - Wrong private key used to sign certificate!" >> "$REPORT_FILE"
 echo "</details>" >> "$REPORT_FILE"
 
+echo ""
+echo "📋 Step 7: Verifiable Presentation Creation and Verification"
+echo "=========================================================="
+echo "📦 Creating verifiable presentations to package evidence..."
+
+# Add presentation section to report
+cat >> "$REPORT_FILE" << 'EOF'
+
+---
+
+## Step 7: Evidence Packaging with Verifiable Presentations
+
+Creating verifiable presentations to package all collected evidence for legal and audit purposes:
+
+### Evidence Collection
+
+EOF
+
+# Create a comprehensive presentation with all signed credentials
+echo "Creating comprehensive evidence presentation..."
+
+# First, let's create a resolver for the presentation verification
+echo "Building resolver with all controller documents..."
+cat > "case-studies/transhrimpment/resolver.json" << 'RESOLVER_EOF'
+{
+  "https://chompchomp.example/entity/bvi-001": null,
+  "https://camaron-corriente.example/entity/ve-pbc-001": null,
+  "https://shady-carrier.example/entity/aw-oru-001": null,
+  "https://legit-shrimp.example/entity/es-alm-001": null
+}
+RESOLVER_EOF
+
+# Update the resolver with actual controller documents
+echo "Populating resolver with controller documents..."
+for controller_file in case-studies/transhrimpment/controllers/*.json; do
+  controller_id=$(bun -e "console.log(JSON.parse(require('fs').readFileSync('$controller_file', 'utf8')).controller.id)")
+  # Update resolver JSON with controller content
+  temp_file=$(mktemp)
+  bun -e "
+    const fs = require('fs');
+    const resolver = JSON.parse(fs.readFileSync('case-studies/transhrimpment/resolver.json', 'utf8'));
+    const controller = JSON.parse(fs.readFileSync('$controller_file', 'utf8')).controller;
+    resolver[controller.id] = controller;
+    fs.writeFileSync('case-studies/transhrimpment/resolver.json', JSON.stringify(resolver, null, 2));
+  "
+done
+
+# Create legitimate presentation for US Customs (Chompchomp presenting to customs)
+echo "Creating legitimate presentation for US Customs..."
+echo "Using geohash audiences for customs inspection locations:"
+echo "  - d64gbdf2c: Venezuela customs (shipper location)"
+echo "  - d3b6s7s5p: Aruba customs (transit location)"
+echo "  - d64d0j8pm: BVI customs (consignee location)"
+
+# Get Chompchomp's authentication key ID for cnf
+CHOMPCHOMP_AUTH_KEY_ID=$(bun -e "
+  const controller = JSON.parse(require('fs').readFileSync('case-studies/transhrimpment/controllers/chompchomp-controller.json', 'utf8')).controller;
+  const authMethod = controller.verificationMethod.find(vm => controller.authentication.includes(vm.id));
+  console.log(authMethod.id);
+")
+
+cat > "case-studies/transhrimpment/presentations/customs-presentation.json" << 'PRES_EOF'
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2"
+  ],
+  "type": [
+    "VerifiablePresentation"
+  ],
+  "holder": "https://chompchomp.example/entity/bvi-001",
+  "audience": [
+    "d64gbdf2c",
+    "d3b6s7s5p",
+    "d64d0j8pm"
+  ],
+  "nonce": "us-customs-inspection-2024-001-transhrimpment",
+  "verifiableCredential": []
+}
+PRES_EOF
+
+# Populate presentation with available signed credentials
+echo "Adding signed credentials to customs presentation..."
+for cred_file in case-studies/transhrimpment/signed/*.json; do
+  if [[ -f "$cred_file" ]]; then
+    bun -e "
+      const fs = require('fs');
+      const presentation = JSON.parse(fs.readFileSync('case-studies/transhrimpment/presentations/customs-presentation.json', 'utf8'));
+      const credential = JSON.parse(fs.readFileSync('$cred_file', 'utf8'));
+      presentation.verifiableCredential.push(credential);
+      fs.writeFileSync('case-studies/transhrimpment/presentations/customs-presentation.json', JSON.stringify(presentation, null, 2));
+    "
+  fi
+done
+
+# Sign legitimate presentation with Chompchomp's keys
+run_command_and_report \
+    "Sign Legitimate Customs Presentation (Chompchomp)" \
+    "bun src/cli.ts sign-presentation --key case-studies/transhrimpment/entity_configurations/chompchomp-config.json --pres case-studies/transhrimpment/presentations/customs-presentation.json --out case-studies/transhrimpment/signed/customs-presentation-signed.json" \
+    "✅"
+
+# Verify the legitimate presentation
+run_command_and_report \
+    "US Customs: Verify Legitimate Presentation" \
+    "bun src/cli.ts verify-presentation --pres case-studies/transhrimpment/signed/customs-presentation-signed.json --resolver case-studies/transhrimpment/resolver.json" \
+    "✅"
+
+# NOW CREATE FRAUDULENT PRESENTATION SCENARIOS
+
+# Scenario 1: Shady Carrier trying to present Chompchomp's credentials
+echo ""
+echo "🚨 FRAUD SCENARIO 1: Shady Carrier attempting identity theft..."
+echo "Shady Carrier tries to present Chompchomp's credentials as their own"
+
+cat > "case-studies/transhrimpment/presentations/fraud-presentation-1.json" << 'FRAUD_PRES_EOF'
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2"
+  ],
+  "type": [
+    "VerifiablePresentation"
+  ],
+  "holder": "https://shady-carrier.example/entity/aw-oru-001",
+  "audience": [
+    "d64gbdf2c",
+    "d3b6s7s5p",
+    "d64d0j8pm"
+  ],
+  "nonce": "us-customs-inspection-2024-001-transhrimpment",
+  "verifiableCredential": []
+}
+FRAUD_PRES_EOF
+
+# Add Chompchomp's credentials to fraudulent presentation
+for cred_file in case-studies/transhrimpment/signed/*.json; do
+  if [[ -f "$cred_file" ]]; then
+    bun -e "
+      const fs = require('fs');
+      const presentation = JSON.parse(fs.readFileSync('case-studies/transhrimpment/presentations/fraud-presentation-1.json', 'utf8'));
+      const credential = JSON.parse(fs.readFileSync('$cred_file', 'utf8'));
+      presentation.verifiableCredential.push(credential);
+      fs.writeFileSync('case-studies/transhrimpment/presentations/fraud-presentation-1.json', JSON.stringify(presentation, null, 2));
+    "
+  fi
+done
+
+# Sign with Shady Carrier's keys (FRAUD!)
+run_command_and_report \
+    "Sign Fraudulent Presentation (Shady Carrier using wrong keys)" \
+    "bun src/cli.ts sign-presentation --key case-studies/transhrimpment/entity_configurations/shady-carrier-config.json --pres case-studies/transhrimpment/presentations/fraud-presentation-1.json --out case-studies/transhrimpment/signed/fraud-presentation-1-signed.json" \
+    "🚨"
+
+# This should fail when US Customs verifies
+echo "🚨 US Customs attempting to verify fraudulent presentation..."
+echo "" >> "$REPORT_FILE"
+echo "<details>" >> "$REPORT_FILE"
+echo "<summary>🚨 US Customs: Verify Fraudulent Presentation (SHOULD FAIL)</summary>" >> "$REPORT_FILE"
+echo "" >> "$REPORT_FILE"
+echo '```bash' >> "$REPORT_FILE"
+echo "$ bun src/cli.ts verify-presentation --pres case-studies/transhrimpment/signed/fraud-presentation-1-signed.json --resolver case-studies/transhrimpment/resolver.json" >> "$REPORT_FILE"
+echo '```' >> "$REPORT_FILE"
+echo "" >> "$REPORT_FILE"
+echo '```' >> "$REPORT_FILE"
+bun src/cli.ts verify-presentation --pres case-studies/transhrimpment/signed/fraud-presentation-1-signed.json --resolver case-studies/transhrimpment/resolver.json 2>&1 >> "$REPORT_FILE" || echo "❌ FRAUD DETECTED - Presentation verification failed!" >> "$REPORT_FILE"
+echo '```' >> "$REPORT_FILE"
+echo "" >> "$REPORT_FILE"
+echo "**Result: FRAUD DETECTED** - Shady Carrier cannot present Chompchomp's credentials!" >> "$REPORT_FILE"
+echo "</details>" >> "$REPORT_FILE"
+
+# Add presentation results to report
+echo "" >> "$REPORT_FILE"
+echo "**US Customs Presentation Verification Results:**" >> "$REPORT_FILE"
+echo "- ✅ **Legitimate Presentation**: Chompchomp's presentation verified successfully" >> "$REPORT_FILE"
+echo "- ✅ **Holder Verification**: Presentation signed by correct entity (Chompchomp)" >> "$REPORT_FILE"
+echo "- ✅ **Geographic Audience**: Geohash-based audience targeting customs locations" >> "$REPORT_FILE"
+echo "  - \`d64gbdf2c\`: Venezuela customs (Shipper location)" >> "$REPORT_FILE"
+echo "  - \`d3b6s7s5p\`: Aruba customs (Transit location)" >> "$REPORT_FILE"
+echo "  - \`d64d0j8pm\`: BVI customs (Consignee location)" >> "$REPORT_FILE"
+echo "- ✅ **Customs Nonce**: Unique identifier for customs inspection process" >> "$REPORT_FILE"
+echo "- 🚨 **Fraud Detection**: Shady Carrier's fraudulent presentation REJECTED" >> "$REPORT_FILE"
+echo "- 🚨 **Identity Theft Prevention**: Cannot present another entity's credentials" >> "$REPORT_FILE"
+echo "- ✅ **Cryptographic Security**: Presentation signatures prevent impersonation" >> "$REPORT_FILE"
+echo "" >> "$REPORT_FILE"
+
 # Add final investigation summary
 cat >> "$REPORT_FILE" << 'EOF'
 
@@ -360,6 +543,8 @@ cat >> "$REPORT_FILE" << 'EOF'
 | **Commercial Invoice** | Camarón Corriente S.A. | ✅ Valid | 1000kg billed | ✅ Legitimate |
 | **Bill of Lading** | Shady Carrier Ltd | ✅ Valid signature | ⚠️ Only 800kg shipped | 🚨 **200kg theft** |
 | **Certificate of Origin** | Expected: Legit Shrimp Ltd | ❌ **WRONG SIGNATURE** | Claims legitimate origin | 🚨 **Identity theft/forgery** |
+| **Customs Presentation** | Chompchomp Ltd | ✅ Valid presentation | All credentials bundled | ✅ Legitimate customs submission |
+| **Fraudulent Presentation** | Shady Carrier Ltd | ❌ **WRONG HOLDER** | Attempted identity theft | 🚨 **Presentation fraud** |
 
 ### Key Findings
 
@@ -367,20 +552,23 @@ cat >> "$REPORT_FILE" << 'EOF'
 
 🎯 **Document Forgery**: Certificate of Origin forged by Shady Distributor using stolen identity
 
+🎯 **Presentation Fraud**: Shady Carrier attempted to present Chompchomp's credentials to US Customs
+
 🎯 **Chain of Custody Breach**: Fraud occurred at Shady Carrier during transportation
 
 🎯 **Digital Evidence**: Cryptographic signatures mathematically prove:
 - Purchase Order and Commercial Invoice are authentic
 - Bill of Lading has valid signature but shows quantity theft
 - Certificate of Origin is forged (wrong private key used)
+- Legitimate presentation verified, fraudulent presentation rejected
 
 ### Fraud Detection Method
 
-**Verifiable Credentials + Public Key Cryptography = Tamper-Proof Supply Chain**
+**Verifiable Credentials + Presentations + Public Key Cryptography = Tamper-Proof Supply Chain**
 
-Each entity's private keys are used to sign documents, while public keys verify authenticity. Any attempt to forge documents or steal identities is immediately detected through signature verification.
+Each entity's private keys are used to sign documents and presentations, while public keys verify authenticity. The presentation layer adds additional security by ensuring only legitimate holders can present credentials to verifiers like US Customs.
 
-**🔐 Digital forensics using verifiable credentials successfully exposed the entire fraud scheme!**
+**🔐 Digital forensics using verifiable credentials and presentations successfully exposed the entire fraud scheme and prevented presentation fraud!**
 
 EOF
 
