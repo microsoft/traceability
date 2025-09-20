@@ -1,16 +1,11 @@
 title: Controller Document Schema
-description: Schema for validating controller documents with cryptographic verification methods and geographic features
+description: Schema for validating W3C Controller Documents with cryptographic verification methods and geographic features
 type: object
 required:
-  - controller
+  - "@context"
+  - id
+  - verificationMethod
 properties:
-  controller:
-    type: object
-    required:
-      - "@context"
-      - id
-      - verificationMethod
-    properties:
       "@context":
         type: array
         items:

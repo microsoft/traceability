@@ -126,2779 +126,908 @@ Validating all generated controller documents for security compliance and struct
 
 
 <details>
-<summary>❌ Validate Chompchomp Controller</summary>
+<summary>✅ Validate Chompchomp Controller</summary>
 
 ```bash
-$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/chompchomp-controller.json
+$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/chompchomp-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml
 ```
 
 ```
 Validating controller document case-studies/transhrimpment/controllers/chompchomp-controller.json...
 ✅ Security check passed - no private keys detected
-❌ Controller document is invalid:
-[
-  {
-    "instancePath": "",
-    "schemaPath": "#/required",
-    "keyword": "required",
-    "params": {
-      "missingProperty": "controller"
+✅ Controller document structure is valid
+
+✅ Controller document validation completed successfully
+
+🗺️ Geographic data detected in controller:
+📍 Map Preview: https://www.openstreetmap.org/#map=15/18.4173/-64.6179
+
+<details>
+<summary>📍 Entity Geographic Information - Feature collection with 2 features containing Point</summary>
+
+### 📊 Geographic Analysis
+
+- **Type**: FeatureCollection
+- **Features**: 2
+- **Geometry Types**: Point
+- **Bounding Box**: 18.4167°N, 64.6208°W to 18.4180°N, 64.6150°W
+
+### 🏷️ Feature Properties
+
+**Feature 1:**
+  - **name**: Chompchomp Ltd Main Office
+  - **type**: Seafood Importer
+  - **role**: headquarters
+  - **address**: {"streetAddress":"Main Street","addressLocality":"Road Town","addressRegion":"Tortola","addressCountry":"VG"}
+
+**Feature 2:**
+  - **name**: Chompchomp Ltd Warehouse
+  - **type**: Storage Facility
+  - **role**: cold-storage
+  - **capacity**: 10000kg
+
+### 📍 Coordinates
+
+1. 18.4167°N, 64.6208°W
+2. 18.4180°N, 64.6150°W
+
+### 📄 Raw GeoJSON
+
+```geojson
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://chompchomp.example/entity/bvi-001",
+  "verificationMethod": [
+    {
+      "id": "https://chompchomp.example/entity/bvi-001#nx62J6beWOO6mIavpWEQCg_GoOi8zfAECZ8p-zHxEvI",
+      "type": "JsonWebKey",
+      "controller": "https://chompchomp.example/entity/bvi-001",
+      "publicKeyJwk": {
+        "kid": "nx62J6beWOO6mIavpWEQCg_GoOi8zfAECZ8p-zHxEvI",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "vb8xKTNFwYM4t1fjAfTPQBsbWPjkfUH60Q0mo9z4LQE",
+        "y": "FBgWNv3E6G-RaCyXdSkl__I2Lk8x2hwqQH50LJ3ODY4",
+        "key_ops": [
+          "verify"
+        ]
+      }
     },
-    "message": "must have required property 'controller'",
-    "schema": [
-      "controller"
-    ],
-    "parentSchema": {
-      "title": "Controller Document Schema",
-      "description": "Schema for validating controller documents with cryptographic verification methods and geographic features",
-      "type": "object",
-      "required": [
-        "controller"
-      ],
-      "properties": {
-        "controller": {
-          "type": "object",
-          "required": [
-            "@context",
-            "id",
-            "verificationMethod"
-          ],
-          "properties": {
-            "@context": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "minItems": 1,
-              "contains": {
-                "const": "https://www.w3.org/ns/cid/v1"
-              }
-            },
-            "id": {
-              "type": "string",
-              "format": "uri",
-              "description": "The controller identifier"
-            },
-            "alsoKnownAs": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Alternative identifiers for this controller (e.g., different geohash precisions, subsidiary IDs)"
-            },
-            "verificationMethod": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "type": "object",
-                "required": [
-                  "id",
-                  "type",
-                  "controller",
-                  "publicKeyJwk"
-                ],
-                "properties": {
-                  "id": {
-                    "type": "string",
-                    "format": "uri",
-                    "description": "Key identifier (controller ID + key thumbprint)"
-                  },
-                  "type": {
-                    "const": "JsonWebKey"
-                  },
-                  "controller": {
-                    "type": "string",
-                    "format": "uri",
-                    "description": "Must match the controller's id"
-                  },
-                  "publicKeyJwk": {
-                    "type": "object",
-                    "required": [
-                      "kid",
-                      "kty",
-                      "crv",
-                      "alg",
-                      "x",
-                      "y",
-                      "key_ops"
-                    ],
-                    "properties": {
-                      "kid": {
-                        "type": "string",
-                        "description": "Key ID (thumbprint)"
-                      },
-                      "kty": {
-                        "const": "EC"
-                      },
-                      "crv": {
-                        "const": "P-256"
-                      },
-                      "alg": {
-                        "const": "ES256"
-                      },
-                      "x": {
-                        "type": "string",
-                        "description": "Public key X coordinate (base64url)"
-                      },
-                      "y": {
-                        "type": "string",
-                        "description": "Public key Y coordinate (base64url)"
-                      },
-                      "key_ops": {
-                        "type": "array",
-                        "items": {
-                          "const": "verify"
-                        },
-                        "minItems": 1,
-                        "maxItems": 1
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "assertionMethod": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Key IDs used for assertions/credentials"
-            },
-            "authentication": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Key IDs used for authentication"
-            },
-            "type": {
-              "const": "FeatureCollection",
-              "description": "GeoJSON type for geographic features"
-            },
-            "features": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": [
-                  "type",
-                  "geometry",
-                  "properties"
-                ],
-                "properties": {
-                  "type": {
-                    "const": "Feature"
-                  },
-                  "geometry": {
-                    "$ref": "#/$defs/GeoJSONPoint"
-                  },
-                  "properties": {
-                    "type": "object",
-                    "required": [
-                      "name",
-                      "type"
-                    ],
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "description": "Human-readable name for the location"
-                      },
-                      "type": {
-                        "type": "string",
-                        "description": "Type of entity or facility"
-                      },
-                      "role": {
-                        "type": "string",
-                        "description": "Role of this location"
-                      },
-                      "address": {
-                        "type": "object",
-                        "properties": {
-                          "streetAddress": {
-                            "type": "string"
-                          },
-                          "addressLocality": {
-                            "type": "string"
-                          },
-                          "addressRegion": {
-                            "type": "string"
-                          },
-                          "addressCountry": {
-                            "type": "string"
-                          }
-                        }
-                      },
-                      "capacity": {
-                        "type": "string",
-                        "description": "Storage or operational capacity"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "generatedKeys": {
-          "type": "object",
-          "description": "Reserved for private key generation metadata (should be empty in public controllers)"
-        },
-        "generated": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Timestamp when controller was generated"
-        }
+    {
+      "id": "https://chompchomp.example/entity/bvi-001#5kl6Gvq9Jvvvy5UJzVVeIWKf6UWwmOylEUTn1VAX6wE",
+      "type": "JsonWebKey",
+      "controller": "https://chompchomp.example/entity/bvi-001",
+      "publicKeyJwk": {
+        "kid": "5kl6Gvq9Jvvvy5UJzVVeIWKf6UWwmOylEUTn1VAX6wE",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "6hRvSeHlwjSC-0LKnVoo3jmiK8C4tdLCA-rD0qymYKQ",
+        "y": "bBP5TVaRr_pQArvHw5T8lT-So6wLaCGZ0vxHIaf0TzY",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://chompchomp.example/entity/bvi-001#nx62J6beWOO6mIavpWEQCg_GoOi8zfAECZ8p-zHxEvI"
+  ],
+  "authentication": [
+    "https://chompchomp.example/entity/bvi-001#5kl6Gvq9Jvvvy5UJzVVeIWKf6UWwmOylEUTn1VAX6wE"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432101",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34321",
+    "urn:ietf:spice:glue:pen:12345"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
       },
-      "examples": [
-        {
-          "controller": {
-            "@context": [
-              "https://www.w3.org/ns/cid/v1",
-              "https://geojson.org/geojson-ld/geojson-context.jsonld"
-            ],
-            "id": "https://example.com/entity/test-001",
-            "alsoKnownAs": [
-              "https://example.com/geo/9q8yyk",
-              "https://example.com/geo/9q8yy"
-            ],
-            "verificationMethod": [
-              {
-                "id": "https://example.com/entity/test-001#4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE",
-                "type": "JsonWebKey",
-                "controller": "https://example.com/entity/test-001",
-                "publicKeyJwk": {
-                  "kid": "4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE",
-                  "kty": "EC",
-                  "crv": "P-256",
-                  "alg": "ES256",
-                  "x": "TXYRYgX8eZTx4m7OkMRy_kLdaBIq9hCEQmODECNGSMw",
-                  "y": "rQ9q1YQHb8YTd6i6EaLYf_ycb9vQpN6VkLaFWlI5T_o",
-                  "key_ops": [
-                    "verify"
-                  ]
-                }
-              }
-            ],
-            "assertionMethod": [
-              "https://example.com/entity/test-001#4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE"
-            ],
-            "authentication": [],
-            "type": "FeatureCollection",
-            "features": [
-              {
-                "type": "Feature",
-                "geometry": {
-                  "type": "Point",
-                  "coordinates": [
-                    -74.0059,
-                    40.7128
-                  ]
-                },
-                "properties": {
-                  "name": "Example Corp Headquarters",
-                  "type": "Corporate Office",
-                  "role": "headquarters",
-                  "address": {
-                    "streetAddress": "123 Main St",
-                    "addressLocality": "New York",
-                    "addressRegion": "NY",
-                    "addressCountry": "US"
-                  }
-                }
-              }
-            ]
-          },
-          "generatedKeys": {},
-          "generated": "2024-01-01T00:00:00Z"
-        }
-      ],
-      "$defs": {
-        "GeoJSONPoint": {
-          "type": "object",
-          "required": [
-            "type",
-            "coordinates"
-          ],
-          "properties": {
-            "type": {
-              "const": "Point"
-            },
-            "coordinates": {
-              "type": "array",
-              "minItems": 2,
-              "maxItems": 3,
-              "items": {
-                "type": "number"
-              }
-            }
-          }
+      "properties": {
+        "name": "Chompchomp Ltd Main Office",
+        "type": "Seafood Importer",
+        "role": "headquarters",
+        "address": {
+          "streetAddress": "Main Street",
+          "addressLocality": "Road Town",
+          "addressRegion": "Tortola",
+          "addressCountry": "VG"
         }
       }
     },
-    "data": {
-      "@context": [
-        "https://www.w3.org/ns/cid/v1",
-        "https://geojson.org/geojson-ld/geojson-context.jsonld"
-      ],
-      "id": "https://chompchomp.example/entity/bvi-001",
-      "verificationMethod": [
-        {
-          "id": "https://chompchomp.example/entity/bvi-001#wOwEuRitE5oxSoT8b1G_zKmk6L_m8d9pxFm522GQm2U",
-          "type": "JsonWebKey",
-          "controller": "https://chompchomp.example/entity/bvi-001",
-          "publicKeyJwk": {
-            "kid": "wOwEuRitE5oxSoT8b1G_zKmk6L_m8d9pxFm522GQm2U",
-            "kty": "EC",
-            "crv": "P-256",
-            "alg": "ES256",
-            "x": "FXjQbgha02OBhXzPWR0dCn56vyeJfgSSujWbczO9gZg",
-            "y": "7K6ntTD46VRrKOaqparaJnLKaNt5loEOVoVYMJecG5U",
-            "key_ops": [
-              "verify"
-            ]
-          }
-        },
-        {
-          "id": "https://chompchomp.example/entity/bvi-001#83X2Af_8uM_ArRqWDsXqaezHFDgbLgQJp3Tx2U4EtCY",
-          "type": "JsonWebKey",
-          "controller": "https://chompchomp.example/entity/bvi-001",
-          "publicKeyJwk": {
-            "kid": "83X2Af_8uM_ArRqWDsXqaezHFDgbLgQJp3Tx2U4EtCY",
-            "kty": "EC",
-            "crv": "P-256",
-            "alg": "ES256",
-            "x": "ggg9b0sMtg6PDQ8oSZLdkI67LEoLmqUs0LivKmUREno",
-            "y": "7G9l1KqXMYkf78-zA4RsgssNeolzD2JQeaGbVxjzS-w",
-            "key_ops": [
-              "verify"
-            ]
-          }
-        }
-      ],
-      "assertionMethod": [
-        "https://chompchomp.example/entity/bvi-001#wOwEuRitE5oxSoT8b1G_zKmk6L_m8d9pxFm522GQm2U"
-      ],
-      "authentication": [
-        "https://chompchomp.example/entity/bvi-001#83X2Af_8uM_ArRqWDsXqaezHFDgbLgQJp3Tx2U4EtCY"
-      ],
-      "alsoKnownAs": [
-        "urn:ietf:spice:glue:gln:4598765432101",
-        "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34321",
-        "urn:ietf:spice:glue:pen:12345"
-      ],
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [
-              -64.6208,
-              18.4167
-            ]
-          },
-          "properties": {
-            "name": "Chompchomp Ltd Main Office",
-            "type": "Seafood Importer",
-            "role": "headquarters",
-            "address": {
-              "streetAddress": "Main Street",
-              "addressLocality": "Road Town",
-              "addressRegion": "Tortola",
-              "addressCountry": "VG"
-            }
-          }
-        },
-        {
-          "type": "Feature",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [
-              -64.615,
-              18.418
-            ]
-          },
-          "properties": {
-            "name": "Chompchomp Ltd Warehouse",
-            "type": "Storage Facility",
-            "role": "cold-storage",
-            "capacity": "10000kg"
-          }
-        }
-      ]
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.615,
+          18.418
+        ]
+      },
+      "properties": {
+        "name": "Chompchomp Ltd Warehouse",
+        "type": "Storage Facility",
+        "role": "cold-storage",
+        "capacity": "10000kg"
+      }
     }
-  }
-]
+  ]
+}
 ```
 
-Exit code: 1
+</details>
+```
+
+Exit code: 0
 </details>
 
 <details>
-<summary>❌ Validate Camarón Corriente Controller</summary>
+<summary>✅ Validate Camarón Corriente Controller</summary>
 
 ```bash
-$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/camaron-corriente-controller.json
+$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/camaron-corriente-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml
 ```
 
 ```
 Validating controller document case-studies/transhrimpment/controllers/camaron-corriente-controller.json...
 ✅ Security check passed - no private keys detected
-❌ Controller document is invalid:
-[
-  {
-    "instancePath": "",
-    "schemaPath": "#/required",
-    "keyword": "required",
-    "params": {
-      "missingProperty": "controller"
-    },
-    "message": "must have required property 'controller'",
-    "schema": [
-      "controller"
-    ],
-    "parentSchema": {
-      "title": "Controller Document Schema",
-      "description": "Schema for validating controller documents with cryptographic verification methods and geographic features",
-      "type": "object",
-      "required": [
-        "controller"
-      ],
-      "properties": {
-        "controller": {
-          "type": "object",
-          "required": [
-            "@context",
-            "id",
-            "verificationMethod"
-          ],
-          "properties": {
-            "@context": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "minItems": 1,
-              "contains": {
-                "const": "https://www.w3.org/ns/cid/v1"
-              }
-            },
-            "id": {
-              "type": "string",
-              "format": "uri",
-              "description": "The controller identifier"
-            },
-            "alsoKnownAs": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Alternative identifiers for this controller (e.g., different geohash precisions, subsidiary IDs)"
-            },
-            "verificationMethod": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "type": "object",
-                "required": [
-                  "id",
-                  "type",
-                  "controller",
-                  "publicKeyJwk"
-                ],
-                "properties": {
-                  "id": {
-                    "type": "string",
-                    "format": "uri",
-                    "description": "Key identifier (controller ID + key thumbprint)"
-                  },
-                  "type": {
-                    "const": "JsonWebKey"
-                  },
-                  "controller": {
-                    "type": "string",
-                    "format": "uri",
-                    "description": "Must match the controller's id"
-                  },
-                  "publicKeyJwk": {
-                    "type": "object",
-                    "required": [
-                      "kid",
-                      "kty",
-                      "crv",
-                      "alg",
-                      "x",
-                      "y",
-                      "key_ops"
-                    ],
-                    "properties": {
-                      "kid": {
-                        "type": "string",
-                        "description": "Key ID (thumbprint)"
-                      },
-                      "kty": {
-                        "const": "EC"
-                      },
-                      "crv": {
-                        "const": "P-256"
-                      },
-                      "alg": {
-                        "const": "ES256"
-                      },
-                      "x": {
-                        "type": "string",
-                        "description": "Public key X coordinate (base64url)"
-                      },
-                      "y": {
-                        "type": "string",
-                        "description": "Public key Y coordinate (base64url)"
-                      },
-                      "key_ops": {
-                        "type": "array",
-                        "items": {
-                          "const": "verify"
-                        },
-                        "minItems": 1,
-                        "maxItems": 1
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "assertionMethod": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Key IDs used for assertions/credentials"
-            },
-            "authentication": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Key IDs used for authentication"
-            },
-            "type": {
-              "const": "FeatureCollection",
-              "description": "GeoJSON type for geographic features"
-            },
-            "features": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": [
-                  "type",
-                  "geometry",
-                  "properties"
-                ],
-                "properties": {
-                  "type": {
-                    "const": "Feature"
-                  },
-                  "geometry": {
-                    "$ref": "#/$defs/GeoJSONPoint"
-                  },
-                  "properties": {
-                    "type": "object",
-                    "required": [
-                      "name",
-                      "type"
-                    ],
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "description": "Human-readable name for the location"
-                      },
-                      "type": {
-                        "type": "string",
-                        "description": "Type of entity or facility"
-                      },
-                      "role": {
-                        "type": "string",
-                        "description": "Role of this location"
-                      },
-                      "address": {
-                        "type": "object",
-                        "properties": {
-                          "streetAddress": {
-                            "type": "string"
-                          },
-                          "addressLocality": {
-                            "type": "string"
-                          },
-                          "addressRegion": {
-                            "type": "string"
-                          },
-                          "addressCountry": {
-                            "type": "string"
-                          }
-                        }
-                      },
-                      "capacity": {
-                        "type": "string",
-                        "description": "Storage or operational capacity"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "generatedKeys": {
-          "type": "object",
-          "description": "Reserved for private key generation metadata (should be empty in public controllers)"
-        },
-        "generated": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Timestamp when controller was generated"
-        }
-      },
-      "examples": [
-        {
-          "controller": {
-            "@context": [
-              "https://www.w3.org/ns/cid/v1",
-              "https://geojson.org/geojson-ld/geojson-context.jsonld"
-            ],
-            "id": "https://example.com/entity/test-001",
-            "alsoKnownAs": [
-              "https://example.com/geo/9q8yyk",
-              "https://example.com/geo/9q8yy"
-            ],
-            "verificationMethod": [
-              {
-                "id": "https://example.com/entity/test-001#4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE",
-                "type": "JsonWebKey",
-                "controller": "https://example.com/entity/test-001",
-                "publicKeyJwk": {
-                  "kid": "4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE",
-                  "kty": "EC",
-                  "crv": "P-256",
-                  "alg": "ES256",
-                  "x": "TXYRYgX8eZTx4m7OkMRy_kLdaBIq9hCEQmODECNGSMw",
-                  "y": "rQ9q1YQHb8YTd6i6EaLYf_ycb9vQpN6VkLaFWlI5T_o",
-                  "key_ops": [
-                    "verify"
-                  ]
-                }
-              }
-            ],
-            "assertionMethod": [
-              "https://example.com/entity/test-001#4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE"
-            ],
-            "authentication": [],
-            "type": "FeatureCollection",
-            "features": [
-              {
-                "type": "Feature",
-                "geometry": {
-                  "type": "Point",
-                  "coordinates": [
-                    -74.0059,
-                    40.7128
-                  ]
-                },
-                "properties": {
-                  "name": "Example Corp Headquarters",
-                  "type": "Corporate Office",
-                  "role": "headquarters",
-                  "address": {
-                    "streetAddress": "123 Main St",
-                    "addressLocality": "New York",
-                    "addressRegion": "NY",
-                    "addressCountry": "US"
-                  }
-                }
-              }
-            ]
-          },
-          "generatedKeys": {},
-          "generated": "2024-01-01T00:00:00Z"
-        }
-      ],
-      "$defs": {
-        "GeoJSONPoint": {
-          "type": "object",
-          "required": [
-            "type",
-            "coordinates"
-          ],
-          "properties": {
-            "type": {
-              "const": "Point"
-            },
-            "coordinates": {
-              "type": "array",
-              "minItems": 2,
-              "maxItems": 3,
-              "items": {
-                "type": "number"
-              }
-            }
-          }
-        }
+✅ Controller document structure is valid
+
+✅ Controller document validation completed successfully
+
+🗺️ Geographic data detected in controller:
+📍 Map Preview: https://www.openstreetmap.org/#map=15/10.4647/-68.0125
+
+<details>
+<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
+
+### 📊 Geographic Analysis
+
+- **Type**: FeatureCollection
+- **Features**: 1
+- **Geometry Types**: Point
+- **Bounding Box**: 10.4647°N, 68.0125°W to 10.4647°N, 68.0125°W
+
+### 🏷️ Feature Properties
+
+**Feature 1:**
+  - **name**: Camarón Corriente S.A. Port Facility
+  - **type**: Seafood Distributor
+  - **role**: export-facility
+  - **address**: {"streetAddress":"Puerto Cabello Port","addressLocality":"Puerto Cabello","addressRegion":"Carabobo","addressCountry":"VE"}
+
+### 📍 Coordinates
+
+1. 10.4647°N, 68.0125°W
+
+### 📄 Raw GeoJSON
+
+```geojson
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+  "verificationMethod": [
+    {
+      "id": "https://camaron-corriente.example/entity/ve-pbc-001#wCgZYzU2U073ubVOEp7wcNHxwEIGuiEoY42b2tuKwfY",
+      "type": "JsonWebKey",
+      "controller": "https://camaron-corriente.example/entity/ve-pbc-001",
+      "publicKeyJwk": {
+        "kid": "wCgZYzU2U073ubVOEp7wcNHxwEIGuiEoY42b2tuKwfY",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "od157huUldxEgWY06BgwPXoRP-3mBvVGrg2aM09-eY0",
+        "y": "9-NhMiNgOh2-lgsOGvzUKZXxAj-9Xw_QtpvvOt2LhSk",
+        "key_ops": [
+          "verify"
+        ]
       }
     },
-    "data": {
-      "@context": [
-        "https://www.w3.org/ns/cid/v1",
-        "https://geojson.org/geojson-ld/geojson-context.jsonld"
-      ],
-      "id": "https://camaron-corriente.example/entity/ve-pbc-001",
-      "verificationMethod": [
-        {
-          "id": "https://camaron-corriente.example/entity/ve-pbc-001#OYCLsIzt-1xAvcoRP9iRzldv7tAnf8IJzwDONem0KYE",
-          "type": "JsonWebKey",
-          "controller": "https://camaron-corriente.example/entity/ve-pbc-001",
-          "publicKeyJwk": {
-            "kid": "OYCLsIzt-1xAvcoRP9iRzldv7tAnf8IJzwDONem0KYE",
-            "kty": "EC",
-            "crv": "P-256",
-            "alg": "ES256",
-            "x": "K3mXeCLu8BB75MbcxyjSC2gLCbh27g_GmSzaAtp6yGk",
-            "y": "ENIV1aN9OHNeL2SwEpD-R838US3fPtQqyzHcfhk1MV8",
-            "key_ops": [
-              "verify"
-            ]
-          }
-        },
-        {
-          "id": "https://camaron-corriente.example/entity/ve-pbc-001#CixPdepIUkZR0N75Q9GdwcI7b9Nt_93ayPKxbAAljXA",
-          "type": "JsonWebKey",
-          "controller": "https://camaron-corriente.example/entity/ve-pbc-001",
-          "publicKeyJwk": {
-            "kid": "CixPdepIUkZR0N75Q9GdwcI7b9Nt_93ayPKxbAAljXA",
-            "kty": "EC",
-            "crv": "P-256",
-            "alg": "ES256",
-            "x": "0LmBRm1gHHLeriAIHVg5EebYLNo57kqVJexPENJPDaQ",
-            "y": "niBfKUWJFaAg73h6R0BMDnbysSsyFvnyzp7ThSYunlg",
-            "key_ops": [
-              "verify"
-            ]
-          }
-        }
-      ],
-      "assertionMethod": [
-        "https://camaron-corriente.example/entity/ve-pbc-001#OYCLsIzt-1xAvcoRP9iRzldv7tAnf8IJzwDONem0KYE"
-      ],
-      "authentication": [
-        "https://camaron-corriente.example/entity/ve-pbc-001#CixPdepIUkZR0N75Q9GdwcI7b9Nt_93ayPKxbAAljXA"
-      ],
-      "alsoKnownAs": [
-        "urn:ietf:spice:glue:gln:4598765432102",
-        "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34322",
-        "urn:ietf:spice:glue:pen:12346"
-      ],
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [
-              -68.0125,
-              10.4647
-            ]
-          },
-          "properties": {
-            "name": "Camarón Corriente S.A. Port Facility",
-            "type": "Seafood Distributor",
-            "role": "export-facility",
-            "address": {
-              "streetAddress": "Puerto Cabello Port",
-              "addressLocality": "Puerto Cabello",
-              "addressRegion": "Carabobo",
-              "addressCountry": "VE"
-            }
-          }
-        }
-      ]
+    {
+      "id": "https://camaron-corriente.example/entity/ve-pbc-001#G5OJWJPRMVV4EQBPnv5Y2zHhV8lb13hzccIeLNFR9nU",
+      "type": "JsonWebKey",
+      "controller": "https://camaron-corriente.example/entity/ve-pbc-001",
+      "publicKeyJwk": {
+        "kid": "G5OJWJPRMVV4EQBPnv5Y2zHhV8lb13hzccIeLNFR9nU",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "z5Hry9ABSN60szLVg9ScUJb3W-Q6sdoGOUN5sl9lXI8",
+        "y": "lChjGkAl5o1Iu7WI2YcbyC71qZtluj6ecILxqQeKUVo",
+        "key_ops": [
+          "verify"
+        ]
+      }
     }
-  }
-]
+  ],
+  "assertionMethod": [
+    "https://camaron-corriente.example/entity/ve-pbc-001#wCgZYzU2U073ubVOEp7wcNHxwEIGuiEoY42b2tuKwfY"
+  ],
+  "authentication": [
+    "https://camaron-corriente.example/entity/ve-pbc-001#G5OJWJPRMVV4EQBPnv5Y2zHhV8lb13hzccIeLNFR9nU"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432102",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34322",
+    "urn:ietf:spice:glue:pen:12346"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -68.0125,
+          10.4647
+        ]
+      },
+      "properties": {
+        "name": "Camarón Corriente S.A. Port Facility",
+        "type": "Seafood Distributor",
+        "role": "export-facility",
+        "address": {
+          "streetAddress": "Puerto Cabello Port",
+          "addressLocality": "Puerto Cabello",
+          "addressRegion": "Carabobo",
+          "addressCountry": "VE"
+        }
+      }
+    }
+  ]
+}
 ```
 
-Exit code: 1
+</details>
+```
+
+Exit code: 0
 </details>
 
 <details>
-<summary>❌ Validate Legit Shrimp Controller</summary>
+<summary>✅ Validate Legit Shrimp Controller</summary>
 
 ```bash
-$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/legit-shrimp-controller.json
+$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/legit-shrimp-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml
 ```
 
 ```
 Validating controller document case-studies/transhrimpment/controllers/legit-shrimp-controller.json...
 ✅ Security check passed - no private keys detected
-❌ Controller document is invalid:
-[
-  {
-    "instancePath": "",
-    "schemaPath": "#/required",
-    "keyword": "required",
-    "params": {
-      "missingProperty": "controller"
-    },
-    "message": "must have required property 'controller'",
-    "schema": [
-      "controller"
-    ],
-    "parentSchema": {
-      "title": "Controller Document Schema",
-      "description": "Schema for validating controller documents with cryptographic verification methods and geographic features",
-      "type": "object",
-      "required": [
-        "controller"
-      ],
-      "properties": {
-        "controller": {
-          "type": "object",
-          "required": [
-            "@context",
-            "id",
-            "verificationMethod"
-          ],
-          "properties": {
-            "@context": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "minItems": 1,
-              "contains": {
-                "const": "https://www.w3.org/ns/cid/v1"
-              }
-            },
-            "id": {
-              "type": "string",
-              "format": "uri",
-              "description": "The controller identifier"
-            },
-            "alsoKnownAs": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Alternative identifiers for this controller (e.g., different geohash precisions, subsidiary IDs)"
-            },
-            "verificationMethod": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "type": "object",
-                "required": [
-                  "id",
-                  "type",
-                  "controller",
-                  "publicKeyJwk"
-                ],
-                "properties": {
-                  "id": {
-                    "type": "string",
-                    "format": "uri",
-                    "description": "Key identifier (controller ID + key thumbprint)"
-                  },
-                  "type": {
-                    "const": "JsonWebKey"
-                  },
-                  "controller": {
-                    "type": "string",
-                    "format": "uri",
-                    "description": "Must match the controller's id"
-                  },
-                  "publicKeyJwk": {
-                    "type": "object",
-                    "required": [
-                      "kid",
-                      "kty",
-                      "crv",
-                      "alg",
-                      "x",
-                      "y",
-                      "key_ops"
-                    ],
-                    "properties": {
-                      "kid": {
-                        "type": "string",
-                        "description": "Key ID (thumbprint)"
-                      },
-                      "kty": {
-                        "const": "EC"
-                      },
-                      "crv": {
-                        "const": "P-256"
-                      },
-                      "alg": {
-                        "const": "ES256"
-                      },
-                      "x": {
-                        "type": "string",
-                        "description": "Public key X coordinate (base64url)"
-                      },
-                      "y": {
-                        "type": "string",
-                        "description": "Public key Y coordinate (base64url)"
-                      },
-                      "key_ops": {
-                        "type": "array",
-                        "items": {
-                          "const": "verify"
-                        },
-                        "minItems": 1,
-                        "maxItems": 1
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "assertionMethod": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Key IDs used for assertions/credentials"
-            },
-            "authentication": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Key IDs used for authentication"
-            },
-            "type": {
-              "const": "FeatureCollection",
-              "description": "GeoJSON type for geographic features"
-            },
-            "features": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": [
-                  "type",
-                  "geometry",
-                  "properties"
-                ],
-                "properties": {
-                  "type": {
-                    "const": "Feature"
-                  },
-                  "geometry": {
-                    "$ref": "#/$defs/GeoJSONPoint"
-                  },
-                  "properties": {
-                    "type": "object",
-                    "required": [
-                      "name",
-                      "type"
-                    ],
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "description": "Human-readable name for the location"
-                      },
-                      "type": {
-                        "type": "string",
-                        "description": "Type of entity or facility"
-                      },
-                      "role": {
-                        "type": "string",
-                        "description": "Role of this location"
-                      },
-                      "address": {
-                        "type": "object",
-                        "properties": {
-                          "streetAddress": {
-                            "type": "string"
-                          },
-                          "addressLocality": {
-                            "type": "string"
-                          },
-                          "addressRegion": {
-                            "type": "string"
-                          },
-                          "addressCountry": {
-                            "type": "string"
-                          }
-                        }
-                      },
-                      "capacity": {
-                        "type": "string",
-                        "description": "Storage or operational capacity"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "generatedKeys": {
-          "type": "object",
-          "description": "Reserved for private key generation metadata (should be empty in public controllers)"
-        },
-        "generated": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Timestamp when controller was generated"
-        }
-      },
-      "examples": [
-        {
-          "controller": {
-            "@context": [
-              "https://www.w3.org/ns/cid/v1",
-              "https://geojson.org/geojson-ld/geojson-context.jsonld"
-            ],
-            "id": "https://example.com/entity/test-001",
-            "alsoKnownAs": [
-              "https://example.com/geo/9q8yyk",
-              "https://example.com/geo/9q8yy"
-            ],
-            "verificationMethod": [
-              {
-                "id": "https://example.com/entity/test-001#4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE",
-                "type": "JsonWebKey",
-                "controller": "https://example.com/entity/test-001",
-                "publicKeyJwk": {
-                  "kid": "4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE",
-                  "kty": "EC",
-                  "crv": "P-256",
-                  "alg": "ES256",
-                  "x": "TXYRYgX8eZTx4m7OkMRy_kLdaBIq9hCEQmODECNGSMw",
-                  "y": "rQ9q1YQHb8YTd6i6EaLYf_ycb9vQpN6VkLaFWlI5T_o",
-                  "key_ops": [
-                    "verify"
-                  ]
-                }
-              }
-            ],
-            "assertionMethod": [
-              "https://example.com/entity/test-001#4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE"
-            ],
-            "authentication": [],
-            "type": "FeatureCollection",
-            "features": [
-              {
-                "type": "Feature",
-                "geometry": {
-                  "type": "Point",
-                  "coordinates": [
-                    -74.0059,
-                    40.7128
-                  ]
-                },
-                "properties": {
-                  "name": "Example Corp Headquarters",
-                  "type": "Corporate Office",
-                  "role": "headquarters",
-                  "address": {
-                    "streetAddress": "123 Main St",
-                    "addressLocality": "New York",
-                    "addressRegion": "NY",
-                    "addressCountry": "US"
-                  }
-                }
-              }
-            ]
-          },
-          "generatedKeys": {},
-          "generated": "2024-01-01T00:00:00Z"
-        }
-      ],
-      "$defs": {
-        "GeoJSONPoint": {
-          "type": "object",
-          "required": [
-            "type",
-            "coordinates"
-          ],
-          "properties": {
-            "type": {
-              "const": "Point"
-            },
-            "coordinates": {
-              "type": "array",
-              "minItems": 2,
-              "maxItems": 3,
-              "items": {
-                "type": "number"
-              }
-            }
-          }
-        }
+✅ Controller document structure is valid
+
+✅ Controller document validation completed successfully
+
+🗺️ Geographic data detected in controller:
+📍 Map Preview: https://www.openstreetmap.org/#map=15/10.6596/-61.5167
+
+<details>
+<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
+
+### 📊 Geographic Analysis
+
+- **Type**: FeatureCollection
+- **Features**: 1
+- **Geometry Types**: Point
+- **Bounding Box**: 10.6596°N, 61.5167°W to 10.6596°N, 61.5167°W
+
+### 🏷️ Feature Properties
+
+**Feature 1:**
+  - **name**: Legit Shrimp Ltd Facility
+  - **type**: Seafood Supplier
+  - **role**: supplier
+  - **address**: {"streetAddress":"Port of Spain Harbor","addressLocality":"Port of Spain","addressRegion":"Port of Spain","addressCountry":"TT"}
+  - **legitimacy**: legitimate-identity-stolen
+
+### 📍 Coordinates
+
+1. 10.6596°N, 61.5167°W
+
+### 📄 Raw GeoJSON
+
+```geojson
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://legit-shrimp.example/entity/tt-pos-001",
+  "verificationMethod": [
+    {
+      "id": "https://legit-shrimp.example/entity/tt-pos-001#LrQ5E8KeOiQ62VVIc_iDcCU1xMwcIOzk1DciPI8DdpU",
+      "type": "JsonWebKey",
+      "controller": "https://legit-shrimp.example/entity/tt-pos-001",
+      "publicKeyJwk": {
+        "kid": "LrQ5E8KeOiQ62VVIc_iDcCU1xMwcIOzk1DciPI8DdpU",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "xUZYceKR-OI4MtundtRaGWgMI1jJomJHbfuLgA4LOTQ",
+        "y": "N8Fy9f3kMZbobXnzb-c6AOKrj543m1bsyaxksFI-tvc",
+        "key_ops": [
+          "verify"
+        ]
       }
     },
-    "data": {
-      "@context": [
-        "https://www.w3.org/ns/cid/v1",
-        "https://geojson.org/geojson-ld/geojson-context.jsonld"
-      ],
-      "id": "https://legit-shrimp.example/entity/tt-pos-001",
-      "verificationMethod": [
-        {
-          "id": "https://legit-shrimp.example/entity/tt-pos-001#cNcRs6f89L6Fe1Jsd_wYvfb94Ffj3iZcDwTV9733_v0",
-          "type": "JsonWebKey",
-          "controller": "https://legit-shrimp.example/entity/tt-pos-001",
-          "publicKeyJwk": {
-            "kid": "cNcRs6f89L6Fe1Jsd_wYvfb94Ffj3iZcDwTV9733_v0",
-            "kty": "EC",
-            "crv": "P-256",
-            "alg": "ES256",
-            "x": "5-hE00KFruMXoTxV6CLpK7I9E0uv_lvXVG5hWcdSscE",
-            "y": "E016R9eLXJjjNRuNZx_dgMcoGgPU5BAmVz-uiRcoLHg",
-            "key_ops": [
-              "verify"
-            ]
-          }
-        },
-        {
-          "id": "https://legit-shrimp.example/entity/tt-pos-001#1J3c5b0XOSeVGdELtdGuJAm-wzNoJWBYOtXOqbyow_Q",
-          "type": "JsonWebKey",
-          "controller": "https://legit-shrimp.example/entity/tt-pos-001",
-          "publicKeyJwk": {
-            "kid": "1J3c5b0XOSeVGdELtdGuJAm-wzNoJWBYOtXOqbyow_Q",
-            "kty": "EC",
-            "crv": "P-256",
-            "alg": "ES256",
-            "x": "fHBpnkvyekj3scf6UKt5Mu0xjsVpRTZwqtPswEQZ84g",
-            "y": "wyDIIaVI47dPl7p44R9zGn-zhduq0t6N8dtYFhhk4i4",
-            "key_ops": [
-              "verify"
-            ]
-          }
-        }
-      ],
-      "assertionMethod": [
-        "https://legit-shrimp.example/entity/tt-pos-001#cNcRs6f89L6Fe1Jsd_wYvfb94Ffj3iZcDwTV9733_v0"
-      ],
-      "authentication": [
-        "https://legit-shrimp.example/entity/tt-pos-001#1J3c5b0XOSeVGdELtdGuJAm-wzNoJWBYOtXOqbyow_Q"
-      ],
-      "alsoKnownAs": [
-        "urn:ietf:spice:glue:gln:4598765432103",
-        "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34323",
-        "urn:ietf:spice:glue:pen:12347"
-      ],
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [
-              -61.5167,
-              10.6596
-            ]
-          },
-          "properties": {
-            "name": "Legit Shrimp Ltd Facility",
-            "type": "Seafood Supplier",
-            "role": "supplier",
-            "address": {
-              "streetAddress": "Port of Spain Harbor",
-              "addressLocality": "Port of Spain",
-              "addressRegion": "Port of Spain",
-              "addressCountry": "TT"
-            },
-            "legitimacy": "legitimate-identity-stolen"
-          }
-        }
-      ]
+    {
+      "id": "https://legit-shrimp.example/entity/tt-pos-001#nr94L4yhi4eGBtPD8QUeYXgi78sbEihzUJ4rvqr8Tls",
+      "type": "JsonWebKey",
+      "controller": "https://legit-shrimp.example/entity/tt-pos-001",
+      "publicKeyJwk": {
+        "kid": "nr94L4yhi4eGBtPD8QUeYXgi78sbEihzUJ4rvqr8Tls",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "7Dufa0VGHTZ0nw2q7peGgT8OfOsz8E8PCiwJ6oZRQgM",
+        "y": "3Z6wxNXfxASzeARkpJIeMZLXyt1ThccwG1t0ob8BvgY",
+        "key_ops": [
+          "verify"
+        ]
+      }
     }
-  }
-]
+  ],
+  "assertionMethod": [
+    "https://legit-shrimp.example/entity/tt-pos-001#LrQ5E8KeOiQ62VVIc_iDcCU1xMwcIOzk1DciPI8DdpU"
+  ],
+  "authentication": [
+    "https://legit-shrimp.example/entity/tt-pos-001#nr94L4yhi4eGBtPD8QUeYXgi78sbEihzUJ4rvqr8Tls"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432103",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34323",
+    "urn:ietf:spice:glue:pen:12347"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -61.5167,
+          10.6596
+        ]
+      },
+      "properties": {
+        "name": "Legit Shrimp Ltd Facility",
+        "type": "Seafood Supplier",
+        "role": "supplier",
+        "address": {
+          "streetAddress": "Port of Spain Harbor",
+          "addressLocality": "Port of Spain",
+          "addressRegion": "Port of Spain",
+          "addressCountry": "TT"
+        },
+        "legitimacy": "legitimate-identity-stolen"
+      }
+    }
+  ]
+}
 ```
 
-Exit code: 1
+</details>
+```
+
+Exit code: 0
 </details>
 
 <details>
-<summary>❌ Validate Shady Carrier Controller</summary>
+<summary>✅ Validate Shady Carrier Controller</summary>
 
 ```bash
-$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/shady-carrier-controller.json
+$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/shady-carrier-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml
 ```
 
 ```
 Validating controller document case-studies/transhrimpment/controllers/shady-carrier-controller.json...
 ✅ Security check passed - no private keys detected
-❌ Controller document is invalid:
-[
-  {
-    "instancePath": "",
-    "schemaPath": "#/required",
-    "keyword": "required",
-    "params": {
-      "missingProperty": "controller"
-    },
-    "message": "must have required property 'controller'",
-    "schema": [
-      "controller"
-    ],
-    "parentSchema": {
-      "title": "Controller Document Schema",
-      "description": "Schema for validating controller documents with cryptographic verification methods and geographic features",
-      "type": "object",
-      "required": [
-        "controller"
-      ],
-      "properties": {
-        "controller": {
-          "type": "object",
-          "required": [
-            "@context",
-            "id",
-            "verificationMethod"
-          ],
-          "properties": {
-            "@context": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "minItems": 1,
-              "contains": {
-                "const": "https://www.w3.org/ns/cid/v1"
-              }
-            },
-            "id": {
-              "type": "string",
-              "format": "uri",
-              "description": "The controller identifier"
-            },
-            "alsoKnownAs": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Alternative identifiers for this controller (e.g., different geohash precisions, subsidiary IDs)"
-            },
-            "verificationMethod": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "type": "object",
-                "required": [
-                  "id",
-                  "type",
-                  "controller",
-                  "publicKeyJwk"
-                ],
-                "properties": {
-                  "id": {
-                    "type": "string",
-                    "format": "uri",
-                    "description": "Key identifier (controller ID + key thumbprint)"
-                  },
-                  "type": {
-                    "const": "JsonWebKey"
-                  },
-                  "controller": {
-                    "type": "string",
-                    "format": "uri",
-                    "description": "Must match the controller's id"
-                  },
-                  "publicKeyJwk": {
-                    "type": "object",
-                    "required": [
-                      "kid",
-                      "kty",
-                      "crv",
-                      "alg",
-                      "x",
-                      "y",
-                      "key_ops"
-                    ],
-                    "properties": {
-                      "kid": {
-                        "type": "string",
-                        "description": "Key ID (thumbprint)"
-                      },
-                      "kty": {
-                        "const": "EC"
-                      },
-                      "crv": {
-                        "const": "P-256"
-                      },
-                      "alg": {
-                        "const": "ES256"
-                      },
-                      "x": {
-                        "type": "string",
-                        "description": "Public key X coordinate (base64url)"
-                      },
-                      "y": {
-                        "type": "string",
-                        "description": "Public key Y coordinate (base64url)"
-                      },
-                      "key_ops": {
-                        "type": "array",
-                        "items": {
-                          "const": "verify"
-                        },
-                        "minItems": 1,
-                        "maxItems": 1
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "assertionMethod": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Key IDs used for assertions/credentials"
-            },
-            "authentication": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Key IDs used for authentication"
-            },
-            "type": {
-              "const": "FeatureCollection",
-              "description": "GeoJSON type for geographic features"
-            },
-            "features": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": [
-                  "type",
-                  "geometry",
-                  "properties"
-                ],
-                "properties": {
-                  "type": {
-                    "const": "Feature"
-                  },
-                  "geometry": {
-                    "$ref": "#/$defs/GeoJSONPoint"
-                  },
-                  "properties": {
-                    "type": "object",
-                    "required": [
-                      "name",
-                      "type"
-                    ],
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "description": "Human-readable name for the location"
-                      },
-                      "type": {
-                        "type": "string",
-                        "description": "Type of entity or facility"
-                      },
-                      "role": {
-                        "type": "string",
-                        "description": "Role of this location"
-                      },
-                      "address": {
-                        "type": "object",
-                        "properties": {
-                          "streetAddress": {
-                            "type": "string"
-                          },
-                          "addressLocality": {
-                            "type": "string"
-                          },
-                          "addressRegion": {
-                            "type": "string"
-                          },
-                          "addressCountry": {
-                            "type": "string"
-                          }
-                        }
-                      },
-                      "capacity": {
-                        "type": "string",
-                        "description": "Storage or operational capacity"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "generatedKeys": {
-          "type": "object",
-          "description": "Reserved for private key generation metadata (should be empty in public controllers)"
-        },
-        "generated": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Timestamp when controller was generated"
-        }
-      },
-      "examples": [
-        {
-          "controller": {
-            "@context": [
-              "https://www.w3.org/ns/cid/v1",
-              "https://geojson.org/geojson-ld/geojson-context.jsonld"
-            ],
-            "id": "https://example.com/entity/test-001",
-            "alsoKnownAs": [
-              "https://example.com/geo/9q8yyk",
-              "https://example.com/geo/9q8yy"
-            ],
-            "verificationMethod": [
-              {
-                "id": "https://example.com/entity/test-001#4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE",
-                "type": "JsonWebKey",
-                "controller": "https://example.com/entity/test-001",
-                "publicKeyJwk": {
-                  "kid": "4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE",
-                  "kty": "EC",
-                  "crv": "P-256",
-                  "alg": "ES256",
-                  "x": "TXYRYgX8eZTx4m7OkMRy_kLdaBIq9hCEQmODECNGSMw",
-                  "y": "rQ9q1YQHb8YTd6i6EaLYf_ycb9vQpN6VkLaFWlI5T_o",
-                  "key_ops": [
-                    "verify"
-                  ]
-                }
-              }
-            ],
-            "assertionMethod": [
-              "https://example.com/entity/test-001#4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE"
-            ],
-            "authentication": [],
-            "type": "FeatureCollection",
-            "features": [
-              {
-                "type": "Feature",
-                "geometry": {
-                  "type": "Point",
-                  "coordinates": [
-                    -74.0059,
-                    40.7128
-                  ]
-                },
-                "properties": {
-                  "name": "Example Corp Headquarters",
-                  "type": "Corporate Office",
-                  "role": "headquarters",
-                  "address": {
-                    "streetAddress": "123 Main St",
-                    "addressLocality": "New York",
-                    "addressRegion": "NY",
-                    "addressCountry": "US"
-                  }
-                }
-              }
-            ]
-          },
-          "generatedKeys": {},
-          "generated": "2024-01-01T00:00:00Z"
-        }
-      ],
-      "$defs": {
-        "GeoJSONPoint": {
-          "type": "object",
-          "required": [
-            "type",
-            "coordinates"
-          ],
-          "properties": {
-            "type": {
-              "const": "Point"
-            },
-            "coordinates": {
-              "type": "array",
-              "minItems": 2,
-              "maxItems": 3,
-              "items": {
-                "type": "number"
-              }
-            }
-          }
-        }
+✅ Controller document structure is valid
+
+✅ Controller document validation completed successfully
+
+🗺️ Geographic data detected in controller:
+📍 Map Preview: https://www.openstreetmap.org/#map=15/12.5186/-70.0270
+
+<details>
+<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
+
+### 📊 Geographic Analysis
+
+- **Type**: FeatureCollection
+- **Features**: 1
+- **Geometry Types**: Point
+- **Bounding Box**: 12.5186°N, 70.0270°W to 12.5186°N, 70.0270°W
+
+### 🏷️ Feature Properties
+
+**Feature 1:**
+  - **name**: Shady Carrier Ltd Operations
+  - **type**: Carrier
+  - **role**: substitute-carrier
+  - **address**: {"streetAddress":"Harbor District","addressLocality":"Oranjestad","addressRegion":"Aruba","addressCountry":"AW"}
+  - **legitimacy**: fraudulent
+
+### 📍 Coordinates
+
+1. 12.5186°N, 70.0270°W
+
+### 📄 Raw GeoJSON
+
+```geojson
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://shady-carrier.example/entity/aw-oru-001",
+  "verificationMethod": [
+    {
+      "id": "https://shady-carrier.example/entity/aw-oru-001#n7GWD9LbqAZQy1Wt5XdYiy81GofxhJgFnIu8iduEMmE",
+      "type": "JsonWebKey",
+      "controller": "https://shady-carrier.example/entity/aw-oru-001",
+      "publicKeyJwk": {
+        "kid": "n7GWD9LbqAZQy1Wt5XdYiy81GofxhJgFnIu8iduEMmE",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "O8_j4yCoKKJMNapSfWEN37QJkeT3DYAdhgyHtnyF-Dg",
+        "y": "cnlKpR7AMTtTjPTmMRWfy1xTZ8B_gu4BS7oVU8DQL5E",
+        "key_ops": [
+          "verify"
+        ]
       }
     },
-    "data": {
-      "@context": [
-        "https://www.w3.org/ns/cid/v1",
-        "https://geojson.org/geojson-ld/geojson-context.jsonld"
-      ],
-      "id": "https://shady-carrier.example/entity/aw-oru-001",
-      "verificationMethod": [
-        {
-          "id": "https://shady-carrier.example/entity/aw-oru-001#p2rAP3fPS1Z0U0HeYTmWdXs30OgZQSf7vUow2rbVj5Y",
-          "type": "JsonWebKey",
-          "controller": "https://shady-carrier.example/entity/aw-oru-001",
-          "publicKeyJwk": {
-            "kid": "p2rAP3fPS1Z0U0HeYTmWdXs30OgZQSf7vUow2rbVj5Y",
-            "kty": "EC",
-            "crv": "P-256",
-            "alg": "ES256",
-            "x": "jt0Uc5M9xQeejkRhYrcWdrGImrj3e-IKLxMdbpibwIc",
-            "y": "wJYApg61w9QcwOvQ10tiLI0rY9_d7cs3loWj-_yaJVg",
-            "key_ops": [
-              "verify"
-            ]
-          }
-        },
-        {
-          "id": "https://shady-carrier.example/entity/aw-oru-001#5p320J3jhoNjpcAk6as_C41vz1V49SHCck-MycCPd-M",
-          "type": "JsonWebKey",
-          "controller": "https://shady-carrier.example/entity/aw-oru-001",
-          "publicKeyJwk": {
-            "kid": "5p320J3jhoNjpcAk6as_C41vz1V49SHCck-MycCPd-M",
-            "kty": "EC",
-            "crv": "P-256",
-            "alg": "ES256",
-            "x": "CdPcy5Lo3FPO67k8cx5H9-UbvcgVhC-KK0Tf9KITXKQ",
-            "y": "84Mi0h6HscsOpyrNdSlYbJdjEyrAmedUKyil_csbU8g",
-            "key_ops": [
-              "verify"
-            ]
-          }
-        }
-      ],
-      "assertionMethod": [
-        "https://shady-carrier.example/entity/aw-oru-001#p2rAP3fPS1Z0U0HeYTmWdXs30OgZQSf7vUow2rbVj5Y"
-      ],
-      "authentication": [
-        "https://shady-carrier.example/entity/aw-oru-001#5p320J3jhoNjpcAk6as_C41vz1V49SHCck-MycCPd-M"
-      ],
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [
-              -70.027,
-              12.5186
-            ]
-          },
-          "properties": {
-            "name": "Shady Carrier Ltd Operations",
-            "type": "Carrier",
-            "role": "substitute-carrier",
-            "address": {
-              "streetAddress": "Harbor District",
-              "addressLocality": "Oranjestad",
-              "addressRegion": "Aruba",
-              "addressCountry": "AW"
-            },
-            "legitimacy": "fraudulent"
-          }
-        }
-      ]
+    {
+      "id": "https://shady-carrier.example/entity/aw-oru-001#wZ4jnnC68M3NScMKDJfRs9tmYZYm7SYkrnEDjELvd8U",
+      "type": "JsonWebKey",
+      "controller": "https://shady-carrier.example/entity/aw-oru-001",
+      "publicKeyJwk": {
+        "kid": "wZ4jnnC68M3NScMKDJfRs9tmYZYm7SYkrnEDjELvd8U",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "oabo-YwYLrj4PM2RofODEtaFBbX5F1xfeoC5lSm_d-o",
+        "y": "yV7oJnA7Jg7eMTg1mGMq0Goqo9o0MdjQpeF9clic1jM",
+        "key_ops": [
+          "verify"
+        ]
+      }
     }
-  }
-]
+  ],
+  "assertionMethod": [
+    "https://shady-carrier.example/entity/aw-oru-001#n7GWD9LbqAZQy1Wt5XdYiy81GofxhJgFnIu8iduEMmE"
+  ],
+  "authentication": [
+    "https://shady-carrier.example/entity/aw-oru-001#wZ4jnnC68M3NScMKDJfRs9tmYZYm7SYkrnEDjELvd8U"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -70.027,
+          12.5186
+        ]
+      },
+      "properties": {
+        "name": "Shady Carrier Ltd Operations",
+        "type": "Carrier",
+        "role": "substitute-carrier",
+        "address": {
+          "streetAddress": "Harbor District",
+          "addressLocality": "Oranjestad",
+          "addressRegion": "Aruba",
+          "addressCountry": "AW"
+        },
+        "legitimacy": "fraudulent"
+      }
+    }
+  ]
+}
 ```
 
-Exit code: 1
+</details>
+```
+
+Exit code: 0
 </details>
 
 <details>
-<summary>❌ Validate Shady Distributor Controller</summary>
+<summary>✅ Validate Shady Distributor Controller</summary>
 
 ```bash
-$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/shady-distributor-controller.json
+$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/shady-distributor-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml
 ```
 
 ```
 Validating controller document case-studies/transhrimpment/controllers/shady-distributor-controller.json...
 ✅ Security check passed - no private keys detected
-❌ Controller document is invalid:
-[
-  {
-    "instancePath": "",
-    "schemaPath": "#/required",
-    "keyword": "required",
-    "params": {
-      "missingProperty": "controller"
-    },
-    "message": "must have required property 'controller'",
-    "schema": [
-      "controller"
-    ],
-    "parentSchema": {
-      "title": "Controller Document Schema",
-      "description": "Schema for validating controller documents with cryptographic verification methods and geographic features",
-      "type": "object",
-      "required": [
-        "controller"
-      ],
-      "properties": {
-        "controller": {
-          "type": "object",
-          "required": [
-            "@context",
-            "id",
-            "verificationMethod"
-          ],
-          "properties": {
-            "@context": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "minItems": 1,
-              "contains": {
-                "const": "https://www.w3.org/ns/cid/v1"
-              }
-            },
-            "id": {
-              "type": "string",
-              "format": "uri",
-              "description": "The controller identifier"
-            },
-            "alsoKnownAs": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Alternative identifiers for this controller (e.g., different geohash precisions, subsidiary IDs)"
-            },
-            "verificationMethod": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "type": "object",
-                "required": [
-                  "id",
-                  "type",
-                  "controller",
-                  "publicKeyJwk"
-                ],
-                "properties": {
-                  "id": {
-                    "type": "string",
-                    "format": "uri",
-                    "description": "Key identifier (controller ID + key thumbprint)"
-                  },
-                  "type": {
-                    "const": "JsonWebKey"
-                  },
-                  "controller": {
-                    "type": "string",
-                    "format": "uri",
-                    "description": "Must match the controller's id"
-                  },
-                  "publicKeyJwk": {
-                    "type": "object",
-                    "required": [
-                      "kid",
-                      "kty",
-                      "crv",
-                      "alg",
-                      "x",
-                      "y",
-                      "key_ops"
-                    ],
-                    "properties": {
-                      "kid": {
-                        "type": "string",
-                        "description": "Key ID (thumbprint)"
-                      },
-                      "kty": {
-                        "const": "EC"
-                      },
-                      "crv": {
-                        "const": "P-256"
-                      },
-                      "alg": {
-                        "const": "ES256"
-                      },
-                      "x": {
-                        "type": "string",
-                        "description": "Public key X coordinate (base64url)"
-                      },
-                      "y": {
-                        "type": "string",
-                        "description": "Public key Y coordinate (base64url)"
-                      },
-                      "key_ops": {
-                        "type": "array",
-                        "items": {
-                          "const": "verify"
-                        },
-                        "minItems": 1,
-                        "maxItems": 1
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "assertionMethod": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Key IDs used for assertions/credentials"
-            },
-            "authentication": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Key IDs used for authentication"
-            },
-            "type": {
-              "const": "FeatureCollection",
-              "description": "GeoJSON type for geographic features"
-            },
-            "features": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": [
-                  "type",
-                  "geometry",
-                  "properties"
-                ],
-                "properties": {
-                  "type": {
-                    "const": "Feature"
-                  },
-                  "geometry": {
-                    "$ref": "#/$defs/GeoJSONPoint"
-                  },
-                  "properties": {
-                    "type": "object",
-                    "required": [
-                      "name",
-                      "type"
-                    ],
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "description": "Human-readable name for the location"
-                      },
-                      "type": {
-                        "type": "string",
-                        "description": "Type of entity or facility"
-                      },
-                      "role": {
-                        "type": "string",
-                        "description": "Role of this location"
-                      },
-                      "address": {
-                        "type": "object",
-                        "properties": {
-                          "streetAddress": {
-                            "type": "string"
-                          },
-                          "addressLocality": {
-                            "type": "string"
-                          },
-                          "addressRegion": {
-                            "type": "string"
-                          },
-                          "addressCountry": {
-                            "type": "string"
-                          }
-                        }
-                      },
-                      "capacity": {
-                        "type": "string",
-                        "description": "Storage or operational capacity"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "generatedKeys": {
-          "type": "object",
-          "description": "Reserved for private key generation metadata (should be empty in public controllers)"
-        },
-        "generated": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Timestamp when controller was generated"
-        }
-      },
-      "examples": [
-        {
-          "controller": {
-            "@context": [
-              "https://www.w3.org/ns/cid/v1",
-              "https://geojson.org/geojson-ld/geojson-context.jsonld"
-            ],
-            "id": "https://example.com/entity/test-001",
-            "alsoKnownAs": [
-              "https://example.com/geo/9q8yyk",
-              "https://example.com/geo/9q8yy"
-            ],
-            "verificationMethod": [
-              {
-                "id": "https://example.com/entity/test-001#4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE",
-                "type": "JsonWebKey",
-                "controller": "https://example.com/entity/test-001",
-                "publicKeyJwk": {
-                  "kid": "4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE",
-                  "kty": "EC",
-                  "crv": "P-256",
-                  "alg": "ES256",
-                  "x": "TXYRYgX8eZTx4m7OkMRy_kLdaBIq9hCEQmODECNGSMw",
-                  "y": "rQ9q1YQHb8YTd6i6EaLYf_ycb9vQpN6VkLaFWlI5T_o",
-                  "key_ops": [
-                    "verify"
-                  ]
-                }
-              }
-            ],
-            "assertionMethod": [
-              "https://example.com/entity/test-001#4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE"
-            ],
-            "authentication": [],
-            "type": "FeatureCollection",
-            "features": [
-              {
-                "type": "Feature",
-                "geometry": {
-                  "type": "Point",
-                  "coordinates": [
-                    -74.0059,
-                    40.7128
-                  ]
-                },
-                "properties": {
-                  "name": "Example Corp Headquarters",
-                  "type": "Corporate Office",
-                  "role": "headquarters",
-                  "address": {
-                    "streetAddress": "123 Main St",
-                    "addressLocality": "New York",
-                    "addressRegion": "NY",
-                    "addressCountry": "US"
-                  }
-                }
-              }
-            ]
-          },
-          "generatedKeys": {},
-          "generated": "2024-01-01T00:00:00Z"
-        }
-      ],
-      "$defs": {
-        "GeoJSONPoint": {
-          "type": "object",
-          "required": [
-            "type",
-            "coordinates"
-          ],
-          "properties": {
-            "type": {
-              "const": "Point"
-            },
-            "coordinates": {
-              "type": "array",
-              "minItems": 2,
-              "maxItems": 3,
-              "items": {
-                "type": "number"
-              }
-            }
-          }
-        }
+✅ Controller document structure is valid
+
+✅ Controller document validation completed successfully
+
+🗺️ Geographic data detected in controller:
+📍 Map Preview: https://www.openstreetmap.org/#map=15/18.4167/-64.6208
+
+<details>
+<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
+
+### 📊 Geographic Analysis
+
+- **Type**: FeatureCollection
+- **Features**: 1
+- **Geometry Types**: Point
+- **Bounding Box**: 18.4167°N, 64.6208°W to 18.4167°N, 64.6208°W
+
+### 🏷️ Feature Properties
+
+**Feature 1:**
+  - **name**: Shady Distributor Ltd Office
+  - **type**: Seafood Distributor
+  - **role**: intermediary
+  - **address**: {"streetAddress":"Offshore Building","addressLocality":"Road Town","addressRegion":"Tortola","addressCountry":"VG"}
+  - **legitimacy**: fraudulent
+
+### 📍 Coordinates
+
+1. 18.4167°N, 64.6208°W
+
+### 📄 Raw GeoJSON
+
+```geojson
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://shady-distributor.example/entity/bvi-002",
+  "verificationMethod": [
+    {
+      "id": "https://shady-distributor.example/entity/bvi-002#HViV1wlQgzXXbdahjyFDVbU_RxPUVCLQCf51fyGatEc",
+      "type": "JsonWebKey",
+      "controller": "https://shady-distributor.example/entity/bvi-002",
+      "publicKeyJwk": {
+        "kid": "HViV1wlQgzXXbdahjyFDVbU_RxPUVCLQCf51fyGatEc",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "mcpc4991vFrddVHW3wYersLW68Ej_pULgV1pMQDugB4",
+        "y": "xFS824TLI3lEqdpOhO1SM03yCTiwhTI5YkfDcSpjd-s",
+        "key_ops": [
+          "verify"
+        ]
       }
     },
-    "data": {
-      "@context": [
-        "https://www.w3.org/ns/cid/v1",
-        "https://geojson.org/geojson-ld/geojson-context.jsonld"
-      ],
-      "id": "https://shady-distributor.example/entity/bvi-002",
-      "verificationMethod": [
-        {
-          "id": "https://shady-distributor.example/entity/bvi-002#tXxcquvlFbHfipqfo668QmJRHRZeHLD_IsziA86R1Lg",
-          "type": "JsonWebKey",
-          "controller": "https://shady-distributor.example/entity/bvi-002",
-          "publicKeyJwk": {
-            "kid": "tXxcquvlFbHfipqfo668QmJRHRZeHLD_IsziA86R1Lg",
-            "kty": "EC",
-            "crv": "P-256",
-            "alg": "ES256",
-            "x": "gkyTrxlyVF_usl8JFVwPU6a55-RP4xzxM5kfA2VBzZw",
-            "y": "tJdMh2Jah_DMDx8Uqurl_HqvywBZ9PUPCQdIvU68L_k",
-            "key_ops": [
-              "verify"
-            ]
-          }
-        },
-        {
-          "id": "https://shady-distributor.example/entity/bvi-002#eo0fUMMAm__9m87sB7UZZ6eI-SEOwBt_ePJazBRr8is",
-          "type": "JsonWebKey",
-          "controller": "https://shady-distributor.example/entity/bvi-002",
-          "publicKeyJwk": {
-            "kid": "eo0fUMMAm__9m87sB7UZZ6eI-SEOwBt_ePJazBRr8is",
-            "kty": "EC",
-            "crv": "P-256",
-            "alg": "ES256",
-            "x": "vM0cSqv95MbhLokEvGfx2lNercg1Vv2fOVdD4LWRnI0",
-            "y": "gjvu0hU6N4nNg8T4zQRvJt2urDlbr_wuJ9KfFuGdVSs",
-            "key_ops": [
-              "verify"
-            ]
-          }
-        }
-      ],
-      "assertionMethod": [
-        "https://shady-distributor.example/entity/bvi-002#tXxcquvlFbHfipqfo668QmJRHRZeHLD_IsziA86R1Lg"
-      ],
-      "authentication": [
-        "https://shady-distributor.example/entity/bvi-002#eo0fUMMAm__9m87sB7UZZ6eI-SEOwBt_ePJazBRr8is"
-      ],
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [
-              -64.6208,
-              18.4167
-            ]
-          },
-          "properties": {
-            "name": "Shady Distributor Ltd Office",
-            "type": "Seafood Distributor",
-            "role": "intermediary",
-            "address": {
-              "streetAddress": "Offshore Building",
-              "addressLocality": "Road Town",
-              "addressRegion": "Tortola",
-              "addressCountry": "VG"
-            },
-            "legitimacy": "fraudulent"
-          }
-        }
-      ]
+    {
+      "id": "https://shady-distributor.example/entity/bvi-002#6Clq3Dk2UwwBaMsN2Qw2h1QGL5ARbPuAuKwgDUf8ubo",
+      "type": "JsonWebKey",
+      "controller": "https://shady-distributor.example/entity/bvi-002",
+      "publicKeyJwk": {
+        "kid": "6Clq3Dk2UwwBaMsN2Qw2h1QGL5ARbPuAuKwgDUf8ubo",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "24LjV4gWuQp58pNhUJRR94QH5CoQsIJFIVovJiEYmiI",
+        "y": "x_AtZ0vLLiOZgwAGUTBUndyYnOtsA_cDvKWvyWNFeCk",
+        "key_ops": [
+          "verify"
+        ]
+      }
     }
-  }
-]
+  ],
+  "assertionMethod": [
+    "https://shady-distributor.example/entity/bvi-002#HViV1wlQgzXXbdahjyFDVbU_RxPUVCLQCf51fyGatEc"
+  ],
+  "authentication": [
+    "https://shady-distributor.example/entity/bvi-002#6Clq3Dk2UwwBaMsN2Qw2h1QGL5ARbPuAuKwgDUf8ubo"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
+      },
+      "properties": {
+        "name": "Shady Distributor Ltd Office",
+        "type": "Seafood Distributor",
+        "role": "intermediary",
+        "address": {
+          "streetAddress": "Offshore Building",
+          "addressLocality": "Road Town",
+          "addressRegion": "Tortola",
+          "addressCountry": "VG"
+        },
+        "legitimacy": "fraudulent"
+      }
+    }
+  ]
+}
 ```
 
-Exit code: 1
+</details>
+```
+
+Exit code: 0
 </details>
 
 <details>
-<summary>❌ Validate Cargo Line Controller</summary>
+<summary>✅ Validate Cargo Line Controller</summary>
 
 ```bash
-$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/cargo-line-controller.json
+$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/cargo-line-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml
 ```
 
 ```
 Validating controller document case-studies/transhrimpment/controllers/cargo-line-controller.json...
 ✅ Security check passed - no private keys detected
-❌ Controller document is invalid:
-[
-  {
-    "instancePath": "",
-    "schemaPath": "#/required",
-    "keyword": "required",
-    "params": {
-      "missingProperty": "controller"
-    },
-    "message": "must have required property 'controller'",
-    "schema": [
-      "controller"
-    ],
-    "parentSchema": {
-      "title": "Controller Document Schema",
-      "description": "Schema for validating controller documents with cryptographic verification methods and geographic features",
-      "type": "object",
-      "required": [
-        "controller"
-      ],
-      "properties": {
-        "controller": {
-          "type": "object",
-          "required": [
-            "@context",
-            "id",
-            "verificationMethod"
-          ],
-          "properties": {
-            "@context": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "minItems": 1,
-              "contains": {
-                "const": "https://www.w3.org/ns/cid/v1"
-              }
-            },
-            "id": {
-              "type": "string",
-              "format": "uri",
-              "description": "The controller identifier"
-            },
-            "alsoKnownAs": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Alternative identifiers for this controller (e.g., different geohash precisions, subsidiary IDs)"
-            },
-            "verificationMethod": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "type": "object",
-                "required": [
-                  "id",
-                  "type",
-                  "controller",
-                  "publicKeyJwk"
-                ],
-                "properties": {
-                  "id": {
-                    "type": "string",
-                    "format": "uri",
-                    "description": "Key identifier (controller ID + key thumbprint)"
-                  },
-                  "type": {
-                    "const": "JsonWebKey"
-                  },
-                  "controller": {
-                    "type": "string",
-                    "format": "uri",
-                    "description": "Must match the controller's id"
-                  },
-                  "publicKeyJwk": {
-                    "type": "object",
-                    "required": [
-                      "kid",
-                      "kty",
-                      "crv",
-                      "alg",
-                      "x",
-                      "y",
-                      "key_ops"
-                    ],
-                    "properties": {
-                      "kid": {
-                        "type": "string",
-                        "description": "Key ID (thumbprint)"
-                      },
-                      "kty": {
-                        "const": "EC"
-                      },
-                      "crv": {
-                        "const": "P-256"
-                      },
-                      "alg": {
-                        "const": "ES256"
-                      },
-                      "x": {
-                        "type": "string",
-                        "description": "Public key X coordinate (base64url)"
-                      },
-                      "y": {
-                        "type": "string",
-                        "description": "Public key Y coordinate (base64url)"
-                      },
-                      "key_ops": {
-                        "type": "array",
-                        "items": {
-                          "const": "verify"
-                        },
-                        "minItems": 1,
-                        "maxItems": 1
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "assertionMethod": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Key IDs used for assertions/credentials"
-            },
-            "authentication": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Key IDs used for authentication"
-            },
-            "type": {
-              "const": "FeatureCollection",
-              "description": "GeoJSON type for geographic features"
-            },
-            "features": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": [
-                  "type",
-                  "geometry",
-                  "properties"
-                ],
-                "properties": {
-                  "type": {
-                    "const": "Feature"
-                  },
-                  "geometry": {
-                    "$ref": "#/$defs/GeoJSONPoint"
-                  },
-                  "properties": {
-                    "type": "object",
-                    "required": [
-                      "name",
-                      "type"
-                    ],
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "description": "Human-readable name for the location"
-                      },
-                      "type": {
-                        "type": "string",
-                        "description": "Type of entity or facility"
-                      },
-                      "role": {
-                        "type": "string",
-                        "description": "Role of this location"
-                      },
-                      "address": {
-                        "type": "object",
-                        "properties": {
-                          "streetAddress": {
-                            "type": "string"
-                          },
-                          "addressLocality": {
-                            "type": "string"
-                          },
-                          "addressRegion": {
-                            "type": "string"
-                          },
-                          "addressCountry": {
-                            "type": "string"
-                          }
-                        }
-                      },
-                      "capacity": {
-                        "type": "string",
-                        "description": "Storage or operational capacity"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "generatedKeys": {
-          "type": "object",
-          "description": "Reserved for private key generation metadata (should be empty in public controllers)"
-        },
-        "generated": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Timestamp when controller was generated"
-        }
-      },
-      "examples": [
-        {
-          "controller": {
-            "@context": [
-              "https://www.w3.org/ns/cid/v1",
-              "https://geojson.org/geojson-ld/geojson-context.jsonld"
-            ],
-            "id": "https://example.com/entity/test-001",
-            "alsoKnownAs": [
-              "https://example.com/geo/9q8yyk",
-              "https://example.com/geo/9q8yy"
-            ],
-            "verificationMethod": [
-              {
-                "id": "https://example.com/entity/test-001#4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE",
-                "type": "JsonWebKey",
-                "controller": "https://example.com/entity/test-001",
-                "publicKeyJwk": {
-                  "kid": "4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE",
-                  "kty": "EC",
-                  "crv": "P-256",
-                  "alg": "ES256",
-                  "x": "TXYRYgX8eZTx4m7OkMRy_kLdaBIq9hCEQmODECNGSMw",
-                  "y": "rQ9q1YQHb8YTd6i6EaLYf_ycb9vQpN6VkLaFWlI5T_o",
-                  "key_ops": [
-                    "verify"
-                  ]
-                }
-              }
-            ],
-            "assertionMethod": [
-              "https://example.com/entity/test-001#4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE"
-            ],
-            "authentication": [],
-            "type": "FeatureCollection",
-            "features": [
-              {
-                "type": "Feature",
-                "geometry": {
-                  "type": "Point",
-                  "coordinates": [
-                    -74.0059,
-                    40.7128
-                  ]
-                },
-                "properties": {
-                  "name": "Example Corp Headquarters",
-                  "type": "Corporate Office",
-                  "role": "headquarters",
-                  "address": {
-                    "streetAddress": "123 Main St",
-                    "addressLocality": "New York",
-                    "addressRegion": "NY",
-                    "addressCountry": "US"
-                  }
-                }
-              }
-            ]
-          },
-          "generatedKeys": {},
-          "generated": "2024-01-01T00:00:00Z"
-        }
-      ],
-      "$defs": {
-        "GeoJSONPoint": {
-          "type": "object",
-          "required": [
-            "type",
-            "coordinates"
-          ],
-          "properties": {
-            "type": {
-              "const": "Point"
-            },
-            "coordinates": {
-              "type": "array",
-              "minItems": 2,
-              "maxItems": 3,
-              "items": {
-                "type": "number"
-              }
-            }
-          }
-        }
+✅ Controller document structure is valid
+
+✅ Controller document validation completed successfully
+
+🗺️ Geographic data detected in controller:
+📍 Map Preview: https://www.openstreetmap.org/#map=15/18.4655/-66.1057
+
+<details>
+<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
+
+### 📊 Geographic Analysis
+
+- **Type**: FeatureCollection
+- **Features**: 1
+- **Geometry Types**: Point
+- **Bounding Box**: 18.4655°N, 66.1057°W to 18.4655°N, 66.1057°W
+
+### 🏷️ Feature Properties
+
+**Feature 1:**
+  - **name**: Cargo Line Ltd Terminal
+  - **type**: Carrier
+  - **role**: shipping-terminal
+  - **address**: {"streetAddress":"San Juan Port","addressLocality":"San Juan","addressRegion":"San Juan","addressCountry":"PR"}
+  - **status**: fleet-repairs
+
+### 📍 Coordinates
+
+1. 18.4655°N, 66.1057°W
+
+### 📄 Raw GeoJSON
+
+```geojson
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://cargo-line.example/entity/pr-sju-001",
+  "verificationMethod": [
+    {
+      "id": "https://cargo-line.example/entity/pr-sju-001#CYpN-W1EXc6cLPov7axBHMfDv3a_PZoj0LmDjFuP20M",
+      "type": "JsonWebKey",
+      "controller": "https://cargo-line.example/entity/pr-sju-001",
+      "publicKeyJwk": {
+        "kid": "CYpN-W1EXc6cLPov7axBHMfDv3a_PZoj0LmDjFuP20M",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "CyAeJJM3QVXqkVYdLn1E41p8WlJY9KVXcSe4w9bu810",
+        "y": "-ozUpC6b5F8kv_AFylZz2iAjwxzJjD463y73Ghd3OHU",
+        "key_ops": [
+          "verify"
+        ]
       }
     },
-    "data": {
-      "@context": [
-        "https://www.w3.org/ns/cid/v1",
-        "https://geojson.org/geojson-ld/geojson-context.jsonld"
-      ],
-      "id": "https://cargo-line.example/entity/pr-sju-001",
-      "verificationMethod": [
-        {
-          "id": "https://cargo-line.example/entity/pr-sju-001#i4Twbiddz6r45qjQpuSBPGg2QH85bV0S1UpYSEqRen4",
-          "type": "JsonWebKey",
-          "controller": "https://cargo-line.example/entity/pr-sju-001",
-          "publicKeyJwk": {
-            "kid": "i4Twbiddz6r45qjQpuSBPGg2QH85bV0S1UpYSEqRen4",
-            "kty": "EC",
-            "crv": "P-256",
-            "alg": "ES256",
-            "x": "H8pNABuOdX5uQ9LyEOXd9LirInwPYjViRHCM4Hr3eOI",
-            "y": "e9_yxCBPtmxG6Ooj_ZW9R5BERz9dDZfcSMRz54ejPGY",
-            "key_ops": [
-              "verify"
-            ]
-          }
-        },
-        {
-          "id": "https://cargo-line.example/entity/pr-sju-001#rrv2UKsvZXEnhBy81iDiEhi3rLm7E43ZLR7Ro9qawG8",
-          "type": "JsonWebKey",
-          "controller": "https://cargo-line.example/entity/pr-sju-001",
-          "publicKeyJwk": {
-            "kid": "rrv2UKsvZXEnhBy81iDiEhi3rLm7E43ZLR7Ro9qawG8",
-            "kty": "EC",
-            "crv": "P-256",
-            "alg": "ES256",
-            "x": "rvuh81vin8WaB0gCw9PVrlZDiX-_clQ49J-y86pyft8",
-            "y": "xwZl3cgz07gG68p8q3Tctvv-oMBLzCsXx_XW_C1VVIc",
-            "key_ops": [
-              "verify"
-            ]
-          }
-        }
-      ],
-      "assertionMethod": [
-        "https://cargo-line.example/entity/pr-sju-001#i4Twbiddz6r45qjQpuSBPGg2QH85bV0S1UpYSEqRen4"
-      ],
-      "authentication": [
-        "https://cargo-line.example/entity/pr-sju-001#rrv2UKsvZXEnhBy81iDiEhi3rLm7E43ZLR7Ro9qawG8"
-      ],
-      "alsoKnownAs": [
-        "urn:ietf:spice:glue:gln:4598765432105",
-        "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34325",
-        "urn:ietf:spice:glue:pen:12349"
-      ],
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [
-              -66.1057,
-              18.4655
-            ]
-          },
-          "properties": {
-            "name": "Cargo Line Ltd Terminal",
-            "type": "Carrier",
-            "role": "shipping-terminal",
-            "address": {
-              "streetAddress": "San Juan Port",
-              "addressLocality": "San Juan",
-              "addressRegion": "San Juan",
-              "addressCountry": "PR"
-            },
-            "status": "fleet-repairs"
-          }
-        }
-      ]
+    {
+      "id": "https://cargo-line.example/entity/pr-sju-001#40DqwP_7Q5vg1FIWbH-OfbSvP6S6gmIxhXlhFRusLSw",
+      "type": "JsonWebKey",
+      "controller": "https://cargo-line.example/entity/pr-sju-001",
+      "publicKeyJwk": {
+        "kid": "40DqwP_7Q5vg1FIWbH-OfbSvP6S6gmIxhXlhFRusLSw",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "RlhbAC1nBWvI1-OUyedXQgIqbmZH1B-Vc6M0y34S1K0",
+        "y": "5NDUXAzfPJSFqDSmWzajXkNKuTMsnY6x9cS1vMuZkOM",
+        "key_ops": [
+          "verify"
+        ]
+      }
     }
-  }
-]
+  ],
+  "assertionMethod": [
+    "https://cargo-line.example/entity/pr-sju-001#CYpN-W1EXc6cLPov7axBHMfDv3a_PZoj0LmDjFuP20M"
+  ],
+  "authentication": [
+    "https://cargo-line.example/entity/pr-sju-001#40DqwP_7Q5vg1FIWbH-OfbSvP6S6gmIxhXlhFRusLSw"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432105",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34325",
+    "urn:ietf:spice:glue:pen:12349"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -66.1057,
+          18.4655
+        ]
+      },
+      "properties": {
+        "name": "Cargo Line Ltd Terminal",
+        "type": "Carrier",
+        "role": "shipping-terminal",
+        "address": {
+          "streetAddress": "San Juan Port",
+          "addressLocality": "San Juan",
+          "addressRegion": "San Juan",
+          "addressCountry": "PR"
+        },
+        "status": "fleet-repairs"
+      }
+    }
+  ]
+}
 ```
 
-Exit code: 1
+</details>
+```
+
+Exit code: 0
 </details>
 
 <details>
-<summary>❌ Validate Anonymous Distributor Controller</summary>
+<summary>✅ Validate Anonymous Distributor Controller</summary>
 
 ```bash
-$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/anonymous-distributor-controller.json
+$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/anonymous-distributor-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml
 ```
 
 ```
 Validating controller document case-studies/transhrimpment/controllers/anonymous-distributor-controller.json...
 ✅ Security check passed - no private keys detected
-❌ Controller document is invalid:
-[
-  {
-    "instancePath": "",
-    "schemaPath": "#/required",
-    "keyword": "required",
-    "params": {
-      "missingProperty": "controller"
-    },
-    "message": "must have required property 'controller'",
-    "schema": [
-      "controller"
-    ],
-    "parentSchema": {
-      "title": "Controller Document Schema",
-      "description": "Schema for validating controller documents with cryptographic verification methods and geographic features",
-      "type": "object",
-      "required": [
-        "controller"
-      ],
-      "properties": {
-        "controller": {
-          "type": "object",
-          "required": [
-            "@context",
-            "id",
-            "verificationMethod"
-          ],
-          "properties": {
-            "@context": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              },
-              "minItems": 1,
-              "contains": {
-                "const": "https://www.w3.org/ns/cid/v1"
-              }
-            },
-            "id": {
-              "type": "string",
-              "format": "uri",
-              "description": "The controller identifier"
-            },
-            "alsoKnownAs": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Alternative identifiers for this controller (e.g., different geohash precisions, subsidiary IDs)"
-            },
-            "verificationMethod": {
-              "type": "array",
-              "minItems": 1,
-              "items": {
-                "type": "object",
-                "required": [
-                  "id",
-                  "type",
-                  "controller",
-                  "publicKeyJwk"
-                ],
-                "properties": {
-                  "id": {
-                    "type": "string",
-                    "format": "uri",
-                    "description": "Key identifier (controller ID + key thumbprint)"
-                  },
-                  "type": {
-                    "const": "JsonWebKey"
-                  },
-                  "controller": {
-                    "type": "string",
-                    "format": "uri",
-                    "description": "Must match the controller's id"
-                  },
-                  "publicKeyJwk": {
-                    "type": "object",
-                    "required": [
-                      "kid",
-                      "kty",
-                      "crv",
-                      "alg",
-                      "x",
-                      "y",
-                      "key_ops"
-                    ],
-                    "properties": {
-                      "kid": {
-                        "type": "string",
-                        "description": "Key ID (thumbprint)"
-                      },
-                      "kty": {
-                        "const": "EC"
-                      },
-                      "crv": {
-                        "const": "P-256"
-                      },
-                      "alg": {
-                        "const": "ES256"
-                      },
-                      "x": {
-                        "type": "string",
-                        "description": "Public key X coordinate (base64url)"
-                      },
-                      "y": {
-                        "type": "string",
-                        "description": "Public key Y coordinate (base64url)"
-                      },
-                      "key_ops": {
-                        "type": "array",
-                        "items": {
-                          "const": "verify"
-                        },
-                        "minItems": 1,
-                        "maxItems": 1
-                      }
-                    }
-                  }
-                }
-              }
-            },
-            "assertionMethod": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Key IDs used for assertions/credentials"
-            },
-            "authentication": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uri"
-              },
-              "description": "Key IDs used for authentication"
-            },
-            "type": {
-              "const": "FeatureCollection",
-              "description": "GeoJSON type for geographic features"
-            },
-            "features": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "required": [
-                  "type",
-                  "geometry",
-                  "properties"
-                ],
-                "properties": {
-                  "type": {
-                    "const": "Feature"
-                  },
-                  "geometry": {
-                    "$ref": "#/$defs/GeoJSONPoint"
-                  },
-                  "properties": {
-                    "type": "object",
-                    "required": [
-                      "name",
-                      "type"
-                    ],
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "description": "Human-readable name for the location"
-                      },
-                      "type": {
-                        "type": "string",
-                        "description": "Type of entity or facility"
-                      },
-                      "role": {
-                        "type": "string",
-                        "description": "Role of this location"
-                      },
-                      "address": {
-                        "type": "object",
-                        "properties": {
-                          "streetAddress": {
-                            "type": "string"
-                          },
-                          "addressLocality": {
-                            "type": "string"
-                          },
-                          "addressRegion": {
-                            "type": "string"
-                          },
-                          "addressCountry": {
-                            "type": "string"
-                          }
-                        }
-                      },
-                      "capacity": {
-                        "type": "string",
-                        "description": "Storage or operational capacity"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "generatedKeys": {
-          "type": "object",
-          "description": "Reserved for private key generation metadata (should be empty in public controllers)"
-        },
-        "generated": {
-          "type": "string",
-          "format": "date-time",
-          "description": "Timestamp when controller was generated"
-        }
-      },
-      "examples": [
-        {
-          "controller": {
-            "@context": [
-              "https://www.w3.org/ns/cid/v1",
-              "https://geojson.org/geojson-ld/geojson-context.jsonld"
-            ],
-            "id": "https://example.com/entity/test-001",
-            "alsoKnownAs": [
-              "https://example.com/geo/9q8yyk",
-              "https://example.com/geo/9q8yy"
-            ],
-            "verificationMethod": [
-              {
-                "id": "https://example.com/entity/test-001#4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE",
-                "type": "JsonWebKey",
-                "controller": "https://example.com/entity/test-001",
-                "publicKeyJwk": {
-                  "kid": "4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE",
-                  "kty": "EC",
-                  "crv": "P-256",
-                  "alg": "ES256",
-                  "x": "TXYRYgX8eZTx4m7OkMRy_kLdaBIq9hCEQmODECNGSMw",
-                  "y": "rQ9q1YQHb8YTd6i6EaLYf_ycb9vQpN6VkLaFWlI5T_o",
-                  "key_ops": [
-                    "verify"
-                  ]
-                }
-              }
-            ],
-            "assertionMethod": [
-              "https://example.com/entity/test-001#4WuGEP6mYyNxNfrEfz4dUa5e9WNZq39_pRfzqKtPOPE"
-            ],
-            "authentication": [],
-            "type": "FeatureCollection",
-            "features": [
-              {
-                "type": "Feature",
-                "geometry": {
-                  "type": "Point",
-                  "coordinates": [
-                    -74.0059,
-                    40.7128
-                  ]
-                },
-                "properties": {
-                  "name": "Example Corp Headquarters",
-                  "type": "Corporate Office",
-                  "role": "headquarters",
-                  "address": {
-                    "streetAddress": "123 Main St",
-                    "addressLocality": "New York",
-                    "addressRegion": "NY",
-                    "addressCountry": "US"
-                  }
-                }
-              }
-            ]
-          },
-          "generatedKeys": {},
-          "generated": "2024-01-01T00:00:00Z"
-        }
-      ],
-      "$defs": {
-        "GeoJSONPoint": {
-          "type": "object",
-          "required": [
-            "type",
-            "coordinates"
-          ],
-          "properties": {
-            "type": {
-              "const": "Point"
-            },
-            "coordinates": {
-              "type": "array",
-              "minItems": 2,
-              "maxItems": 3,
-              "items": {
-                "type": "number"
-              }
-            }
-          }
-        }
+✅ Controller document structure is valid
+
+✅ Controller document validation completed successfully
+
+🗺️ Geographic data detected in controller:
+📍 Map Preview: https://www.openstreetmap.org/#map=15/18.3419/-64.9307
+
+<details>
+<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
+
+### 📊 Geographic Analysis
+
+- **Type**: FeatureCollection
+- **Features**: 1
+- **Geometry Types**: Point
+- **Bounding Box**: 18.3419°N, 64.9307°W to 18.3419°N, 64.9307°W
+
+### 🏷️ Feature Properties
+
+**Feature 1:**
+  - **name**: Anonymous Distributor Warehouse
+  - **type**: Seafood Distributor
+  - **role**: final-buyer
+  - **address**: {"streetAddress":"Charlotte Amalie Port","addressLocality":"Charlotte Amalie","addressRegion":"St. Thomas","addressCountry":"VI"}
+  - **legitimacy**: legitimate-victim
+
+### 📍 Coordinates
+
+1. 18.3419°N, 64.9307°W
+
+### 📄 Raw GeoJSON
+
+```geojson
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://anonymous-distributor.example/entity/vi-stt-001",
+  "verificationMethod": [
+    {
+      "id": "https://anonymous-distributor.example/entity/vi-stt-001#FIqtv3VJ5UBHnM12mGc0X5ebDP0kvRCWOH2rt4BsZ3I",
+      "type": "JsonWebKey",
+      "controller": "https://anonymous-distributor.example/entity/vi-stt-001",
+      "publicKeyJwk": {
+        "kid": "FIqtv3VJ5UBHnM12mGc0X5ebDP0kvRCWOH2rt4BsZ3I",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "epiVTdrRJ7_oCgBVC9CENFQMATouDkFdgjEZ_fv0hno",
+        "y": "Q676uMpDwdLZaNnvTx6ITGAz7ROtqfeTwjOnEGMxRFY",
+        "key_ops": [
+          "verify"
+        ]
       }
     },
-    "data": {
-      "@context": [
-        "https://www.w3.org/ns/cid/v1",
-        "https://geojson.org/geojson-ld/geojson-context.jsonld"
-      ],
-      "id": "https://anonymous-distributor.example/entity/vi-stt-001",
-      "verificationMethod": [
-        {
-          "id": "https://anonymous-distributor.example/entity/vi-stt-001#dBXT804ewjGRZyp_EmFVuIRBoeU9aOZwzNVte8BTFLk",
-          "type": "JsonWebKey",
-          "controller": "https://anonymous-distributor.example/entity/vi-stt-001",
-          "publicKeyJwk": {
-            "kid": "dBXT804ewjGRZyp_EmFVuIRBoeU9aOZwzNVte8BTFLk",
-            "kty": "EC",
-            "crv": "P-256",
-            "alg": "ES256",
-            "x": "r3ywqWrruCW0ciHUP2fuVlUndQ13EAESFNluFxUhA18",
-            "y": "cTRcYPPOeHrNBmakIkms4xly1RoAEd8O6yxwHolEqTI",
-            "key_ops": [
-              "verify"
-            ]
-          }
-        },
-        {
-          "id": "https://anonymous-distributor.example/entity/vi-stt-001#mDfeZFqaB5NeMydO5ijKkIx5KmuR-jD1YRyxV72_Rtc",
-          "type": "JsonWebKey",
-          "controller": "https://anonymous-distributor.example/entity/vi-stt-001",
-          "publicKeyJwk": {
-            "kid": "mDfeZFqaB5NeMydO5ijKkIx5KmuR-jD1YRyxV72_Rtc",
-            "kty": "EC",
-            "crv": "P-256",
-            "alg": "ES256",
-            "x": "UBd9mGrOCZTrckPSRwjHPPUFP4NYUjsTG63CayP0JHc",
-            "y": "W7iVkGh3qI0WarWEeK3peUDqR9j5Cj5VQHC0X4ikHUk",
-            "key_ops": [
-              "verify"
-            ]
-          }
-        }
-      ],
-      "assertionMethod": [
-        "https://anonymous-distributor.example/entity/vi-stt-001#dBXT804ewjGRZyp_EmFVuIRBoeU9aOZwzNVte8BTFLk"
-      ],
-      "authentication": [
-        "https://anonymous-distributor.example/entity/vi-stt-001#mDfeZFqaB5NeMydO5ijKkIx5KmuR-jD1YRyxV72_Rtc"
-      ],
-      "alsoKnownAs": [
-        "urn:ietf:spice:glue:gln:4598765432106",
-        "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34326",
-        "urn:ietf:spice:glue:pen:12350"
-      ],
-      "type": "FeatureCollection",
-      "features": [
-        {
-          "type": "Feature",
-          "geometry": {
-            "type": "Point",
-            "coordinates": [
-              -64.9307,
-              18.3419
-            ]
-          },
-          "properties": {
-            "name": "Anonymous Distributor Warehouse",
-            "type": "Seafood Distributor",
-            "role": "final-buyer",
-            "address": {
-              "streetAddress": "Charlotte Amalie Port",
-              "addressLocality": "Charlotte Amalie",
-              "addressRegion": "St. Thomas",
-              "addressCountry": "VI"
-            },
-            "legitimacy": "legitimate-victim"
-          }
-        }
-      ]
+    {
+      "id": "https://anonymous-distributor.example/entity/vi-stt-001#0JiKwGYOUs2kjcvt4r0r7TPOdj50u8Qiy6iC-msCpbU",
+      "type": "JsonWebKey",
+      "controller": "https://anonymous-distributor.example/entity/vi-stt-001",
+      "publicKeyJwk": {
+        "kid": "0JiKwGYOUs2kjcvt4r0r7TPOdj50u8Qiy6iC-msCpbU",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "1s9zQp3vIeDcaWt5LLIVD71QjvAVHx14tW9T8NCb02A",
+        "y": "pOFO3eSARH_ifdEUAWSRtGuotEwlg9xMULir7G93aDA",
+        "key_ops": [
+          "verify"
+        ]
+      }
     }
-  }
-]
+  ],
+  "assertionMethod": [
+    "https://anonymous-distributor.example/entity/vi-stt-001#FIqtv3VJ5UBHnM12mGc0X5ebDP0kvRCWOH2rt4BsZ3I"
+  ],
+  "authentication": [
+    "https://anonymous-distributor.example/entity/vi-stt-001#0JiKwGYOUs2kjcvt4r0r7TPOdj50u8Qiy6iC-msCpbU"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432106",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34326",
+    "urn:ietf:spice:glue:pen:12350"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.9307,
+          18.3419
+        ]
+      },
+      "properties": {
+        "name": "Anonymous Distributor Warehouse",
+        "type": "Seafood Distributor",
+        "role": "final-buyer",
+        "address": {
+          "streetAddress": "Charlotte Amalie Port",
+          "addressLocality": "Charlotte Amalie",
+          "addressRegion": "St. Thomas",
+          "addressCountry": "VI"
+        },
+        "legitimacy": "legitimate-victim"
+      }
+    }
+  ]
+}
 ```
 
-Exit code: 1
+</details>
+```
+
+Exit code: 0
 </details>
 
 ### GeoJSON Rendering for Controller Documents
@@ -2907,297 +1036,873 @@ Rendering geographic data from controller documents to visualize entity location
 
 
 <details>
-<summary>❌ Render GeoJSON for anonymous-distributor</summary>
+<summary>✅ Analyze GeoJSON for anonymous-distributor</summary>
 
 ```bash
-$ bun src/cli.ts render-geojson --controller case-studies/transhrimpment/controllers/anonymous-distributor-controller.json --out case-studies/transhrimpment/anonymous-distributor-location.geojson
+$ bun src/cli.ts analyze-geojson --controller case-studies/transhrimpment/controllers/anonymous-distributor-controller.json
 ```
 
 ```
-Unknown command: render-geojson
+Analyzing GeoJSON in controller case-studies/transhrimpment/controllers/anonymous-distributor-controller.json...
+✅ GeoJSON detected: Feature collection with 1 features containing Point
+📍 Map Preview: https://www.openstreetmap.org/#map=15/18.3419/-64.9307
 
-Verifiable Supply Chain CLI
+<details>
+<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
 
-Usage: bun cli.ts <command> [options]
+### 📊 Geographic Analysis
 
-Commands:
-  init-case-study --name <case-name>            Initialize a new case study with configuration files
-  generate-keys --out <file>                    Generate key pair and save to file
-  generate-controller --config <file> --out <file>   Generate controller from config file
-  sign-credential --key <file> --cred <file> --out <file>   Sign credential with private key
-  sign-presentation --key <file> --pres <file> --out <file> Sign presentation with private key
-  verify-credential --cred <file> --key <file>           Verify credential with public key
-  verify-presentation --pres <file> --resolver <file>    Verify presentation with resolver
-  extract-public-key --key <file> --out <file>           Extract public key from private key
-  validate-schema --schema <file> [--example <file>]      Validate YAML schema and optional example
-  validate-controller --controller <file>                 Validate controller document (security + schema)
-  analyze-geojson --credential <file> [--out <file>]     Analyze GeoJSON in credential and export markdown
-  analyze-geojson --controller <file> [--out <file>]    Analyze GeoJSON in controller and export markdown
-  help                                          Show this help message
+- **Type**: FeatureCollection
+- **Features**: 1
+- **Geometry Types**: Point
+- **Bounding Box**: 18.3419°N, 64.9307°W to 18.3419°N, 64.9307°W
 
-Examples:
-  bun cli.ts init-case-study --name my-case-study
-  bun cli.ts generate-keys --out entity1-keys.json
-  bun cli.ts generate-controller --config entity1-config.json --out entity1-controller.json
-  bun cli.ts sign-credential --key entity1-keys.json --cred shipment.json --out signed-shipment.json
-  bun cli.ts verify-credential --cred signed-shipment.json --key entity1-public.json
-  bun cli.ts validate-schema --schema schema.yaml --example example.json
-  bun cli.ts validate-controller --controller controller.json
+### 🏷️ Feature Properties
+
+**Feature 1:**
+  - **name**: Anonymous Distributor Warehouse
+  - **type**: Seafood Distributor
+  - **role**: final-buyer
+  - **address**: {"streetAddress":"Charlotte Amalie Port","addressLocality":"Charlotte Amalie","addressRegion":"St. Thomas","addressCountry":"VI"}
+  - **legitimacy**: legitimate-victim
+
+### 📍 Coordinates
+
+1. 18.3419°N, 64.9307°W
+
+### 📄 Raw GeoJSON
+
+```geojson
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://anonymous-distributor.example/entity/vi-stt-001",
+  "verificationMethod": [
+    {
+      "id": "https://anonymous-distributor.example/entity/vi-stt-001#FIqtv3VJ5UBHnM12mGc0X5ebDP0kvRCWOH2rt4BsZ3I",
+      "type": "JsonWebKey",
+      "controller": "https://anonymous-distributor.example/entity/vi-stt-001",
+      "publicKeyJwk": {
+        "kid": "FIqtv3VJ5UBHnM12mGc0X5ebDP0kvRCWOH2rt4BsZ3I",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "epiVTdrRJ7_oCgBVC9CENFQMATouDkFdgjEZ_fv0hno",
+        "y": "Q676uMpDwdLZaNnvTx6ITGAz7ROtqfeTwjOnEGMxRFY",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://anonymous-distributor.example/entity/vi-stt-001#0JiKwGYOUs2kjcvt4r0r7TPOdj50u8Qiy6iC-msCpbU",
+      "type": "JsonWebKey",
+      "controller": "https://anonymous-distributor.example/entity/vi-stt-001",
+      "publicKeyJwk": {
+        "kid": "0JiKwGYOUs2kjcvt4r0r7TPOdj50u8Qiy6iC-msCpbU",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "1s9zQp3vIeDcaWt5LLIVD71QjvAVHx14tW9T8NCb02A",
+        "y": "pOFO3eSARH_ifdEUAWSRtGuotEwlg9xMULir7G93aDA",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://anonymous-distributor.example/entity/vi-stt-001#FIqtv3VJ5UBHnM12mGc0X5ebDP0kvRCWOH2rt4BsZ3I"
+  ],
+  "authentication": [
+    "https://anonymous-distributor.example/entity/vi-stt-001#0JiKwGYOUs2kjcvt4r0r7TPOdj50u8Qiy6iC-msCpbU"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432106",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34326",
+    "urn:ietf:spice:glue:pen:12350"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.9307,
+          18.3419
+        ]
+      },
+      "properties": {
+        "name": "Anonymous Distributor Warehouse",
+        "type": "Seafood Distributor",
+        "role": "final-buyer",
+        "address": {
+          "streetAddress": "Charlotte Amalie Port",
+          "addressLocality": "Charlotte Amalie",
+          "addressRegion": "St. Thomas",
+          "addressCountry": "VI"
+        },
+        "legitimacy": "legitimate-victim"
+      }
+    }
+  ]
+}
 ```
 
-Exit code: 1
+</details>
+```
+
+Exit code: 0
 </details>
 
 <details>
-<summary>❌ Render GeoJSON for camaron-corriente</summary>
+<summary>✅ Analyze GeoJSON for camaron-corriente</summary>
 
 ```bash
-$ bun src/cli.ts render-geojson --controller case-studies/transhrimpment/controllers/camaron-corriente-controller.json --out case-studies/transhrimpment/camaron-corriente-location.geojson
+$ bun src/cli.ts analyze-geojson --controller case-studies/transhrimpment/controllers/camaron-corriente-controller.json
 ```
 
 ```
-Unknown command: render-geojson
+Analyzing GeoJSON in controller case-studies/transhrimpment/controllers/camaron-corriente-controller.json...
+✅ GeoJSON detected: Feature collection with 1 features containing Point
+📍 Map Preview: https://www.openstreetmap.org/#map=15/10.4647/-68.0125
 
-Verifiable Supply Chain CLI
+<details>
+<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
 
-Usage: bun cli.ts <command> [options]
+### 📊 Geographic Analysis
 
-Commands:
-  init-case-study --name <case-name>            Initialize a new case study with configuration files
-  generate-keys --out <file>                    Generate key pair and save to file
-  generate-controller --config <file> --out <file>   Generate controller from config file
-  sign-credential --key <file> --cred <file> --out <file>   Sign credential with private key
-  sign-presentation --key <file> --pres <file> --out <file> Sign presentation with private key
-  verify-credential --cred <file> --key <file>           Verify credential with public key
-  verify-presentation --pres <file> --resolver <file>    Verify presentation with resolver
-  extract-public-key --key <file> --out <file>           Extract public key from private key
-  validate-schema --schema <file> [--example <file>]      Validate YAML schema and optional example
-  validate-controller --controller <file>                 Validate controller document (security + schema)
-  analyze-geojson --credential <file> [--out <file>]     Analyze GeoJSON in credential and export markdown
-  analyze-geojson --controller <file> [--out <file>]    Analyze GeoJSON in controller and export markdown
-  help                                          Show this help message
+- **Type**: FeatureCollection
+- **Features**: 1
+- **Geometry Types**: Point
+- **Bounding Box**: 10.4647°N, 68.0125°W to 10.4647°N, 68.0125°W
 
-Examples:
-  bun cli.ts init-case-study --name my-case-study
-  bun cli.ts generate-keys --out entity1-keys.json
-  bun cli.ts generate-controller --config entity1-config.json --out entity1-controller.json
-  bun cli.ts sign-credential --key entity1-keys.json --cred shipment.json --out signed-shipment.json
-  bun cli.ts verify-credential --cred signed-shipment.json --key entity1-public.json
-  bun cli.ts validate-schema --schema schema.yaml --example example.json
-  bun cli.ts validate-controller --controller controller.json
+### 🏷️ Feature Properties
+
+**Feature 1:**
+  - **name**: Camarón Corriente S.A. Port Facility
+  - **type**: Seafood Distributor
+  - **role**: export-facility
+  - **address**: {"streetAddress":"Puerto Cabello Port","addressLocality":"Puerto Cabello","addressRegion":"Carabobo","addressCountry":"VE"}
+
+### 📍 Coordinates
+
+1. 10.4647°N, 68.0125°W
+
+### 📄 Raw GeoJSON
+
+```geojson
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+  "verificationMethod": [
+    {
+      "id": "https://camaron-corriente.example/entity/ve-pbc-001#wCgZYzU2U073ubVOEp7wcNHxwEIGuiEoY42b2tuKwfY",
+      "type": "JsonWebKey",
+      "controller": "https://camaron-corriente.example/entity/ve-pbc-001",
+      "publicKeyJwk": {
+        "kid": "wCgZYzU2U073ubVOEp7wcNHxwEIGuiEoY42b2tuKwfY",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "od157huUldxEgWY06BgwPXoRP-3mBvVGrg2aM09-eY0",
+        "y": "9-NhMiNgOh2-lgsOGvzUKZXxAj-9Xw_QtpvvOt2LhSk",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://camaron-corriente.example/entity/ve-pbc-001#G5OJWJPRMVV4EQBPnv5Y2zHhV8lb13hzccIeLNFR9nU",
+      "type": "JsonWebKey",
+      "controller": "https://camaron-corriente.example/entity/ve-pbc-001",
+      "publicKeyJwk": {
+        "kid": "G5OJWJPRMVV4EQBPnv5Y2zHhV8lb13hzccIeLNFR9nU",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "z5Hry9ABSN60szLVg9ScUJb3W-Q6sdoGOUN5sl9lXI8",
+        "y": "lChjGkAl5o1Iu7WI2YcbyC71qZtluj6ecILxqQeKUVo",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://camaron-corriente.example/entity/ve-pbc-001#wCgZYzU2U073ubVOEp7wcNHxwEIGuiEoY42b2tuKwfY"
+  ],
+  "authentication": [
+    "https://camaron-corriente.example/entity/ve-pbc-001#G5OJWJPRMVV4EQBPnv5Y2zHhV8lb13hzccIeLNFR9nU"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432102",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34322",
+    "urn:ietf:spice:glue:pen:12346"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -68.0125,
+          10.4647
+        ]
+      },
+      "properties": {
+        "name": "Camarón Corriente S.A. Port Facility",
+        "type": "Seafood Distributor",
+        "role": "export-facility",
+        "address": {
+          "streetAddress": "Puerto Cabello Port",
+          "addressLocality": "Puerto Cabello",
+          "addressRegion": "Carabobo",
+          "addressCountry": "VE"
+        }
+      }
+    }
+  ]
+}
 ```
 
-Exit code: 1
+</details>
+```
+
+Exit code: 0
 </details>
 
 <details>
-<summary>❌ Render GeoJSON for cargo-line</summary>
+<summary>✅ Analyze GeoJSON for cargo-line</summary>
 
 ```bash
-$ bun src/cli.ts render-geojson --controller case-studies/transhrimpment/controllers/cargo-line-controller.json --out case-studies/transhrimpment/cargo-line-location.geojson
+$ bun src/cli.ts analyze-geojson --controller case-studies/transhrimpment/controllers/cargo-line-controller.json
 ```
 
 ```
-Unknown command: render-geojson
+Analyzing GeoJSON in controller case-studies/transhrimpment/controllers/cargo-line-controller.json...
+✅ GeoJSON detected: Feature collection with 1 features containing Point
+📍 Map Preview: https://www.openstreetmap.org/#map=15/18.4655/-66.1057
 
-Verifiable Supply Chain CLI
+<details>
+<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
 
-Usage: bun cli.ts <command> [options]
+### 📊 Geographic Analysis
 
-Commands:
-  init-case-study --name <case-name>            Initialize a new case study with configuration files
-  generate-keys --out <file>                    Generate key pair and save to file
-  generate-controller --config <file> --out <file>   Generate controller from config file
-  sign-credential --key <file> --cred <file> --out <file>   Sign credential with private key
-  sign-presentation --key <file> --pres <file> --out <file> Sign presentation with private key
-  verify-credential --cred <file> --key <file>           Verify credential with public key
-  verify-presentation --pres <file> --resolver <file>    Verify presentation with resolver
-  extract-public-key --key <file> --out <file>           Extract public key from private key
-  validate-schema --schema <file> [--example <file>]      Validate YAML schema and optional example
-  validate-controller --controller <file>                 Validate controller document (security + schema)
-  analyze-geojson --credential <file> [--out <file>]     Analyze GeoJSON in credential and export markdown
-  analyze-geojson --controller <file> [--out <file>]    Analyze GeoJSON in controller and export markdown
-  help                                          Show this help message
+- **Type**: FeatureCollection
+- **Features**: 1
+- **Geometry Types**: Point
+- **Bounding Box**: 18.4655°N, 66.1057°W to 18.4655°N, 66.1057°W
 
-Examples:
-  bun cli.ts init-case-study --name my-case-study
-  bun cli.ts generate-keys --out entity1-keys.json
-  bun cli.ts generate-controller --config entity1-config.json --out entity1-controller.json
-  bun cli.ts sign-credential --key entity1-keys.json --cred shipment.json --out signed-shipment.json
-  bun cli.ts verify-credential --cred signed-shipment.json --key entity1-public.json
-  bun cli.ts validate-schema --schema schema.yaml --example example.json
-  bun cli.ts validate-controller --controller controller.json
+### 🏷️ Feature Properties
+
+**Feature 1:**
+  - **name**: Cargo Line Ltd Terminal
+  - **type**: Carrier
+  - **role**: shipping-terminal
+  - **address**: {"streetAddress":"San Juan Port","addressLocality":"San Juan","addressRegion":"San Juan","addressCountry":"PR"}
+  - **status**: fleet-repairs
+
+### 📍 Coordinates
+
+1. 18.4655°N, 66.1057°W
+
+### 📄 Raw GeoJSON
+
+```geojson
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://cargo-line.example/entity/pr-sju-001",
+  "verificationMethod": [
+    {
+      "id": "https://cargo-line.example/entity/pr-sju-001#CYpN-W1EXc6cLPov7axBHMfDv3a_PZoj0LmDjFuP20M",
+      "type": "JsonWebKey",
+      "controller": "https://cargo-line.example/entity/pr-sju-001",
+      "publicKeyJwk": {
+        "kid": "CYpN-W1EXc6cLPov7axBHMfDv3a_PZoj0LmDjFuP20M",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "CyAeJJM3QVXqkVYdLn1E41p8WlJY9KVXcSe4w9bu810",
+        "y": "-ozUpC6b5F8kv_AFylZz2iAjwxzJjD463y73Ghd3OHU",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://cargo-line.example/entity/pr-sju-001#40DqwP_7Q5vg1FIWbH-OfbSvP6S6gmIxhXlhFRusLSw",
+      "type": "JsonWebKey",
+      "controller": "https://cargo-line.example/entity/pr-sju-001",
+      "publicKeyJwk": {
+        "kid": "40DqwP_7Q5vg1FIWbH-OfbSvP6S6gmIxhXlhFRusLSw",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "RlhbAC1nBWvI1-OUyedXQgIqbmZH1B-Vc6M0y34S1K0",
+        "y": "5NDUXAzfPJSFqDSmWzajXkNKuTMsnY6x9cS1vMuZkOM",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://cargo-line.example/entity/pr-sju-001#CYpN-W1EXc6cLPov7axBHMfDv3a_PZoj0LmDjFuP20M"
+  ],
+  "authentication": [
+    "https://cargo-line.example/entity/pr-sju-001#40DqwP_7Q5vg1FIWbH-OfbSvP6S6gmIxhXlhFRusLSw"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432105",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34325",
+    "urn:ietf:spice:glue:pen:12349"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -66.1057,
+          18.4655
+        ]
+      },
+      "properties": {
+        "name": "Cargo Line Ltd Terminal",
+        "type": "Carrier",
+        "role": "shipping-terminal",
+        "address": {
+          "streetAddress": "San Juan Port",
+          "addressLocality": "San Juan",
+          "addressRegion": "San Juan",
+          "addressCountry": "PR"
+        },
+        "status": "fleet-repairs"
+      }
+    }
+  ]
+}
 ```
 
-Exit code: 1
+</details>
+```
+
+Exit code: 0
 </details>
 
 <details>
-<summary>❌ Render GeoJSON for chompchomp</summary>
+<summary>✅ Analyze GeoJSON for chompchomp</summary>
 
 ```bash
-$ bun src/cli.ts render-geojson --controller case-studies/transhrimpment/controllers/chompchomp-controller.json --out case-studies/transhrimpment/chompchomp-location.geojson
+$ bun src/cli.ts analyze-geojson --controller case-studies/transhrimpment/controllers/chompchomp-controller.json
 ```
 
 ```
-Unknown command: render-geojson
+Analyzing GeoJSON in controller case-studies/transhrimpment/controllers/chompchomp-controller.json...
+✅ GeoJSON detected: Feature collection with 2 features containing Point
+📍 Map Preview: https://www.openstreetmap.org/#map=15/18.4173/-64.6179
 
-Verifiable Supply Chain CLI
+<details>
+<summary>📍 Entity Geographic Information - Feature collection with 2 features containing Point</summary>
 
-Usage: bun cli.ts <command> [options]
+### 📊 Geographic Analysis
 
-Commands:
-  init-case-study --name <case-name>            Initialize a new case study with configuration files
-  generate-keys --out <file>                    Generate key pair and save to file
-  generate-controller --config <file> --out <file>   Generate controller from config file
-  sign-credential --key <file> --cred <file> --out <file>   Sign credential with private key
-  sign-presentation --key <file> --pres <file> --out <file> Sign presentation with private key
-  verify-credential --cred <file> --key <file>           Verify credential with public key
-  verify-presentation --pres <file> --resolver <file>    Verify presentation with resolver
-  extract-public-key --key <file> --out <file>           Extract public key from private key
-  validate-schema --schema <file> [--example <file>]      Validate YAML schema and optional example
-  validate-controller --controller <file>                 Validate controller document (security + schema)
-  analyze-geojson --credential <file> [--out <file>]     Analyze GeoJSON in credential and export markdown
-  analyze-geojson --controller <file> [--out <file>]    Analyze GeoJSON in controller and export markdown
-  help                                          Show this help message
+- **Type**: FeatureCollection
+- **Features**: 2
+- **Geometry Types**: Point
+- **Bounding Box**: 18.4167°N, 64.6208°W to 18.4180°N, 64.6150°W
 
-Examples:
-  bun cli.ts init-case-study --name my-case-study
-  bun cli.ts generate-keys --out entity1-keys.json
-  bun cli.ts generate-controller --config entity1-config.json --out entity1-controller.json
-  bun cli.ts sign-credential --key entity1-keys.json --cred shipment.json --out signed-shipment.json
-  bun cli.ts verify-credential --cred signed-shipment.json --key entity1-public.json
-  bun cli.ts validate-schema --schema schema.yaml --example example.json
-  bun cli.ts validate-controller --controller controller.json
+### 🏷️ Feature Properties
+
+**Feature 1:**
+  - **name**: Chompchomp Ltd Main Office
+  - **type**: Seafood Importer
+  - **role**: headquarters
+  - **address**: {"streetAddress":"Main Street","addressLocality":"Road Town","addressRegion":"Tortola","addressCountry":"VG"}
+
+**Feature 2:**
+  - **name**: Chompchomp Ltd Warehouse
+  - **type**: Storage Facility
+  - **role**: cold-storage
+  - **capacity**: 10000kg
+
+### 📍 Coordinates
+
+1. 18.4167°N, 64.6208°W
+2. 18.4180°N, 64.6150°W
+
+### 📄 Raw GeoJSON
+
+```geojson
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://chompchomp.example/entity/bvi-001",
+  "verificationMethod": [
+    {
+      "id": "https://chompchomp.example/entity/bvi-001#nx62J6beWOO6mIavpWEQCg_GoOi8zfAECZ8p-zHxEvI",
+      "type": "JsonWebKey",
+      "controller": "https://chompchomp.example/entity/bvi-001",
+      "publicKeyJwk": {
+        "kid": "nx62J6beWOO6mIavpWEQCg_GoOi8zfAECZ8p-zHxEvI",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "vb8xKTNFwYM4t1fjAfTPQBsbWPjkfUH60Q0mo9z4LQE",
+        "y": "FBgWNv3E6G-RaCyXdSkl__I2Lk8x2hwqQH50LJ3ODY4",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://chompchomp.example/entity/bvi-001#5kl6Gvq9Jvvvy5UJzVVeIWKf6UWwmOylEUTn1VAX6wE",
+      "type": "JsonWebKey",
+      "controller": "https://chompchomp.example/entity/bvi-001",
+      "publicKeyJwk": {
+        "kid": "5kl6Gvq9Jvvvy5UJzVVeIWKf6UWwmOylEUTn1VAX6wE",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "6hRvSeHlwjSC-0LKnVoo3jmiK8C4tdLCA-rD0qymYKQ",
+        "y": "bBP5TVaRr_pQArvHw5T8lT-So6wLaCGZ0vxHIaf0TzY",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://chompchomp.example/entity/bvi-001#nx62J6beWOO6mIavpWEQCg_GoOi8zfAECZ8p-zHxEvI"
+  ],
+  "authentication": [
+    "https://chompchomp.example/entity/bvi-001#5kl6Gvq9Jvvvy5UJzVVeIWKf6UWwmOylEUTn1VAX6wE"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432101",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34321",
+    "urn:ietf:spice:glue:pen:12345"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
+      },
+      "properties": {
+        "name": "Chompchomp Ltd Main Office",
+        "type": "Seafood Importer",
+        "role": "headquarters",
+        "address": {
+          "streetAddress": "Main Street",
+          "addressLocality": "Road Town",
+          "addressRegion": "Tortola",
+          "addressCountry": "VG"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.615,
+          18.418
+        ]
+      },
+      "properties": {
+        "name": "Chompchomp Ltd Warehouse",
+        "type": "Storage Facility",
+        "role": "cold-storage",
+        "capacity": "10000kg"
+      }
+    }
+  ]
+}
 ```
 
-Exit code: 1
+</details>
+```
+
+Exit code: 0
 </details>
 
 <details>
-<summary>❌ Render GeoJSON for legit-shrimp</summary>
+<summary>✅ Analyze GeoJSON for legit-shrimp</summary>
 
 ```bash
-$ bun src/cli.ts render-geojson --controller case-studies/transhrimpment/controllers/legit-shrimp-controller.json --out case-studies/transhrimpment/legit-shrimp-location.geojson
+$ bun src/cli.ts analyze-geojson --controller case-studies/transhrimpment/controllers/legit-shrimp-controller.json
 ```
 
 ```
-Unknown command: render-geojson
+Analyzing GeoJSON in controller case-studies/transhrimpment/controllers/legit-shrimp-controller.json...
+✅ GeoJSON detected: Feature collection with 1 features containing Point
+📍 Map Preview: https://www.openstreetmap.org/#map=15/10.6596/-61.5167
 
-Verifiable Supply Chain CLI
+<details>
+<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
 
-Usage: bun cli.ts <command> [options]
+### 📊 Geographic Analysis
 
-Commands:
-  init-case-study --name <case-name>            Initialize a new case study with configuration files
-  generate-keys --out <file>                    Generate key pair and save to file
-  generate-controller --config <file> --out <file>   Generate controller from config file
-  sign-credential --key <file> --cred <file> --out <file>   Sign credential with private key
-  sign-presentation --key <file> --pres <file> --out <file> Sign presentation with private key
-  verify-credential --cred <file> --key <file>           Verify credential with public key
-  verify-presentation --pres <file> --resolver <file>    Verify presentation with resolver
-  extract-public-key --key <file> --out <file>           Extract public key from private key
-  validate-schema --schema <file> [--example <file>]      Validate YAML schema and optional example
-  validate-controller --controller <file>                 Validate controller document (security + schema)
-  analyze-geojson --credential <file> [--out <file>]     Analyze GeoJSON in credential and export markdown
-  analyze-geojson --controller <file> [--out <file>]    Analyze GeoJSON in controller and export markdown
-  help                                          Show this help message
+- **Type**: FeatureCollection
+- **Features**: 1
+- **Geometry Types**: Point
+- **Bounding Box**: 10.6596°N, 61.5167°W to 10.6596°N, 61.5167°W
 
-Examples:
-  bun cli.ts init-case-study --name my-case-study
-  bun cli.ts generate-keys --out entity1-keys.json
-  bun cli.ts generate-controller --config entity1-config.json --out entity1-controller.json
-  bun cli.ts sign-credential --key entity1-keys.json --cred shipment.json --out signed-shipment.json
-  bun cli.ts verify-credential --cred signed-shipment.json --key entity1-public.json
-  bun cli.ts validate-schema --schema schema.yaml --example example.json
-  bun cli.ts validate-controller --controller controller.json
+### 🏷️ Feature Properties
+
+**Feature 1:**
+  - **name**: Legit Shrimp Ltd Facility
+  - **type**: Seafood Supplier
+  - **role**: supplier
+  - **address**: {"streetAddress":"Port of Spain Harbor","addressLocality":"Port of Spain","addressRegion":"Port of Spain","addressCountry":"TT"}
+  - **legitimacy**: legitimate-identity-stolen
+
+### 📍 Coordinates
+
+1. 10.6596°N, 61.5167°W
+
+### 📄 Raw GeoJSON
+
+```geojson
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://legit-shrimp.example/entity/tt-pos-001",
+  "verificationMethod": [
+    {
+      "id": "https://legit-shrimp.example/entity/tt-pos-001#LrQ5E8KeOiQ62VVIc_iDcCU1xMwcIOzk1DciPI8DdpU",
+      "type": "JsonWebKey",
+      "controller": "https://legit-shrimp.example/entity/tt-pos-001",
+      "publicKeyJwk": {
+        "kid": "LrQ5E8KeOiQ62VVIc_iDcCU1xMwcIOzk1DciPI8DdpU",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "xUZYceKR-OI4MtundtRaGWgMI1jJomJHbfuLgA4LOTQ",
+        "y": "N8Fy9f3kMZbobXnzb-c6AOKrj543m1bsyaxksFI-tvc",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://legit-shrimp.example/entity/tt-pos-001#nr94L4yhi4eGBtPD8QUeYXgi78sbEihzUJ4rvqr8Tls",
+      "type": "JsonWebKey",
+      "controller": "https://legit-shrimp.example/entity/tt-pos-001",
+      "publicKeyJwk": {
+        "kid": "nr94L4yhi4eGBtPD8QUeYXgi78sbEihzUJ4rvqr8Tls",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "7Dufa0VGHTZ0nw2q7peGgT8OfOsz8E8PCiwJ6oZRQgM",
+        "y": "3Z6wxNXfxASzeARkpJIeMZLXyt1ThccwG1t0ob8BvgY",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://legit-shrimp.example/entity/tt-pos-001#LrQ5E8KeOiQ62VVIc_iDcCU1xMwcIOzk1DciPI8DdpU"
+  ],
+  "authentication": [
+    "https://legit-shrimp.example/entity/tt-pos-001#nr94L4yhi4eGBtPD8QUeYXgi78sbEihzUJ4rvqr8Tls"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432103",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34323",
+    "urn:ietf:spice:glue:pen:12347"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -61.5167,
+          10.6596
+        ]
+      },
+      "properties": {
+        "name": "Legit Shrimp Ltd Facility",
+        "type": "Seafood Supplier",
+        "role": "supplier",
+        "address": {
+          "streetAddress": "Port of Spain Harbor",
+          "addressLocality": "Port of Spain",
+          "addressRegion": "Port of Spain",
+          "addressCountry": "TT"
+        },
+        "legitimacy": "legitimate-identity-stolen"
+      }
+    }
+  ]
+}
 ```
 
-Exit code: 1
+</details>
+```
+
+Exit code: 0
 </details>
 
 <details>
-<summary>❌ Render GeoJSON for shady-carrier</summary>
+<summary>✅ Analyze GeoJSON for shady-carrier</summary>
 
 ```bash
-$ bun src/cli.ts render-geojson --controller case-studies/transhrimpment/controllers/shady-carrier-controller.json --out case-studies/transhrimpment/shady-carrier-location.geojson
+$ bun src/cli.ts analyze-geojson --controller case-studies/transhrimpment/controllers/shady-carrier-controller.json
 ```
 
 ```
-Unknown command: render-geojson
+Analyzing GeoJSON in controller case-studies/transhrimpment/controllers/shady-carrier-controller.json...
+✅ GeoJSON detected: Feature collection with 1 features containing Point
+📍 Map Preview: https://www.openstreetmap.org/#map=15/12.5186/-70.0270
 
-Verifiable Supply Chain CLI
+<details>
+<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
 
-Usage: bun cli.ts <command> [options]
+### 📊 Geographic Analysis
 
-Commands:
-  init-case-study --name <case-name>            Initialize a new case study with configuration files
-  generate-keys --out <file>                    Generate key pair and save to file
-  generate-controller --config <file> --out <file>   Generate controller from config file
-  sign-credential --key <file> --cred <file> --out <file>   Sign credential with private key
-  sign-presentation --key <file> --pres <file> --out <file> Sign presentation with private key
-  verify-credential --cred <file> --key <file>           Verify credential with public key
-  verify-presentation --pres <file> --resolver <file>    Verify presentation with resolver
-  extract-public-key --key <file> --out <file>           Extract public key from private key
-  validate-schema --schema <file> [--example <file>]      Validate YAML schema and optional example
-  validate-controller --controller <file>                 Validate controller document (security + schema)
-  analyze-geojson --credential <file> [--out <file>]     Analyze GeoJSON in credential and export markdown
-  analyze-geojson --controller <file> [--out <file>]    Analyze GeoJSON in controller and export markdown
-  help                                          Show this help message
+- **Type**: FeatureCollection
+- **Features**: 1
+- **Geometry Types**: Point
+- **Bounding Box**: 12.5186°N, 70.0270°W to 12.5186°N, 70.0270°W
 
-Examples:
-  bun cli.ts init-case-study --name my-case-study
-  bun cli.ts generate-keys --out entity1-keys.json
-  bun cli.ts generate-controller --config entity1-config.json --out entity1-controller.json
-  bun cli.ts sign-credential --key entity1-keys.json --cred shipment.json --out signed-shipment.json
-  bun cli.ts verify-credential --cred signed-shipment.json --key entity1-public.json
-  bun cli.ts validate-schema --schema schema.yaml --example example.json
-  bun cli.ts validate-controller --controller controller.json
+### 🏷️ Feature Properties
+
+**Feature 1:**
+  - **name**: Shady Carrier Ltd Operations
+  - **type**: Carrier
+  - **role**: substitute-carrier
+  - **address**: {"streetAddress":"Harbor District","addressLocality":"Oranjestad","addressRegion":"Aruba","addressCountry":"AW"}
+  - **legitimacy**: fraudulent
+
+### 📍 Coordinates
+
+1. 12.5186°N, 70.0270°W
+
+### 📄 Raw GeoJSON
+
+```geojson
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://shady-carrier.example/entity/aw-oru-001",
+  "verificationMethod": [
+    {
+      "id": "https://shady-carrier.example/entity/aw-oru-001#n7GWD9LbqAZQy1Wt5XdYiy81GofxhJgFnIu8iduEMmE",
+      "type": "JsonWebKey",
+      "controller": "https://shady-carrier.example/entity/aw-oru-001",
+      "publicKeyJwk": {
+        "kid": "n7GWD9LbqAZQy1Wt5XdYiy81GofxhJgFnIu8iduEMmE",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "O8_j4yCoKKJMNapSfWEN37QJkeT3DYAdhgyHtnyF-Dg",
+        "y": "cnlKpR7AMTtTjPTmMRWfy1xTZ8B_gu4BS7oVU8DQL5E",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://shady-carrier.example/entity/aw-oru-001#wZ4jnnC68M3NScMKDJfRs9tmYZYm7SYkrnEDjELvd8U",
+      "type": "JsonWebKey",
+      "controller": "https://shady-carrier.example/entity/aw-oru-001",
+      "publicKeyJwk": {
+        "kid": "wZ4jnnC68M3NScMKDJfRs9tmYZYm7SYkrnEDjELvd8U",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "oabo-YwYLrj4PM2RofODEtaFBbX5F1xfeoC5lSm_d-o",
+        "y": "yV7oJnA7Jg7eMTg1mGMq0Goqo9o0MdjQpeF9clic1jM",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://shady-carrier.example/entity/aw-oru-001#n7GWD9LbqAZQy1Wt5XdYiy81GofxhJgFnIu8iduEMmE"
+  ],
+  "authentication": [
+    "https://shady-carrier.example/entity/aw-oru-001#wZ4jnnC68M3NScMKDJfRs9tmYZYm7SYkrnEDjELvd8U"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -70.027,
+          12.5186
+        ]
+      },
+      "properties": {
+        "name": "Shady Carrier Ltd Operations",
+        "type": "Carrier",
+        "role": "substitute-carrier",
+        "address": {
+          "streetAddress": "Harbor District",
+          "addressLocality": "Oranjestad",
+          "addressRegion": "Aruba",
+          "addressCountry": "AW"
+        },
+        "legitimacy": "fraudulent"
+      }
+    }
+  ]
+}
 ```
 
-Exit code: 1
+</details>
+```
+
+Exit code: 0
 </details>
 
 <details>
-<summary>❌ Render GeoJSON for shady-distributor</summary>
+<summary>✅ Analyze GeoJSON for shady-distributor</summary>
 
 ```bash
-$ bun src/cli.ts render-geojson --controller case-studies/transhrimpment/controllers/shady-distributor-controller.json --out case-studies/transhrimpment/shady-distributor-location.geojson
+$ bun src/cli.ts analyze-geojson --controller case-studies/transhrimpment/controllers/shady-distributor-controller.json
 ```
 
 ```
-Unknown command: render-geojson
+Analyzing GeoJSON in controller case-studies/transhrimpment/controllers/shady-distributor-controller.json...
+✅ GeoJSON detected: Feature collection with 1 features containing Point
+📍 Map Preview: https://www.openstreetmap.org/#map=15/18.4167/-64.6208
 
-Verifiable Supply Chain CLI
+<details>
+<summary>📍 Entity Geographic Information - Feature collection with 1 features containing Point</summary>
 
-Usage: bun cli.ts <command> [options]
+### 📊 Geographic Analysis
 
-Commands:
-  init-case-study --name <case-name>            Initialize a new case study with configuration files
-  generate-keys --out <file>                    Generate key pair and save to file
-  generate-controller --config <file> --out <file>   Generate controller from config file
-  sign-credential --key <file> --cred <file> --out <file>   Sign credential with private key
-  sign-presentation --key <file> --pres <file> --out <file> Sign presentation with private key
-  verify-credential --cred <file> --key <file>           Verify credential with public key
-  verify-presentation --pres <file> --resolver <file>    Verify presentation with resolver
-  extract-public-key --key <file> --out <file>           Extract public key from private key
-  validate-schema --schema <file> [--example <file>]      Validate YAML schema and optional example
-  validate-controller --controller <file>                 Validate controller document (security + schema)
-  analyze-geojson --credential <file> [--out <file>]     Analyze GeoJSON in credential and export markdown
-  analyze-geojson --controller <file> [--out <file>]    Analyze GeoJSON in controller and export markdown
-  help                                          Show this help message
+- **Type**: FeatureCollection
+- **Features**: 1
+- **Geometry Types**: Point
+- **Bounding Box**: 18.4167°N, 64.6208°W to 18.4167°N, 64.6208°W
 
-Examples:
-  bun cli.ts init-case-study --name my-case-study
-  bun cli.ts generate-keys --out entity1-keys.json
-  bun cli.ts generate-controller --config entity1-config.json --out entity1-controller.json
-  bun cli.ts sign-credential --key entity1-keys.json --cred shipment.json --out signed-shipment.json
-  bun cli.ts verify-credential --cred signed-shipment.json --key entity1-public.json
-  bun cli.ts validate-schema --schema schema.yaml --example example.json
-  bun cli.ts validate-controller --controller controller.json
+### 🏷️ Feature Properties
+
+**Feature 1:**
+  - **name**: Shady Distributor Ltd Office
+  - **type**: Seafood Distributor
+  - **role**: intermediary
+  - **address**: {"streetAddress":"Offshore Building","addressLocality":"Road Town","addressRegion":"Tortola","addressCountry":"VG"}
+  - **legitimacy**: fraudulent
+
+### 📍 Coordinates
+
+1. 18.4167°N, 64.6208°W
+
+### 📄 Raw GeoJSON
+
+```geojson
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://shady-distributor.example/entity/bvi-002",
+  "verificationMethod": [
+    {
+      "id": "https://shady-distributor.example/entity/bvi-002#HViV1wlQgzXXbdahjyFDVbU_RxPUVCLQCf51fyGatEc",
+      "type": "JsonWebKey",
+      "controller": "https://shady-distributor.example/entity/bvi-002",
+      "publicKeyJwk": {
+        "kid": "HViV1wlQgzXXbdahjyFDVbU_RxPUVCLQCf51fyGatEc",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "mcpc4991vFrddVHW3wYersLW68Ej_pULgV1pMQDugB4",
+        "y": "xFS824TLI3lEqdpOhO1SM03yCTiwhTI5YkfDcSpjd-s",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://shady-distributor.example/entity/bvi-002#6Clq3Dk2UwwBaMsN2Qw2h1QGL5ARbPuAuKwgDUf8ubo",
+      "type": "JsonWebKey",
+      "controller": "https://shady-distributor.example/entity/bvi-002",
+      "publicKeyJwk": {
+        "kid": "6Clq3Dk2UwwBaMsN2Qw2h1QGL5ARbPuAuKwgDUf8ubo",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "24LjV4gWuQp58pNhUJRR94QH5CoQsIJFIVovJiEYmiI",
+        "y": "x_AtZ0vLLiOZgwAGUTBUndyYnOtsA_cDvKWvyWNFeCk",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://shady-distributor.example/entity/bvi-002#HViV1wlQgzXXbdahjyFDVbU_RxPUVCLQCf51fyGatEc"
+  ],
+  "authentication": [
+    "https://shady-distributor.example/entity/bvi-002#6Clq3Dk2UwwBaMsN2Qw2h1QGL5ARbPuAuKwgDUf8ubo"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
+      },
+      "properties": {
+        "name": "Shady Distributor Ltd Office",
+        "type": "Seafood Distributor",
+        "role": "intermediary",
+        "address": {
+          "streetAddress": "Offshore Building",
+          "addressLocality": "Road Town",
+          "addressRegion": "Tortola",
+          "addressCountry": "VG"
+        },
+        "legitimacy": "fraudulent"
+      }
+    }
+  ]
+}
 ```
 
-Exit code: 1
+</details>
+```
+
+Exit code: 0
 </details>
 
 

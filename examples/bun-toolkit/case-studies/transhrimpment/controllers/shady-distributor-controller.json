@@ -6,32 +6,32 @@
   "id": "https://shady-distributor.example/entity/bvi-002",
   "verificationMethod": [
     {
-      "id": "https://shady-distributor.example/entity/bvi-002#tXxcquvlFbHfipqfo668QmJRHRZeHLD_IsziA86R1Lg",
+      "id": "https://shady-distributor.example/entity/bvi-002#HViV1wlQgzXXbdahjyFDVbU_RxPUVCLQCf51fyGatEc",
       "type": "JsonWebKey",
       "controller": "https://shady-distributor.example/entity/bvi-002",
       "publicKeyJwk": {
-        "kid": "tXxcquvlFbHfipqfo668QmJRHRZeHLD_IsziA86R1Lg",
+        "kid": "HViV1wlQgzXXbdahjyFDVbU_RxPUVCLQCf51fyGatEc",
         "kty": "EC",
         "crv": "P-256",
         "alg": "ES256",
-        "x": "gkyTrxlyVF_usl8JFVwPU6a55-RP4xzxM5kfA2VBzZw",
-        "y": "tJdMh2Jah_DMDx8Uqurl_HqvywBZ9PUPCQdIvU68L_k",
+        "x": "mcpc4991vFrddVHW3wYersLW68Ej_pULgV1pMQDugB4",
+        "y": "xFS824TLI3lEqdpOhO1SM03yCTiwhTI5YkfDcSpjd-s",
         "key_ops": [
           "verify"
         ]
       }
     },
     {
-      "id": "https://shady-distributor.example/entity/bvi-002#eo0fUMMAm__9m87sB7UZZ6eI-SEOwBt_ePJazBRr8is",
+      "id": "https://shady-distributor.example/entity/bvi-002#6Clq3Dk2UwwBaMsN2Qw2h1QGL5ARbPuAuKwgDUf8ubo",
       "type": "JsonWebKey",
       "controller": "https://shady-distributor.example/entity/bvi-002",
       "publicKeyJwk": {
-        "kid": "eo0fUMMAm__9m87sB7UZZ6eI-SEOwBt_ePJazBRr8is",
+        "kid": "6Clq3Dk2UwwBaMsN2Qw2h1QGL5ARbPuAuKwgDUf8ubo",
         "kty": "EC",
         "crv": "P-256",
         "alg": "ES256",
-        "x": "vM0cSqv95MbhLokEvGfx2lNercg1Vv2fOVdD4LWRnI0",
-        "y": "gjvu0hU6N4nNg8T4zQRvJt2urDlbr_wuJ9KfFuGdVSs",
+        "x": "24LjV4gWuQp58pNhUJRR94QH5CoQsIJFIVovJiEYmiI",
+        "y": "x_AtZ0vLLiOZgwAGUTBUndyYnOtsA_cDvKWvyWNFeCk",
         "key_ops": [
           "verify"
         ]
@@ -39,10 +39,10 @@
     }
   ],
   "assertionMethod": [
-    "https://shady-distributor.example/entity/bvi-002#tXxcquvlFbHfipqfo668QmJRHRZeHLD_IsziA86R1Lg"
+    "https://shady-distributor.example/entity/bvi-002#HViV1wlQgzXXbdahjyFDVbU_RxPUVCLQCf51fyGatEc"
   ],
   "authentication": [
-    "https://shady-distributor.example/entity/bvi-002#eo0fUMMAm__9m87sB7UZZ6eI-SEOwBt_ePJazBRr8is"
+    "https://shady-distributor.example/entity/bvi-002#6Clq3Dk2UwwBaMsN2Qw2h1QGL5ARbPuAuKwgDUf8ubo"
   ],
   "type": "FeatureCollection",
   "features": [

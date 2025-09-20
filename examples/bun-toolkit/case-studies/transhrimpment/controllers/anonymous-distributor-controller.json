@@ -6,32 +6,32 @@
   "id": "https://anonymous-distributor.example/entity/vi-stt-001",
   "verificationMethod": [
     {
-      "id": "https://anonymous-distributor.example/entity/vi-stt-001#dBXT804ewjGRZyp_EmFVuIRBoeU9aOZwzNVte8BTFLk",
+      "id": "https://anonymous-distributor.example/entity/vi-stt-001#FIqtv3VJ5UBHnM12mGc0X5ebDP0kvRCWOH2rt4BsZ3I",
       "type": "JsonWebKey",
       "controller": "https://anonymous-distributor.example/entity/vi-stt-001",
       "publicKeyJwk": {
-        "kid": "dBXT804ewjGRZyp_EmFVuIRBoeU9aOZwzNVte8BTFLk",
+        "kid": "FIqtv3VJ5UBHnM12mGc0X5ebDP0kvRCWOH2rt4BsZ3I",
         "kty": "EC",
         "crv": "P-256",
         "alg": "ES256",
-        "x": "r3ywqWrruCW0ciHUP2fuVlUndQ13EAESFNluFxUhA18",
-        "y": "cTRcYPPOeHrNBmakIkms4xly1RoAEd8O6yxwHolEqTI",
+        "x": "epiVTdrRJ7_oCgBVC9CENFQMATouDkFdgjEZ_fv0hno",
+        "y": "Q676uMpDwdLZaNnvTx6ITGAz7ROtqfeTwjOnEGMxRFY",
         "key_ops": [
           "verify"
         ]
       }
     },
     {
-      "id": "https://anonymous-distributor.example/entity/vi-stt-001#mDfeZFqaB5NeMydO5ijKkIx5KmuR-jD1YRyxV72_Rtc",
+      "id": "https://anonymous-distributor.example/entity/vi-stt-001#0JiKwGYOUs2kjcvt4r0r7TPOdj50u8Qiy6iC-msCpbU",
       "type": "JsonWebKey",
       "controller": "https://anonymous-distributor.example/entity/vi-stt-001",
       "publicKeyJwk": {
-        "kid": "mDfeZFqaB5NeMydO5ijKkIx5KmuR-jD1YRyxV72_Rtc",
+        "kid": "0JiKwGYOUs2kjcvt4r0r7TPOdj50u8Qiy6iC-msCpbU",
         "kty": "EC",
         "crv": "P-256",
         "alg": "ES256",
-        "x": "UBd9mGrOCZTrckPSRwjHPPUFP4NYUjsTG63CayP0JHc",
-        "y": "W7iVkGh3qI0WarWEeK3peUDqR9j5Cj5VQHC0X4ikHUk",
+        "x": "1s9zQp3vIeDcaWt5LLIVD71QjvAVHx14tW9T8NCb02A",
+        "y": "pOFO3eSARH_ifdEUAWSRtGuotEwlg9xMULir7G93aDA",
         "key_ops": [
           "verify"
         ]
@@ -39,10 +39,10 @@
     }
   ],
   "assertionMethod": [
-    "https://anonymous-distributor.example/entity/vi-stt-001#dBXT804ewjGRZyp_EmFVuIRBoeU9aOZwzNVte8BTFLk"
+    "https://anonymous-distributor.example/entity/vi-stt-001#FIqtv3VJ5UBHnM12mGc0X5ebDP0kvRCWOH2rt4BsZ3I"
   ],
   "authentication": [
-    "https://anonymous-distributor.example/entity/vi-stt-001#mDfeZFqaB5NeMydO5ijKkIx5KmuR-jD1YRyxV72_Rtc"
+    "https://anonymous-distributor.example/entity/vi-stt-001#0JiKwGYOUs2kjcvt4r0r7TPOdj50u8Qiy6iC-msCpbU"
   ],
   "alsoKnownAs": [
     "urn:ietf:spice:glue:gln:4598765432106",

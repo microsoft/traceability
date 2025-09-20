@@ -6,32 +6,32 @@
   "id": "https://shady-carrier.example/entity/aw-oru-001",
   "verificationMethod": [
     {
-      "id": "https://shady-carrier.example/entity/aw-oru-001#p2rAP3fPS1Z0U0HeYTmWdXs30OgZQSf7vUow2rbVj5Y",
+      "id": "https://shady-carrier.example/entity/aw-oru-001#n7GWD9LbqAZQy1Wt5XdYiy81GofxhJgFnIu8iduEMmE",
       "type": "JsonWebKey",
       "controller": "https://shady-carrier.example/entity/aw-oru-001",
       "publicKeyJwk": {
-        "kid": "p2rAP3fPS1Z0U0HeYTmWdXs30OgZQSf7vUow2rbVj5Y",
+        "kid": "n7GWD9LbqAZQy1Wt5XdYiy81GofxhJgFnIu8iduEMmE",
         "kty": "EC",
         "crv": "P-256",
         "alg": "ES256",
-        "x": "jt0Uc5M9xQeejkRhYrcWdrGImrj3e-IKLxMdbpibwIc",
-        "y": "wJYApg61w9QcwOvQ10tiLI0rY9_d7cs3loWj-_yaJVg",
+        "x": "O8_j4yCoKKJMNapSfWEN37QJkeT3DYAdhgyHtnyF-Dg",
+        "y": "cnlKpR7AMTtTjPTmMRWfy1xTZ8B_gu4BS7oVU8DQL5E",
         "key_ops": [
           "verify"
         ]
       }
     },
     {
-      "id": "https://shady-carrier.example/entity/aw-oru-001#5p320J3jhoNjpcAk6as_C41vz1V49SHCck-MycCPd-M",
+      "id": "https://shady-carrier.example/entity/aw-oru-001#wZ4jnnC68M3NScMKDJfRs9tmYZYm7SYkrnEDjELvd8U",
       "type": "JsonWebKey",
       "controller": "https://shady-carrier.example/entity/aw-oru-001",
       "publicKeyJwk": {
-        "kid": "5p320J3jhoNjpcAk6as_C41vz1V49SHCck-MycCPd-M",
+        "kid": "wZ4jnnC68M3NScMKDJfRs9tmYZYm7SYkrnEDjELvd8U",
         "kty": "EC",
         "crv": "P-256",
         "alg": "ES256",
-        "x": "CdPcy5Lo3FPO67k8cx5H9-UbvcgVhC-KK0Tf9KITXKQ",
-        "y": "84Mi0h6HscsOpyrNdSlYbJdjEyrAmedUKyil_csbU8g",
+        "x": "oabo-YwYLrj4PM2RofODEtaFBbX5F1xfeoC5lSm_d-o",
+        "y": "yV7oJnA7Jg7eMTg1mGMq0Goqo9o0MdjQpeF9clic1jM",
         "key_ops": [
           "verify"
         ]
@@ -39,10 +39,10 @@
     }
   ],
   "assertionMethod": [
-    "https://shady-carrier.example/entity/aw-oru-001#p2rAP3fPS1Z0U0HeYTmWdXs30OgZQSf7vUow2rbVj5Y"
+    "https://shady-carrier.example/entity/aw-oru-001#n7GWD9LbqAZQy1Wt5XdYiy81GofxhJgFnIu8iduEMmE"
   ],
   "authentication": [
-    "https://shady-carrier.example/entity/aw-oru-001#5p320J3jhoNjpcAk6as_C41vz1V49SHCck-MycCPd-M"
+    "https://shady-carrier.example/entity/aw-oru-001#wZ4jnnC68M3NScMKDJfRs9tmYZYm7SYkrnEDjELvd8U"
   ],
   "type": "FeatureCollection",
   "features": [

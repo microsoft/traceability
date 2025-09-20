@@ -27,7 +27,7 @@ Commands:
   verify-presentation --pres <file> --resolver <file>    Verify presentation with resolver
   extract-public-key --key <file> --out <file>           Extract public key from private key
   validate-schema --schema <file> [--example <file>]      Validate YAML schema and optional example
-  validate-controller --controller <file>                 Validate controller document (security + schema)
+  validate-controller --controller <file> --schema <file> Validate controller document
   analyze-geojson --credential <file> [--out <file>]     Analyze GeoJSON in credential and export markdown
   analyze-geojson --controller <file> [--out <file>]    Analyze GeoJSON in controller and export markdown
   help                                          Show this help message
@@ -39,7 +39,7 @@ Examples:
   bun cli.ts sign-credential --key entity1-keys.json --cred shipment.json --out signed-shipment.json
   bun cli.ts verify-credential --cred signed-shipment.json --key entity1-public.json
   bun cli.ts validate-schema --schema schema.yaml --example example.json
-  bun cli.ts validate-controller --controller controller.json
+  bun cli.ts validate-controller --controller controller.json --schema schema.yaml
 `);
 }
 
@@ -1146,7 +1146,7 @@ function containsPrivateKeys(obj: any): boolean {
   return false;
 }
 
-async function validateController(controllerFile: string) {
+async function validateController(controllerFile: string, schemaFile: string) {
   console.log(`Validating controller document ${controllerFile}...`);
 
   try {
@@ -1163,7 +1163,7 @@ async function validateController(controllerFile: string) {
     console.log(`✅ Security check passed - no private keys detected`);
 
     // Load and validate against controller schema
-    const schemaContent = await Bun.file('schemas/controller-document.yaml').text();
+    const schemaContent = await Bun.file(schemaFile).text();
     const schemaData = yaml.load(schemaContent);
 
     const ajv = new Ajv({ allErrors: true, verbose: true });
@@ -1413,7 +1413,11 @@ try {
         console.error("Please specify --controller <file>.");
         process.exit(1);
       }
-      await validateController(values.controller);
+      if (!values.schema) {
+        console.error("Please specify --schema <file>.");
+        process.exit(1);
+      }
+      await validateController(values.controller, values.schema);
       break;
 
     case 'analyze-geojson':

@@ -6,10 +6,9 @@
 # Change to project root for proper module resolution
 cd ../../
 
-# Initialize case study with fresh keys and configurations
-echo "🔍 Initializing Transhrimpment Case Study"
-echo "========================================"
-bun src/cli.ts init-case-study --name transhrimpment
+# Using existing case study configurations
+echo "🔍 Starting Transhrimpment Digital Investigation Demo"
+echo "===================================================="
 echo ""
 
 REPORT_FILE="case-studies/transhrimpment/report.md"
@@ -145,37 +144,37 @@ echo "Now validating all generated controller documents..."
 # Validate all generated controllers
 run_command_and_report \
     "Validate Chompchomp Controller" \
-    "bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/chompchomp-controller.json" \
+    "bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/chompchomp-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml" \
     ""
 
 run_command_and_report \
     "Validate Camarón Corriente Controller" \
-    "bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/camaron-corriente-controller.json" \
+    "bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/camaron-corriente-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml" \
     ""
 
 run_command_and_report \
     "Validate Legit Shrimp Controller" \
-    "bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/legit-shrimp-controller.json" \
+    "bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/legit-shrimp-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml" \
     ""
 
 run_command_and_report \
     "Validate Shady Carrier Controller" \
-    "bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/shady-carrier-controller.json" \
+    "bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/shady-carrier-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml" \
     ""
 
 run_command_and_report \
     "Validate Shady Distributor Controller" \
-    "bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/shady-distributor-controller.json" \
+    "bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/shady-distributor-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml" \
     ""
 
 run_command_and_report \
     "Validate Cargo Line Controller" \
-    "bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/cargo-line-controller.json" \
+    "bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/cargo-line-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml" \
     ""
 
 run_command_and_report \
     "Validate Anonymous Distributor Controller" \
-    "bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/anonymous-distributor-controller.json" \
+    "bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/anonymous-distributor-controller.json --schema case-studies/transhrimpment/schemas/controller-document.yaml" \
     ""
 
 # Add GeoJSON rendering section
@@ -195,8 +194,8 @@ for controller_file in case-studies/transhrimpment/controllers/*.json; do
         entity_name=$(basename "$controller_file" -controller.json)
 
         run_command_and_report \
-            "Render GeoJSON for $entity_name" \
-            "bun src/cli.ts render-geojson --controller $controller_file --out case-studies/transhrimpment/${entity_name}-location.geojson" \
+            "Analyze GeoJSON for $entity_name" \
+            "bun src/cli.ts analyze-geojson --controller $controller_file" \
             ""
     fi
 done
