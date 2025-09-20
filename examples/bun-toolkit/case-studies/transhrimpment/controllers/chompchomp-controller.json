@@ -1,0 +1,92 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://chompchomp.example/entity/bvi-001",
+  "verificationMethod": [
+    {
+      "id": "https://chompchomp.example/entity/bvi-001#wOwEuRitE5oxSoT8b1G_zKmk6L_m8d9pxFm522GQm2U",
+      "type": "JsonWebKey",
+      "controller": "https://chompchomp.example/entity/bvi-001",
+      "publicKeyJwk": {
+        "kid": "wOwEuRitE5oxSoT8b1G_zKmk6L_m8d9pxFm522GQm2U",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "FXjQbgha02OBhXzPWR0dCn56vyeJfgSSujWbczO9gZg",
+        "y": "7K6ntTD46VRrKOaqparaJnLKaNt5loEOVoVYMJecG5U",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://chompchomp.example/entity/bvi-001#83X2Af_8uM_ArRqWDsXqaezHFDgbLgQJp3Tx2U4EtCY",
+      "type": "JsonWebKey",
+      "controller": "https://chompchomp.example/entity/bvi-001",
+      "publicKeyJwk": {
+        "kid": "83X2Af_8uM_ArRqWDsXqaezHFDgbLgQJp3Tx2U4EtCY",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "ggg9b0sMtg6PDQ8oSZLdkI67LEoLmqUs0LivKmUREno",
+        "y": "7G9l1KqXMYkf78-zA4RsgssNeolzD2JQeaGbVxjzS-w",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://chompchomp.example/entity/bvi-001#wOwEuRitE5oxSoT8b1G_zKmk6L_m8d9pxFm522GQm2U"
+  ],
+  "authentication": [
+    "https://chompchomp.example/entity/bvi-001#83X2Af_8uM_ArRqWDsXqaezHFDgbLgQJp3Tx2U4EtCY"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432101",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34321",
+    "urn:ietf:spice:glue:pen:12345"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
+      },
+      "properties": {
+        "name": "Chompchomp Ltd Main Office",
+        "type": "Seafood Importer",
+        "role": "headquarters",
+        "address": {
+          "streetAddress": "Main Street",
+          "addressLocality": "Road Town",
+          "addressRegion": "Tortola",
+          "addressCountry": "VG"
+        }
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.615,
+          18.418
+        ]
+      },
+      "properties": {
+        "name": "Chompchomp Ltd Warehouse",
+        "type": "Storage Facility",
+        "role": "cold-storage",
+        "capacity": "10000kg"
+      }
+    }
+  ]
+}

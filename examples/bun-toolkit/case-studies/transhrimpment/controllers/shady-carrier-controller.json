@@ -1,0 +1,72 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://shady-carrier.example/entity/aw-oru-001",
+  "verificationMethod": [
+    {
+      "id": "https://shady-carrier.example/entity/aw-oru-001#p2rAP3fPS1Z0U0HeYTmWdXs30OgZQSf7vUow2rbVj5Y",
+      "type": "JsonWebKey",
+      "controller": "https://shady-carrier.example/entity/aw-oru-001",
+      "publicKeyJwk": {
+        "kid": "p2rAP3fPS1Z0U0HeYTmWdXs30OgZQSf7vUow2rbVj5Y",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "jt0Uc5M9xQeejkRhYrcWdrGImrj3e-IKLxMdbpibwIc",
+        "y": "wJYApg61w9QcwOvQ10tiLI0rY9_d7cs3loWj-_yaJVg",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://shady-carrier.example/entity/aw-oru-001#5p320J3jhoNjpcAk6as_C41vz1V49SHCck-MycCPd-M",
+      "type": "JsonWebKey",
+      "controller": "https://shady-carrier.example/entity/aw-oru-001",
+      "publicKeyJwk": {
+        "kid": "5p320J3jhoNjpcAk6as_C41vz1V49SHCck-MycCPd-M",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "CdPcy5Lo3FPO67k8cx5H9-UbvcgVhC-KK0Tf9KITXKQ",
+        "y": "84Mi0h6HscsOpyrNdSlYbJdjEyrAmedUKyil_csbU8g",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://shady-carrier.example/entity/aw-oru-001#p2rAP3fPS1Z0U0HeYTmWdXs30OgZQSf7vUow2rbVj5Y"
+  ],
+  "authentication": [
+    "https://shady-carrier.example/entity/aw-oru-001#5p320J3jhoNjpcAk6as_C41vz1V49SHCck-MycCPd-M"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -70.027,
+          12.5186
+        ]
+      },
+      "properties": {
+        "name": "Shady Carrier Ltd Operations",
+        "type": "Carrier",
+        "role": "substitute-carrier",
+        "address": {
+          "streetAddress": "Harbor District",
+          "addressLocality": "Oranjestad",
+          "addressRegion": "Aruba",
+          "addressCountry": "AW"
+        },
+        "legitimacy": "fraudulent"
+      }
+    }
+  ]
+}

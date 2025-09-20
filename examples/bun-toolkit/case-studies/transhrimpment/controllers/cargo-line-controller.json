@@ -1,0 +1,77 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://cargo-line.example/entity/pr-sju-001",
+  "verificationMethod": [
+    {
+      "id": "https://cargo-line.example/entity/pr-sju-001#i4Twbiddz6r45qjQpuSBPGg2QH85bV0S1UpYSEqRen4",
+      "type": "JsonWebKey",
+      "controller": "https://cargo-line.example/entity/pr-sju-001",
+      "publicKeyJwk": {
+        "kid": "i4Twbiddz6r45qjQpuSBPGg2QH85bV0S1UpYSEqRen4",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "H8pNABuOdX5uQ9LyEOXd9LirInwPYjViRHCM4Hr3eOI",
+        "y": "e9_yxCBPtmxG6Ooj_ZW9R5BERz9dDZfcSMRz54ejPGY",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://cargo-line.example/entity/pr-sju-001#rrv2UKsvZXEnhBy81iDiEhi3rLm7E43ZLR7Ro9qawG8",
+      "type": "JsonWebKey",
+      "controller": "https://cargo-line.example/entity/pr-sju-001",
+      "publicKeyJwk": {
+        "kid": "rrv2UKsvZXEnhBy81iDiEhi3rLm7E43ZLR7Ro9qawG8",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "rvuh81vin8WaB0gCw9PVrlZDiX-_clQ49J-y86pyft8",
+        "y": "xwZl3cgz07gG68p8q3Tctvv-oMBLzCsXx_XW_C1VVIc",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://cargo-line.example/entity/pr-sju-001#i4Twbiddz6r45qjQpuSBPGg2QH85bV0S1UpYSEqRen4"
+  ],
+  "authentication": [
+    "https://cargo-line.example/entity/pr-sju-001#rrv2UKsvZXEnhBy81iDiEhi3rLm7E43ZLR7Ro9qawG8"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432105",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34325",
+    "urn:ietf:spice:glue:pen:12349"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -66.1057,
+          18.4655
+        ]
+      },
+      "properties": {
+        "name": "Cargo Line Ltd Terminal",
+        "type": "Carrier",
+        "role": "shipping-terminal",
+        "address": {
+          "streetAddress": "San Juan Port",
+          "addressLocality": "San Juan",
+          "addressRegion": "San Juan",
+          "addressCountry": "PR"
+        },
+        "status": "fleet-repairs"
+      }
+    }
+  ]
+}

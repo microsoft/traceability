@@ -844,15 +844,8 @@ async function generateController(configFile: string, outputFile: string) {
     }
 
     const controllerDoc = builder.build();
-    const keys = builder.getGeneratedKeys();
 
-    const output = {
-      controller: controllerDoc,
-      generatedKeys: keys,
-      generated: new Date().toISOString()
-    };
-
-    await Bun.write(outputFile, JSON.stringify(output, null, 2));
+    await Bun.write(outputFile, JSON.stringify(controllerDoc, null, 2));
     console.log(`✅ Controller saved to ${outputFile}`);
   } catch (error) {
     console.error(`❌ Error reading config file: ${error}`);

@@ -1,0 +1,77 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://legit-shrimp.example/entity/tt-pos-001",
+  "verificationMethod": [
+    {
+      "id": "https://legit-shrimp.example/entity/tt-pos-001#cNcRs6f89L6Fe1Jsd_wYvfb94Ffj3iZcDwTV9733_v0",
+      "type": "JsonWebKey",
+      "controller": "https://legit-shrimp.example/entity/tt-pos-001",
+      "publicKeyJwk": {
+        "kid": "cNcRs6f89L6Fe1Jsd_wYvfb94Ffj3iZcDwTV9733_v0",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "5-hE00KFruMXoTxV6CLpK7I9E0uv_lvXVG5hWcdSscE",
+        "y": "E016R9eLXJjjNRuNZx_dgMcoGgPU5BAmVz-uiRcoLHg",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://legit-shrimp.example/entity/tt-pos-001#1J3c5b0XOSeVGdELtdGuJAm-wzNoJWBYOtXOqbyow_Q",
+      "type": "JsonWebKey",
+      "controller": "https://legit-shrimp.example/entity/tt-pos-001",
+      "publicKeyJwk": {
+        "kid": "1J3c5b0XOSeVGdELtdGuJAm-wzNoJWBYOtXOqbyow_Q",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "fHBpnkvyekj3scf6UKt5Mu0xjsVpRTZwqtPswEQZ84g",
+        "y": "wyDIIaVI47dPl7p44R9zGn-zhduq0t6N8dtYFhhk4i4",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://legit-shrimp.example/entity/tt-pos-001#cNcRs6f89L6Fe1Jsd_wYvfb94Ffj3iZcDwTV9733_v0"
+  ],
+  "authentication": [
+    "https://legit-shrimp.example/entity/tt-pos-001#1J3c5b0XOSeVGdELtdGuJAm-wzNoJWBYOtXOqbyow_Q"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432103",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34323",
+    "urn:ietf:spice:glue:pen:12347"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -61.5167,
+          10.6596
+        ]
+      },
+      "properties": {
+        "name": "Legit Shrimp Ltd Facility",
+        "type": "Seafood Supplier",
+        "role": "supplier",
+        "address": {
+          "streetAddress": "Port of Spain Harbor",
+          "addressLocality": "Port of Spain",
+          "addressRegion": "Port of Spain",
+          "addressCountry": "TT"
+        },
+        "legitimacy": "legitimate-identity-stolen"
+      }
+    }
+  ]
+}

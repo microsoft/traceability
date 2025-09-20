@@ -124,3 +124,10 @@ These documents are substitutes for the original documents, and they are used to
 | **Fraudulent Bill of Lading** | `bill-of-lading-credential.yaml` | `https://shady-carrier.example/entity/aw-oru-001` | `https://chompchomp.example/entity/bvi-001` |
 | **Fraudulent Certificate of Origin** | `certificate-of-origin-credential.yaml` | `https://legit-shrimp.example/entity/tt-pos-001` (forged) | `https://shady-distributor.example/entity/bvi-002` |
 
+## Analysis
+
+Using the Bun Toolkit, we can analyze the supply chain documents to uncover the fraud.
+
+```bash
+demo.sh
+```

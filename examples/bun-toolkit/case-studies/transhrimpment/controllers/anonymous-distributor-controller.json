@@ -1,0 +1,77 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://anonymous-distributor.example/entity/vi-stt-001",
+  "verificationMethod": [
+    {
+      "id": "https://anonymous-distributor.example/entity/vi-stt-001#dBXT804ewjGRZyp_EmFVuIRBoeU9aOZwzNVte8BTFLk",
+      "type": "JsonWebKey",
+      "controller": "https://anonymous-distributor.example/entity/vi-stt-001",
+      "publicKeyJwk": {
+        "kid": "dBXT804ewjGRZyp_EmFVuIRBoeU9aOZwzNVte8BTFLk",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "r3ywqWrruCW0ciHUP2fuVlUndQ13EAESFNluFxUhA18",
+        "y": "cTRcYPPOeHrNBmakIkms4xly1RoAEd8O6yxwHolEqTI",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://anonymous-distributor.example/entity/vi-stt-001#mDfeZFqaB5NeMydO5ijKkIx5KmuR-jD1YRyxV72_Rtc",
+      "type": "JsonWebKey",
+      "controller": "https://anonymous-distributor.example/entity/vi-stt-001",
+      "publicKeyJwk": {
+        "kid": "mDfeZFqaB5NeMydO5ijKkIx5KmuR-jD1YRyxV72_Rtc",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "UBd9mGrOCZTrckPSRwjHPPUFP4NYUjsTG63CayP0JHc",
+        "y": "W7iVkGh3qI0WarWEeK3peUDqR9j5Cj5VQHC0X4ikHUk",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://anonymous-distributor.example/entity/vi-stt-001#dBXT804ewjGRZyp_EmFVuIRBoeU9aOZwzNVte8BTFLk"
+  ],
+  "authentication": [
+    "https://anonymous-distributor.example/entity/vi-stt-001#mDfeZFqaB5NeMydO5ijKkIx5KmuR-jD1YRyxV72_Rtc"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432106",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34326",
+    "urn:ietf:spice:glue:pen:12350"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.9307,
+          18.3419
+        ]
+      },
+      "properties": {
+        "name": "Anonymous Distributor Warehouse",
+        "type": "Seafood Distributor",
+        "role": "final-buyer",
+        "address": {
+          "streetAddress": "Charlotte Amalie Port",
+          "addressLocality": "Charlotte Amalie",
+          "addressRegion": "St. Thomas",
+          "addressCountry": "VI"
+        },
+        "legitimacy": "legitimate-victim"
+      }
+    }
+  ]
+}

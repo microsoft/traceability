@@ -1,0 +1,72 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://shady-distributor.example/entity/bvi-002",
+  "verificationMethod": [
+    {
+      "id": "https://shady-distributor.example/entity/bvi-002#tXxcquvlFbHfipqfo668QmJRHRZeHLD_IsziA86R1Lg",
+      "type": "JsonWebKey",
+      "controller": "https://shady-distributor.example/entity/bvi-002",
+      "publicKeyJwk": {
+        "kid": "tXxcquvlFbHfipqfo668QmJRHRZeHLD_IsziA86R1Lg",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "gkyTrxlyVF_usl8JFVwPU6a55-RP4xzxM5kfA2VBzZw",
+        "y": "tJdMh2Jah_DMDx8Uqurl_HqvywBZ9PUPCQdIvU68L_k",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://shady-distributor.example/entity/bvi-002#eo0fUMMAm__9m87sB7UZZ6eI-SEOwBt_ePJazBRr8is",
+      "type": "JsonWebKey",
+      "controller": "https://shady-distributor.example/entity/bvi-002",
+      "publicKeyJwk": {
+        "kid": "eo0fUMMAm__9m87sB7UZZ6eI-SEOwBt_ePJazBRr8is",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "vM0cSqv95MbhLokEvGfx2lNercg1Vv2fOVdD4LWRnI0",
+        "y": "gjvu0hU6N4nNg8T4zQRvJt2urDlbr_wuJ9KfFuGdVSs",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://shady-distributor.example/entity/bvi-002#tXxcquvlFbHfipqfo668QmJRHRZeHLD_IsziA86R1Lg"
+  ],
+  "authentication": [
+    "https://shady-distributor.example/entity/bvi-002#eo0fUMMAm__9m87sB7UZZ6eI-SEOwBt_ePJazBRr8is"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
+      },
+      "properties": {
+        "name": "Shady Distributor Ltd Office",
+        "type": "Seafood Distributor",
+        "role": "intermediary",
+        "address": {
+          "streetAddress": "Offshore Building",
+          "addressLocality": "Road Town",
+          "addressRegion": "Tortola",
+          "addressCountry": "VG"
+        },
+        "legitimacy": "fraudulent"
+      }
+    }
+  ]
+}
