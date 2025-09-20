@@ -5,6 +5,9 @@ import { key, controller, credential, presentation, resolver } from "./index";
 import { createControllerBuilder } from "./controller/builder";
 import type { VerifiableCredential } from "./credential/credential";
 import type { VerifiablePresentation } from "./presentation/presentation";
+import Ajv from "ajv";
+import addFormats from "ajv-formats";
+import * as yaml from "js-yaml";
 
 function printHelp() {
   console.log(`
@@ -20,6 +23,7 @@ Commands:
   verify-credential --cred <file> --key <file>           Verify credential with public key
   verify-presentation --pres <file> --resolver <file>    Verify presentation with resolver
   extract-public-key --key <file> --out <file>           Extract public key from private key
+  validate-schema --schema <file> [--example <file>]      Validate YAML schema and optional example
   help                                          Show this help message
 
 Examples:
@@ -27,6 +31,7 @@ Examples:
   bun cli.ts generate-controller --config entity1-config.json --out entity1-controller.json
   bun cli.ts sign-credential --key entity1-keys.json --cred shipment.json --out signed-shipment.json
   bun cli.ts verify-credential --cred signed-shipment.json --key entity1-public.json
+  bun cli.ts validate-schema --schema schema.yaml --example example.json
 `);
 }
 
@@ -206,6 +211,75 @@ async function extractPublicKey(keyFile: string, outputFile: string) {
   }
 }
 
+async function validateSchema(schemaFile: string, exampleFile?: string) {
+  console.log(`Validating schema ${schemaFile}${exampleFile ? ` with example ${exampleFile}` : ''}...`);
+
+  try {
+    // Read and parse YAML schema
+    const schemaContent = await Bun.file(schemaFile).text();
+    let schemaData: any;
+
+    try {
+      schemaData = yaml.load(schemaContent);
+      console.log(`✅ YAML schema is valid`);
+    } catch (yamlError) {
+      console.error(`❌ Invalid YAML schema: ${yamlError}`);
+      process.exit(1);
+    }
+
+    // Convert to JSON Schema and validate
+    const ajv = new Ajv({ allErrors: true, verbose: true });
+    addFormats(ajv);
+
+    let validate: any;
+    try {
+      validate = ajv.compile(schemaData);
+      console.log(`✅ JSON Schema compilation successful`);
+    } catch (schemaError) {
+      console.error(`❌ Invalid JSON Schema: ${schemaError}`);
+      process.exit(1);
+    }
+
+    // Validate built-in examples if present
+    if (schemaData.examples && Array.isArray(schemaData.examples)) {
+      console.log(`\n=== Validating built-in examples ===`);
+      for (let i = 0; i < schemaData.examples.length; i++) {
+        const example = schemaData.examples[i];
+        const isValid = validate(example);
+
+        if (isValid) {
+          console.log(`✅ Built-in example ${i + 1} is valid`);
+        } else {
+          console.error(`❌ Built-in example ${i + 1} is invalid:`);
+          console.error(JSON.stringify(validate.errors, null, 2));
+          process.exit(1);
+        }
+      }
+    }
+
+    // Validate external example file if provided
+    if (exampleFile) {
+      console.log(`\n=== Validating external example ===`);
+      const exampleData = await Bun.file(exampleFile).json();
+      const isValid = validate(exampleData);
+
+      if (isValid) {
+        console.log(`✅ External example is valid`);
+      } else {
+        console.error(`❌ External example is invalid:`);
+        console.error(JSON.stringify(validate.errors, null, 2));
+        process.exit(1);
+      }
+    }
+
+    console.log(`\n✅ Schema validation completed successfully`);
+
+  } catch (error) {
+    console.error(`❌ Error during validation: ${error}`);
+    process.exit(1);
+  }
+}
+
 // Parse command line arguments
 const { values, positionals } = parseArgs({
   args: Bun.argv.slice(2),
@@ -216,6 +290,8 @@ const { values, positionals } = parseArgs({
     cred: { type: 'string' },
     pres: { type: 'string' },
     resolver: { type: 'string' },
+    schema: { type: 'string' },
+    example: { type: 'string' },
     help: { type: 'boolean', short: 'h' }
   },
   allowPositionals: true
@@ -285,6 +361,14 @@ try {
         process.exit(1);
       }
       await extractPublicKey(values.key, values.out);
+      break;
+
+    case 'validate-schema':
+      if (!values.schema) {
+        console.error("Please specify --schema <file>.");
+        process.exit(1);
+      }
+      await validateSchema(values.schema, values.example);
       break;
 
     default:
