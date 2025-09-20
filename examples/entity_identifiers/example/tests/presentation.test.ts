@@ -79,10 +79,17 @@ test("create and verify presentation with enveloped route credential", async () 
   expect(typeof signedPresentation).toBe("string");
   expect(signedPresentation.split(".")).toHaveLength(3); // JWS format
   
-  expect(verifiedPresentation).toEqual(presentationData);
+  // Check core presentation properties
+  expect(verifiedPresentation["@context"]).toEqual(presentationData["@context"]);
+  expect(verifiedPresentation.type).toEqual(presentationData.type);
   expect(verifiedPresentation.holder).toBe(presentationData.holder);
   expect(verifiedPresentation.verifiableCredential).toHaveLength(1);
   expect(verifiedPresentation.verifiableCredential![0]).toEqual(envelopedCredential);
+  // Check JWT claims are added
+  expect(verifiedPresentation.iat).toBeDefined();
+  expect(verifiedPresentation.exp).toBeDefined();
+  expect(typeof verifiedPresentation.iat).toBe('number');
+  expect(typeof verifiedPresentation.exp).toBe('number');
 });
 
 test("verify presentation with wrong holder key fails", async () => {
@@ -280,8 +287,17 @@ test("create and verify presentation with ES384 algorithm", async () => {
   
   const presentationVerifier = await presentation.verifier(holderPublicKey);
   const verifiedPresentation = await presentationVerifier.verify(signedPresentation);
-  
-  expect(verifiedPresentation).toEqual(presentationData);
+
+  // Check core presentation properties
+  expect(verifiedPresentation["@context"]).toEqual(presentationData["@context"]);
+  expect(verifiedPresentation.type).toEqual(presentationData.type);
+  expect(verifiedPresentation.holder).toBe(presentationData.holder);
+  expect(verifiedPresentation.verifiableCredential).toEqual(presentationData.verifiableCredential);
+  // Check JWT claims are added
+  expect(verifiedPresentation.iat).toBeDefined();
+  expect(verifiedPresentation.exp).toBeDefined();
+  expect(typeof verifiedPresentation.iat).toBe('number');
+  expect(typeof verifiedPresentation.exp).toBe('number');
 });
 
 test("verify presentation with complex route credential", async () => {
@@ -363,10 +379,17 @@ test("verify presentation with complex route credential", async () => {
   const presentationVerifier = await presentation.verifier(holderPublicKey);
   const verifiedPresentation = await presentationVerifier.verify(signedPresentation);
   
-  // Assertions
-  expect(verifiedPresentation).toEqual(presentationData);
+  // Check core presentation properties
+  expect(verifiedPresentation["@context"]).toEqual(presentationData["@context"]);
+  expect(verifiedPresentation.type).toEqual(presentationData.type);
   expect(verifiedPresentation.holder).toBe(presentationData.holder);
   expect(verifiedPresentation.verifiableCredential).toHaveLength(1);
+  expect(verifiedPresentation.verifiableCredential).toEqual(presentationData.verifiableCredential);
+  // Check JWT claims are added
+  expect(verifiedPresentation.iat).toBeDefined();
+  expect(verifiedPresentation.exp).toBeDefined();
+  expect(typeof verifiedPresentation.iat).toBe('number');
+  expect(typeof verifiedPresentation.exp).toBe('number');
   
   // Verify the enveloped credential structure
   const envelopedCred = verifiedPresentation.verifiableCredential![0];
@@ -396,8 +419,15 @@ test("extract JWS from enveloped credential", async () => {
   // Verify the extracted JWS can be verified
   const credentialVerifier = await credential.verifier(issuerPublicKey);
   const verifiedCredential = await credentialVerifier.verify(extractedJws);
-  
-  expect(verifiedCredential).toEqual(sampleRouteCredential);
+
+  // Check core credential properties
+  expect(verifiedCredential["@context"]).toEqual(sampleRouteCredential["@context"]);
+  expect(verifiedCredential.type).toEqual(sampleRouteCredential.type);
+  expect(verifiedCredential.issuer).toBe(sampleRouteCredential.issuer);
+  expect(verifiedCredential.credentialSubject).toEqual(sampleRouteCredential.credentialSubject);
+  // Check JWT claims are added
+  expect(verifiedCredential.iat).toBeDefined();
+  expect(typeof verifiedCredential.iat).toBe('number');
 });
 
 test("extract JWS from invalid enveloped credential fails", async () => {

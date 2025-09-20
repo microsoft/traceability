@@ -51,9 +51,38 @@ export const verifier = async (publicKey: PublicKey) => {
         throw new Error('Invalid signature');
       }
 
-      // Decode and return the presentation
+      // Decode the JWT payload
       const payloadBytes = base64url.decode(payload);
-      const presentation = JSON.parse(new TextDecoder().decode(payloadBytes)) as VerifiablePresentation;
+      const jwtPayload = JSON.parse(new TextDecoder().decode(payloadBytes)) as any;
+
+      // Validate time-based JWT claims
+      const nowInSeconds = Math.floor(Date.now() / 1000);
+
+      // Check exp (expiration) claim - presentations should always have expiration
+      if (jwtPayload.exp !== undefined) {
+        if (typeof jwtPayload.exp !== 'number') {
+          throw new Error('Invalid exp claim: must be a number');
+        }
+        if (nowInSeconds > jwtPayload.exp) {
+          const expDate = new Date(jwtPayload.exp * 1000);
+          throw new Error(`Presentation has expired. Expired at: ${expDate.toISOString()}`);
+        }
+      }
+
+      // Check iat (issued at) claim if present
+      if (jwtPayload.iat !== undefined) {
+        if (typeof jwtPayload.iat !== 'number') {
+          throw new Error('Invalid iat claim: must be a number');
+        }
+        // Reject if issued in the future (allowing 60 seconds clock skew)
+        if (jwtPayload.iat > nowInSeconds + 60) {
+          throw new Error('Invalid iat claim: presentation issued in the future');
+        }
+      }
+
+      // Return the full JWT payload as the presentation
+      // This preserves all JWT claims (exp, iat, nonce, aud) alongside the presentation data
+      const presentation: VerifiablePresentation = jwtPayload;
 
       return presentation;
     }

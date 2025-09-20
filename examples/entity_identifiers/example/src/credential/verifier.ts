@@ -51,32 +51,49 @@ export const verifier = async (publicKey: PublicKey) => {
         throw new Error('Invalid signature');
       }
 
-      // Decode and return the credential
+      // Decode the JWT payload
       const payloadBytes = base64url.decode(payload);
-      const credential = JSON.parse(new TextDecoder().decode(payloadBytes)) as VerifiableCredential;
+      const jwtPayload = JSON.parse(new TextDecoder().decode(payloadBytes)) as any;
 
-      // Validate date fields if present
-      const now = new Date();
-      
-      if (credential.validFrom) {
-        const validFromDate = new Date(credential.validFrom);
-        if (isNaN(validFromDate.getTime())) {
-          throw new Error('Invalid validFrom date format');
+      // Validate time-based JWT claims
+      const nowInSeconds = Math.floor(Date.now() / 1000);
+
+      // Check nbf (not before) claim if present
+      if (jwtPayload.nbf !== undefined) {
+        if (typeof jwtPayload.nbf !== 'number') {
+          throw new Error('Invalid nbf claim: must be a number');
         }
-        if (now < validFromDate) {
-          throw new Error(`Credential is not yet valid. Valid from: ${credential.validFrom}`);
-        }
-      }
-      
-      if (credential.validUntil) {
-        const validUntilDate = new Date(credential.validUntil);
-        if (isNaN(validUntilDate.getTime())) {
-          throw new Error('Invalid validUntil date format');
-        }
-        if (now > validUntilDate) {
-          throw new Error(`Credential has expired. Valid until: ${credential.validUntil}`);
+        if (nowInSeconds < jwtPayload.nbf) {
+          const nbfDate = new Date(jwtPayload.nbf * 1000);
+          throw new Error(`Credential is not yet valid. Not before: ${nbfDate.toISOString()}`);
         }
       }
+
+      // Check exp (expiration) claim if present
+      if (jwtPayload.exp !== undefined) {
+        if (typeof jwtPayload.exp !== 'number') {
+          throw new Error('Invalid exp claim: must be a number');
+        }
+        if (nowInSeconds > jwtPayload.exp) {
+          const expDate = new Date(jwtPayload.exp * 1000);
+          throw new Error(`Credential has expired. Expired at: ${expDate.toISOString()}`);
+        }
+      }
+
+      // Check iat (issued at) claim if present
+      if (jwtPayload.iat !== undefined) {
+        if (typeof jwtPayload.iat !== 'number') {
+          throw new Error('Invalid iat claim: must be a number');
+        }
+        // Could add additional validation here, e.g., reject if issued in the future
+        if (jwtPayload.iat > nowInSeconds + 60) { // Allow 60 seconds clock skew
+          throw new Error('Invalid iat claim: credential issued in the future');
+        }
+      }
+
+      // Return the full JWT payload as the credential
+      // This preserves all JWT claims (nbf, exp, iat) alongside the credential data
+      const credential: VerifiableCredential = jwtPayload;
 
       return credential;
     }

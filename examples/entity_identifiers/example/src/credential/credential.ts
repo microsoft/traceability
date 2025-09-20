@@ -10,6 +10,10 @@ export interface VerifiableCredential {
   cnf?: {
     kid: string;
   };
+  // JWT standard claims that may be present after verification
+  iat?: number;  // Issued at (Unix timestamp)
+  nbf?: number;  // Not before (Unix timestamp)
+  exp?: number;  // Expiration (Unix timestamp)
 }
 
 export interface CredentialSubject {

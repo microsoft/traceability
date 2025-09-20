@@ -17,13 +17,18 @@ export interface ControllerResolver {
   }>;
 }
 
+export interface VerificationOptions {
+  expectedNonce?: string;
+  expectedAudience?: string | string[];
+}
+
 export interface PresentationVerifierWithControllerResolver {
-  verify: (jws: string) => Promise<VerifiablePresentation>;
+  verify: (jws: string, options?: VerificationOptions) => Promise<VerifiablePresentation>;
 }
 
 export const verifierWithControllerResolver = async (controllerResolver: ControllerResolver) => {
   return {
-    verify: async (jws: string) => {
+    verify: async (jws: string, options?: VerificationOptions) => {
       // Parse JWS to get initial information
       const parts = jws.split('.');
       if (parts.length !== 3) {
@@ -63,6 +68,63 @@ export const verifierWithControllerResolver = async (controllerResolver: Control
 
       // Verify the presentation signature
       const verifiedPresentation = await presentationVerifier.verify(jws);
+
+      // Extract the full JWT payload to check time claims, nonce and audience
+      const jwtPayload = JSON.parse(new TextDecoder().decode(payloadBytes)) as any;
+
+      // Validate time-based JWT claims
+      const nowInSeconds = Math.floor(Date.now() / 1000);
+
+      // Check exp (expiration) claim
+      if (jwtPayload.exp !== undefined) {
+        if (typeof jwtPayload.exp !== 'number') {
+          throw new Error('Invalid exp claim: must be a number');
+        }
+        if (nowInSeconds > jwtPayload.exp) {
+          const expDate = new Date(jwtPayload.exp * 1000);
+          throw new Error(`Presentation has expired. Expired at: ${expDate.toISOString()}`);
+        }
+      }
+
+      // Check iat (issued at) claim
+      if (jwtPayload.iat !== undefined) {
+        if (typeof jwtPayload.iat !== 'number') {
+          throw new Error('Invalid iat claim: must be a number');
+        }
+        if (jwtPayload.iat > nowInSeconds + 60) { // Allow 60 seconds clock skew
+          throw new Error('Invalid iat claim: presentation issued in the future');
+        }
+      }
+
+      // Validate nonce if expected
+      if (options?.expectedNonce) {
+        if (!jwtPayload.nonce) {
+          throw new Error('Nonce is required but not present in presentation');
+        }
+        if (jwtPayload.nonce !== options.expectedNonce) {
+          throw new Error(`Nonce mismatch: expected ${options.expectedNonce} but got ${jwtPayload.nonce}`);
+        }
+      }
+
+      // Validate audience if expected
+      if (options?.expectedAudience) {
+        if (!jwtPayload.aud) {
+          throw new Error('Audience is required but not present in presentation');
+        }
+
+        // Normalize both to arrays for comparison
+        const presentationAud = Array.isArray(jwtPayload.aud) ? jwtPayload.aud : [jwtPayload.aud];
+        const expectedAud = Array.isArray(options.expectedAudience) ? options.expectedAudience : [options.expectedAudience];
+
+        // Check if at least one expected audience matches
+        const hasMatchingAudience = expectedAud.some(expected =>
+          presentationAud.includes(expected)
+        );
+
+        if (!hasMatchingAudience) {
+          throw new Error(`Audience mismatch: expected one of [${expectedAud.join(', ')}] but got [${presentationAud.join(', ')}]`);
+        }
+      }
 
       // Now verify each credential in the presentation
       if (verifiedPresentation.verifiableCredential && verifiedPresentation.verifiableCredential.length > 0) {

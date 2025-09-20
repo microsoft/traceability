@@ -81,7 +81,15 @@ test("credential signed with full verification method ID as kid", async () => {
   // Should be able to verify
   const verifier = await keyResolver.resolve(fullKidPublicKey.kid);
   const verifiedCredential = await verifier.verify(signedCredential);
-  expect(verifiedCredential).toEqual(testCredential);
+
+  // Check core credential properties
+  expect(verifiedCredential["@context"]).toEqual(testCredential["@context"]);
+  expect(verifiedCredential.type).toEqual(testCredential.type);
+  expect(verifiedCredential.issuer).toBe(testCredential.issuer);
+  expect(verifiedCredential.credentialSubject).toEqual(testCredential.credentialSubject);
+  // Check JWT claims are added
+  expect(verifiedCredential.iat).toBeDefined();
+  expect(typeof verifiedCredential.iat).toBe('number');
 });
 
 test("presentation signed with raw kid only", async () => {
@@ -109,7 +117,16 @@ test("presentation signed with raw kid only", async () => {
   // Should be able to verify
   const verifier = await keyResolver.resolve(holderPublicKey.kid);
   const verifiedPresentation = await verifier.verify(signedPresentation);
-  expect(verifiedPresentation).toEqual(testPresentation);
+
+  // Check core presentation properties
+  expect(verifiedPresentation["@context"]).toEqual(testPresentation["@context"]);
+  expect(verifiedPresentation.type).toEqual(testPresentation.type);
+  expect(verifiedPresentation.holder).toBe(testPresentation.holder);
+  // Check JWT claims are added
+  expect(verifiedPresentation.iat).toBeDefined();
+  expect(verifiedPresentation.exp).toBeDefined();
+  expect(typeof verifiedPresentation.iat).toBe('number');
+  expect(typeof verifiedPresentation.exp).toBe('number');
 });
 
 test("mixed kid formats in same resolver", async () => {

@@ -52,11 +52,14 @@ test("sign and verify credential", async () => {
   expect(typeof signedCredential).toBe("string");
   expect(signedCredential.split(".")).toHaveLength(3); // JWS format: header.payload.signature
   
-  expect(verifiedCredential).toEqual(sampleCredential);
+  // Check core credential properties
   expect(verifiedCredential["@context"]).toEqual(sampleCredential["@context"]);
   expect(verifiedCredential.type).toEqual(sampleCredential.type);
   expect(verifiedCredential.issuer).toBe(sampleCredential.issuer);
   expect(verifiedCredential.credentialSubject).toEqual(sampleCredential.credentialSubject);
+  // Check JWT claims are added
+  expect(verifiedCredential.iat).toBeDefined();
+  expect(typeof verifiedCredential.iat).toBe('number');
 });
 
 test("verify with wrong public key fails", async () => {
@@ -135,8 +138,15 @@ test("sign and verify with ES384 algorithm", async () => {
   
   const signedCredential = await signer.sign(sampleCredential);
   const verifiedCredential = await verifier.verify(signedCredential);
-  
-  expect(verifiedCredential).toEqual(sampleCredential);
+
+  // Check core credential properties
+  expect(verifiedCredential["@context"]).toEqual(sampleCredential["@context"]);
+  expect(verifiedCredential.type).toEqual(sampleCredential.type);
+  expect(verifiedCredential.issuer).toBe(sampleCredential.issuer);
+  expect(verifiedCredential.credentialSubject).toEqual(sampleCredential.credentialSubject);
+  // Check JWT claims are added
+  expect(verifiedCredential.iat).toBeDefined();
+  expect(typeof verifiedCredential.iat).toBe('number');
 });
 
 test("sign and verify credential with different subject data", async () => {
@@ -184,10 +194,18 @@ test("sign and verify credential with different subject data", async () => {
   
   const signedCredential = await signer.sign(customCredential);
   const verifiedCredential = await verifier.verify(signedCredential);
-  
-  expect(verifiedCredential).toEqual(customCredential);
-  expect(verifiedCredential.credentialSubject.geometry).toEqual(customCredential.credentialSubject.geometry);
-  expect(verifiedCredential.credentialSubject.properties).toEqual(customCredential.credentialSubject.properties);
+
+  // Check core credential properties
+  expect(verifiedCredential["@context"]).toEqual(customCredential["@context"]);
+  expect(verifiedCredential.type).toEqual(customCredential.type);
+  expect(verifiedCredential.issuer).toBe(customCredential.issuer);
+  expect(verifiedCredential.credentialSubject).toEqual(customCredential.credentialSubject);
+  // Check JWT claims are added and validFrom/validUntil converted
+  expect(verifiedCredential.iat).toBeDefined();
+  expect(verifiedCredential.nbf).toBeDefined();
+  expect(verifiedCredential.exp).toBeDefined();
+  expect(verifiedCredential.validFrom).toBeUndefined();
+  expect(verifiedCredential.validUntil).toBeUndefined();
 });
 
 test("verify credential with valid date range succeeds", async () => {
@@ -210,8 +228,18 @@ test("verify credential with valid date range succeeds", async () => {
   
   const signedCredential = await signer.sign(validCredential);
   const verifiedCredential = await verifier.verify(signedCredential);
-  
-  expect(verifiedCredential).toEqual(validCredential);
+
+  // Check core credential properties
+  expect(verifiedCredential["@context"]).toEqual(validCredential["@context"]);
+  expect(verifiedCredential.type).toEqual(validCredential.type);
+  expect(verifiedCredential.issuer).toBe(validCredential.issuer);
+  expect(verifiedCredential.credentialSubject).toEqual(validCredential.credentialSubject);
+  // Check JWT claims are added and validFrom/validUntil converted
+  expect(verifiedCredential.iat).toBeDefined();
+  expect(verifiedCredential.nbf).toBeDefined();
+  expect(verifiedCredential.exp).toBeDefined();
+  expect(verifiedCredential.validFrom).toBeUndefined();
+  expect(verifiedCredential.validUntil).toBeUndefined();
 });
 
 test("verify expired credential fails", async () => {
@@ -278,8 +306,16 @@ test("verify credential with only validFrom succeeds when current time is after 
   
   const signedCredential = await signer.sign(credentialWithValidFrom);
   const verifiedCredential = await verifier.verify(signedCredential);
-  
-  expect(verifiedCredential).toEqual(credentialWithValidFrom);
+
+  // Check core credential properties
+  expect(verifiedCredential["@context"]).toEqual(credentialWithValidFrom["@context"]);
+  expect(verifiedCredential.type).toEqual(credentialWithValidFrom.type);
+  expect(verifiedCredential.issuer).toBe(credentialWithValidFrom.issuer);
+  expect(verifiedCredential.credentialSubject).toEqual(credentialWithValidFrom.credentialSubject);
+  // Check JWT claims are added and validFrom converted
+  expect(verifiedCredential.iat).toBeDefined();
+  expect(verifiedCredential.nbf).toBeDefined();
+  expect(verifiedCredential.validFrom).toBeUndefined();
 });
 
 test("verify credential with only validUntil succeeds when current time is before validUntil", async () => {
@@ -300,42 +336,52 @@ test("verify credential with only validUntil succeeds when current time is befor
   
   const signedCredential = await signer.sign(credentialWithValidUntil);
   const verifiedCredential = await verifier.verify(signedCredential);
-  
-  expect(verifiedCredential).toEqual(credentialWithValidUntil);
+
+  // Check core credential properties
+  expect(verifiedCredential["@context"]).toEqual(credentialWithValidUntil["@context"]);
+  expect(verifiedCredential.type).toEqual(credentialWithValidUntil.type);
+  expect(verifiedCredential.issuer).toBe(credentialWithValidUntil.issuer);
+  expect(verifiedCredential.credentialSubject).toEqual(credentialWithValidUntil.credentialSubject);
+  // Check JWT claims are added and validUntil converted
+  expect(verifiedCredential.iat).toBeDefined();
+  expect(verifiedCredential.exp).toBeDefined();
+  expect(verifiedCredential.validUntil).toBeUndefined();
 });
 
-test("verify credential with invalid validFrom date format fails", async () => {
+test("credential with invalid validFrom fails verification", async () => {
   const privateKey = await key.generatePrivateKey("ES256");
   const publicKey = await key.exportPublicKey(privateKey);
-  
+
   const signer = await credential.signer(privateKey);
   const verifier = await credential.verifier(publicKey);
-  
+
   // Create credential with invalid validFrom date format
   const invalidCredential: VerifiableCredential = {
     ...sampleCredential,
     validFrom: "invalid-date-format"
   };
-  
+
   const signedCredential = await signer.sign(invalidCredential);
-  
-  await expect(verifier.verify(signedCredential)).rejects.toThrow("Invalid validFrom date format");
+
+  // Should fail verification because NaN became null in JSON serialization
+  await expect(verifier.verify(signedCredential)).rejects.toThrow("Invalid nbf claim: must be a number");
 });
 
-test("verify credential with invalid validUntil date format fails", async () => {
+test("credential with invalid validUntil fails verification", async () => {
   const privateKey = await key.generatePrivateKey("ES256");
   const publicKey = await key.exportPublicKey(privateKey);
-  
+
   const signer = await credential.signer(privateKey);
   const verifier = await credential.verifier(publicKey);
-  
+
   // Create credential with invalid validUntil date format
   const invalidCredential: VerifiableCredential = {
     ...sampleCredential,
     validUntil: "invalid-date-format"
   };
-  
+
   const signedCredential = await signer.sign(invalidCredential);
-  
-  await expect(verifier.verify(signedCredential)).rejects.toThrow("Invalid validUntil date format");
+
+  // Should fail verification because NaN became null in JSON serialization
+  await expect(verifier.verify(signedCredential)).rejects.toThrow("Invalid exp claim: must be a number");
 });

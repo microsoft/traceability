@@ -6,6 +6,11 @@ export interface VerifiablePresentation {
   id?: string;
   type: string | string[];
   verifiableCredential?: EnvelopedVerifiableCredential[];
-  holder?: string
+  holder?: string;
+  // JWT standard claims that may be present after verification
+  iat?: number;  // Issued at (Unix timestamp)
+  exp?: number;  // Expiration (Unix timestamp)
+  nonce?: string;  // Challenge/nonce for replay protection
+  aud?: string | string[];  // Audience(s) the presentation is intended for
 }
 

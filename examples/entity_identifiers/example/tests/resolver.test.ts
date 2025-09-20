@@ -149,7 +149,14 @@ test("verify credential with issuer's assertion key through resolver", async () 
   const verifiedCredential = await assertionVerifier.verify(signedCredential);
 
   // Assertions
-  expect(verifiedCredential).toEqual(sampleCredential);
+  // Check core credential properties
+  expect(verifiedCredential["@context"]).toEqual(sampleCredential["@context"]);
+  expect(verifiedCredential.type).toEqual(sampleCredential.type);
+  expect(verifiedCredential.issuer).toBe(sampleCredential.issuer);
+  expect(verifiedCredential.credentialSubject).toEqual(sampleCredential.credentialSubject);
+  // Check JWT claims are added
+  expect(verifiedCredential.iat).toBeDefined();
+  expect(typeof verifiedCredential.iat).toBe('number');
   expect(verifiedCredential.issuer).toBe("https://issuer.example/geo/9q8yyk");
 });
 
@@ -184,7 +191,15 @@ test("verify presentation with holder's authentication key through resolver", as
   const verifiedPresentation = await authenticationVerifier.verify(signedPresentation);
 
   // Assertions
-  expect(verifiedPresentation).toEqual(samplePresentation);
+  // Check core presentation properties
+  expect(verifiedPresentation["@context"]).toEqual(samplePresentation["@context"]);
+  expect(verifiedPresentation.type).toEqual(samplePresentation.type);
+  expect(verifiedPresentation.holder).toBe(samplePresentation.holder);
+  // Check JWT claims are added
+  expect(verifiedPresentation.iat).toBeDefined();
+  expect(verifiedPresentation.exp).toBeDefined();
+  expect(typeof verifiedPresentation.iat).toBe('number');
+  expect(typeof verifiedPresentation.exp).toBe('number');
   expect(verifiedPresentation.holder).toBe("https://holder.example/geo/abc123");
 });
 
@@ -355,7 +370,14 @@ test("verify credential with ES384 algorithm through resolver", async () => {
   const verifiedCredential = await assertionVerifier.verify(signedCredential);
 
   // Assertions
-  expect(verifiedCredential).toEqual(sampleCredential);
+  // Check core credential properties
+  expect(verifiedCredential["@context"]).toEqual(sampleCredential["@context"]);
+  expect(verifiedCredential.type).toEqual(sampleCredential.type);
+  expect(verifiedCredential.issuer).toBe(sampleCredential.issuer);
+  expect(verifiedCredential.credentialSubject).toEqual(sampleCredential.credentialSubject);
+  // Check JWT claims are added
+  expect(verifiedCredential.iat).toBeDefined();
+  expect(typeof verifiedCredential.iat).toBe('number');
   expect(verifiedCredential.issuer).toBe("https://issuer.example/geo/9q8yyk");
 });
 
@@ -390,7 +412,15 @@ test("verify presentation with ES384 algorithm through resolver", async () => {
   const verifiedPresentation = await authenticationVerifier.verify(signedPresentation);
 
   // Assertions
-  expect(verifiedPresentation).toEqual(samplePresentation);
+  // Check core presentation properties
+  expect(verifiedPresentation["@context"]).toEqual(samplePresentation["@context"]);
+  expect(verifiedPresentation.type).toEqual(samplePresentation.type);
+  expect(verifiedPresentation.holder).toBe(samplePresentation.holder);
+  // Check JWT claims are added
+  expect(verifiedPresentation.iat).toBeDefined();
+  expect(verifiedPresentation.exp).toBeDefined();
+  expect(typeof verifiedPresentation.iat).toBe('number');
+  expect(typeof verifiedPresentation.exp).toBe('number');
   expect(verifiedPresentation.holder).toBe("https://holder.example/geo/abc123");
 });
 
@@ -430,7 +460,14 @@ test("end-to-end: issuer creates credential, holder creates presentation, both v
   const assertionVerifier = await assertionKeyResolver.resolve(issuerVerificationMethodId);
   const verifiedCredential = await assertionVerifier.verify(signedCredential);
 
-  expect(verifiedCredential).toEqual(sampleCredential);
+  // Check core credential properties
+  expect(verifiedCredential["@context"]).toEqual(sampleCredential["@context"]);
+  expect(verifiedCredential.type).toEqual(sampleCredential.type);
+  expect(verifiedCredential.issuer).toBe(sampleCredential.issuer);
+  expect(verifiedCredential.credentialSubject).toEqual(sampleCredential.credentialSubject);
+  // Check JWT claims are added
+  expect(verifiedCredential.iat).toBeDefined();
+  expect(typeof verifiedCredential.iat).toBe('number');
 
   // Step 3: Create enveloped credential for presentation
   const envelopedCredential = credential.createEnvelopedVerifiableCredential(signedCredential);
@@ -453,7 +490,16 @@ test("end-to-end: issuer creates credential, holder creates presentation, both v
   const verifiedPresentation = await authenticationVerifier.verify(signedPresentation);
 
   // Assertions
-  expect(verifiedPresentation).toEqual(presentationData);
+  // Check core presentation properties
+  expect(verifiedPresentation["@context"]).toEqual(presentationData["@context"]);
+  expect(verifiedPresentation.type).toEqual(presentationData.type);
+  expect(verifiedPresentation.holder).toBe(presentationData.holder);
+  expect(verifiedPresentation.verifiableCredential).toEqual(presentationData.verifiableCredential);
+  // Check JWT claims are added
+  expect(verifiedPresentation.iat).toBeDefined();
+  expect(verifiedPresentation.exp).toBeDefined();
+  expect(typeof verifiedPresentation.iat).toBe('number');
+  expect(typeof verifiedPresentation.exp).toBe('number');
   expect(verifiedPresentation.holder).toBe("https://holder.example/geo/abc123");
   expect(verifiedPresentation.verifiableCredential).toHaveLength(1);
   expect(verifiedPresentation.verifiableCredential![0]).toEqual(envelopedCredential);
