@@ -267,12 +267,37 @@ echo "---" >> "$REPORT_FILE"
 echo "" >> "$REPORT_FILE"
 
 echo ""
-echo "🔍 Step 5: Verification and Fraud Detection"
+echo "🗺️ Step 5: Geographic Data Analysis"
+echo "===================================="
+echo "📍 Analyzing GeoJSON data in supply chain credentials..."
+
+# Add geographic analysis section to report
+cat >> "$REPORT_FILE" << 'EOF'
+## Step 5: Geographic Data Analysis
+
+Analyzing embedded GeoJSON content in supply chain credentials to track shipment routes and geographic context:
+
+### Geographic Route Analysis
+
+EOF
+
+# Analyze GeoJSON in Bill of Lading (contains shipping route)
+run_command_and_report \
+    "Analyze Bill of Lading Shipping Route" \
+    "bun src/cli.ts analyze-geojson --cred case-studies/transhrimpment/credentials/bill-of-lading.json --out case-studies/transhrimpment/bill-of-lading-route-analysis.md" \
+    "🗺️"
+
+echo "" >> "$REPORT_FILE"
+echo "---" >> "$REPORT_FILE"
+echo "" >> "$REPORT_FILE"
+
+echo ""
+echo "🔍 Step 6: Verification and Fraud Detection"
 echo "==========================================="
 
 # Add verification section to report
 cat >> "$REPORT_FILE" << 'EOF'
-## Step 5: Digital Verification and Fraud Detection
+## Step 6: Digital Verification and Fraud Detection
 
 Using public key cryptography to verify the authenticity of signed supply chain documents:
 

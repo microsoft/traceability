@@ -8,6 +8,8 @@ import type { VerifiablePresentation } from "./presentation/presentation";
 import Ajv from "ajv";
 import addFormats from "ajv-formats";
 import * as yaml from "js-yaml";
+import { detectCredentialGeoJSON } from "./geojson/detector";
+import { geoJSONToMarkdown, generateMapPreviewURL } from "./geojson/markdown";
 
 function printHelp() {
   console.log(`
@@ -25,6 +27,7 @@ Commands:
   extract-public-key --key <file> --out <file>           Extract public key from private key
   validate-schema --schema <file> [--example <file>]      Validate YAML schema and optional example
   validate-controller --controller <file>                 Validate controller document (security + schema)
+  analyze-geojson --cred <file> [--out <file>]           Analyze GeoJSON in credential and export markdown
   help                                          Show this help message
 
 Examples:
@@ -127,6 +130,18 @@ async function signCredential(keyFile: string, credentialFile: string, outputFil
     const keyData = await Bun.file(keyFile).json();
     const unsignedCredential = await Bun.file(credentialFile).json();
 
+    // Check for GeoJSON content before signing
+    const geoJSONAnalysis = detectCredentialGeoJSON(unsignedCredential);
+    if (geoJSONAnalysis) {
+      console.log(`🗺️ Geographic data detected in credential: ${geoJSONAnalysis.description}`);
+
+      // Generate map preview URL if possible
+      const mapURL = generateMapPreviewURL(geoJSONAnalysis);
+      if (mapURL) {
+        console.log(`📍 Map Preview: ${mapURL}`);
+      }
+    }
+
     const privateKey = keyData.privateKey || keyData; // Support both formats
     const signer = await credential.signer(privateKey);
     const signedCredential = await signer.sign(unsignedCredential);
@@ -171,6 +186,28 @@ async function verifyCredential(credentialFile: string, keyFile: string) {
 
     console.log(`✅ Credential verification successful`);
     console.log(JSON.stringify(result, null, 2));
+
+    // Check for GeoJSON content in credential subject
+    const geoJSONAnalysis = detectCredentialGeoJSON(result);
+    if (geoJSONAnalysis) {
+      console.log(`\n🗺️ Geographic data detected in credential:`);
+
+      // Generate markdown preview
+      const markdownPreview = geoJSONToMarkdown(
+        result.credentialSubject,
+        geoJSONAnalysis,
+        { title: "Credential Geographic Data" }
+      );
+
+      // Generate map preview URL if possible
+      const mapURL = generateMapPreviewURL(geoJSONAnalysis);
+      if (mapURL) {
+        console.log(`📍 Map Preview: ${mapURL}`);
+      }
+
+      console.log(`\n${markdownPreview}`);
+    }
+
   } catch (error) {
     console.error(`❌ Credential verification failed: ${error}`);
     process.exit(1);
@@ -411,6 +448,55 @@ async function validateController(controllerFile: string) {
   }
 }
 
+async function analyzeGeoJSON(credentialFile: string, outputFile?: string) {
+  console.log(`Analyzing GeoJSON in credential ${credentialFile}...`);
+
+  try {
+    const credentialData = await Bun.file(credentialFile).json();
+
+    // Detect GeoJSON content
+    const geoJSONAnalysis = detectCredentialGeoJSON(credentialData);
+
+    if (!geoJSONAnalysis) {
+      console.log(`❌ No valid GeoJSON found in credential subject`);
+      return;
+    }
+
+    console.log(`✅ GeoJSON detected: ${geoJSONAnalysis.description}`);
+
+    // Generate markdown output
+    const markdownContent = geoJSONToMarkdown(
+      credentialData.credentialSubject,
+      geoJSONAnalysis,
+      {
+        title: "Supply Chain Geographic Data",
+        showAnalysis: true,
+        showCoordinates: true,
+        showProperties: true,
+        maxPropertiesDisplay: 10
+      }
+    );
+
+    // Generate map preview URL if possible
+    const mapURL = generateMapPreviewURL(geoJSONAnalysis);
+    if (mapURL) {
+      console.log(`📍 Map Preview: ${mapURL}`);
+    }
+
+    // Output to file or console
+    if (outputFile) {
+      await Bun.write(outputFile, markdownContent);
+      console.log(`✅ GeoJSON analysis saved to ${outputFile}`);
+    } else {
+      console.log(`\n${markdownContent}`);
+    }
+
+  } catch (error) {
+    console.error(`❌ Error analyzing GeoJSON: ${error}`);
+    process.exit(1);
+  }
+}
+
 // Parse command line arguments
 const { values, positionals } = parseArgs({
   args: Bun.argv.slice(2),
@@ -509,6 +595,14 @@ try {
         process.exit(1);
       }
       await validateController(values.controller);
+      break;
+
+    case 'analyze-geojson':
+      if (!values.cred) {
+        console.error("Please specify --cred <file>.");
+        process.exit(1);
+      }
+      await analyzeGeoJSON(values.cred, values.out);
       break;
 
     default:
