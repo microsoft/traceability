@@ -1,4 +1,5 @@
 import type { Controller } from "../controller/controller";
+import type { PublicKey } from "../types";
 import { createPublicKeyResolver } from "./publicKeyResolver";
 
 export const createControllerResolver = async (entries: Array<[string, Controller]>) => {
@@ -23,8 +24,8 @@ export const createControllerResolver = async (entries: Array<[string, Controlle
         }
       }
       return {
-        assertion: createPublicKeyResolver(assertionKeys, 'assertion'),
-        authentication: createPublicKeyResolver(authenticationKeys, 'authentication')
+        assertion: createPublicKeyResolver(assertionKeys as [string, PublicKey][], 'assertion'),
+        authentication: createPublicKeyResolver(authenticationKeys as [string, PublicKey][], 'authentication')
       };
 
     }
