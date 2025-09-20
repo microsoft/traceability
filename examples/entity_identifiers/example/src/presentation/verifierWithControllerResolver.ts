@@ -57,20 +57,9 @@ export const verifierWithControllerResolver = async (controllerResolver: Control
       // Get the authentication key resolver for the holder
       const authenticationKeyResolver = await holderController.authentication;
 
-      // Find the correct verification method ID
-      let presentationVerifier;
-      try {
-        // Try with full verification method ID (holder + # + kid)
-        const verificationMethodId = `${holderId}#${header.kid}`;
-        presentationVerifier = await authenticationKeyResolver.resolve(verificationMethodId);
-      } catch (e) {
-        // If that fails, try with just the kid
-        try {
-          presentationVerifier = await authenticationKeyResolver.resolve(header.kid);
-        } catch (e2) {
-          throw new Error(`Cannot find authentication key for presentation signed with kid: ${header.kid}`);
-        }
-      }
+      // Resolve the presentation verifier using the kid
+      // The resolver handles both full verification method IDs and raw kids
+      const presentationVerifier = await authenticationKeyResolver.resolve(header.kid);
 
       // Verify the presentation signature
       const verifiedPresentation = await presentationVerifier.verify(jws);
@@ -104,20 +93,9 @@ export const verifierWithControllerResolver = async (controllerResolver: Control
           const credHeaderBytes = base64url.decode(credParts[0]);
           const credHeader = JSON.parse(new TextDecoder().decode(credHeaderBytes));
 
-          // Find the correct verification method ID for the issuer
-          let credentialVerifier;
-          try {
-            // Try with full verification method ID (issuer + # + kid)
-            const verificationMethodId = `${issuerId}#${credHeader.kid}`;
-            credentialVerifier = await assertionKeyResolver.resolve(verificationMethodId);
-          } catch (e) {
-            // If that fails, try with just the kid
-            try {
-              credentialVerifier = await assertionKeyResolver.resolve(credHeader.kid);
-            } catch (e2) {
-              throw new Error(`Cannot find assertion key for credential signed with kid: ${credHeader.kid}`);
-            }
-          }
+          // Resolve the credential verifier using the kid
+          // The resolver handles both full verification method IDs and raw kids
+          const credentialVerifier = await assertionKeyResolver.resolve(credHeader.kid);
 
           // Verify the credential
           const verifiedCredential = await credentialVerifier.verify(credJws);
