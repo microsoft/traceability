@@ -1,0 +1,87 @@
+# Python.gitignore - common Python project ignores
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+eggs/
+*.egg-info/
+.installed.cfg
+pip-wheel-metadata/
+wheels/
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv/
+venv.bak/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit tests / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django / Flask / common frameworks
+local_settings.py
+db.sqlite3
+instance/
+.webassets-cache
+media/
+staticfiles/
+
+# Sphinx documentation
+docs/_build/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.iml
+*.suo
+*.user
+*.userosscache
+*.sln
+*.pyproj
+
+# OS generated files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Environment / secrets
+.env
+.env.*
+secrets.yml
+*.key
+*.pem
+
+# Linters / type checkers / caches
+.mypy_cache/
+.ruff_cache/
+
+# Misc
+*.log
+*.sqlite3
+*.db
+*.tmp
