@@ -12,8 +12,9 @@ Lets say `Chompchomp Ltd` submits a purchase order to `Camarón Corriente S.A.` 
 
 `Camarón Corriente S.A.`'s usual carrier is `Cargo Line Ltd` based out of `San Juan, Puerto Rico`, but due to a recent hurricane they have been forced to make repairs to their fleet, and are currently unable to deliver the goods.
 
-`Camarón Corriente S.A.` scrambled to find a new carrier, and rushes their normal vetting process for an organization called `Shady Carrier Ltd` based out of `Oranjestad, Aruba`.
+**Note:** In normal circumstances, `Cargo Line Ltd` would have issued a legitimate Bill of Lading for the complete 1000kg shipment from Puerto Cabello, Venezuela to Road Town, Tortola, BVI.
 
+`Camarón Corriente S.A.` scrambled to find a new carrier, and rushes their normal vetting process for an organization called `Shady Carrier Ltd` based out of `Oranjestad, Aruba`.
 
 `Shady Carrier Ltd` quickly delivers the goods but forges critical supply chain documentation to make it appear that part of the frozen shrimp was destroyed during transit.
 
@@ -21,7 +22,11 @@ Lets say `Chompchomp Ltd` submits a purchase order to `Camarón Corriente S.A.` 
 
 `Shady Distributor Ltd` forges fresh certifcates of origin that say the frozen shrimp was sourced from a legitimate supplier called `Legit Shrimp Ltd` based out of `Port of Spain, Trinidad and Tobago`.
 
+**Note:** `Legit Shrimp Ltd` is a legitimate supplier that would have issued proper certificates of origin for their actual shrimp products, but their identity was stolen and used fraudulently.
+
 A seafood distributor in `Charlotte Amalie, St. Thomas, U.S. Virgin Islands` places an order for 500kg of frozen shrimp from `Shady Distributor Ltd`, who happens to use `Cargo Line Ltd`, and after their repairs to their fleet, the carrier is able to deliver the goods.
+
+**Note:** This secondary transaction would have generated legitimate purchase orders and commercial invoices between `Anonymous Distributor` and `Shady Distributor Ltd`, and a legitimate bill of lading from the now-repaired `Cargo Line Ltd`.
 
 
 The importer's customs broker files all the paper work for the imported shrimp as hs code 0306.17, originating from `Trinidad and Tobago`.
@@ -29,7 +34,28 @@ Lab tests on the shrimp reveal chemical contamination, and an investigation is l
 
 You are an an auditor called in to help with the investigation.
 
-In this scenario, all the supply chain paperwork was also digitally protected, and by verifying the digital sigantures, you are able to uncover the fraud.
+In this scenario, all the supply chain paperwork was also digitally protected, and by verifying the digital signatures, you are able to uncover the fraud. The fraudulent documents appear completely legitimate in all ways except for being signed by the wrong entity.
+
+## Investigation Process
+
+As the auditor, you would discover the fraud by:
+
+1. **Verifying Digital Signatures**: The fraudulent documents appear legitimate in all ways except for being signed by the wrong entity. Digital signature verification reveals they were not issued by the claimed entities.
+
+2. **Comparing with Legitimate Documents**: By checking what legitimate documents should have been issued (as shown in the table above), you can identify discrepancies:
+   - The fraudulent bill of lading claims only 800kg was delivered, but the original purchase order was for 1000kg
+   - The fraudulent certificate of origin claims Legit Shrimp Ltd as the source, but Legit Shrimp Ltd never issued such a certificate
+   - The legitimate Cargo Line Ltd bill of lading was never issued due to hurricane damage
+
+3. **Tracing the Supply Chain**: The legitimate documents would show the intended flow:
+   - Chompchomp Ltd → Camarón Corriente S.A. (legitimate)
+   - Camarón Corriente S.A. → Cargo Line Ltd → Chompchomp Ltd (should have been legitimate)
+   - Anonymous Distributor → Shady Distributor Ltd → Cargo Line Ltd (legitimate but to fraudulent entity)
+
+4. **Identifying the Fraud**: The investigation reveals:
+   - Shady Carrier Ltd stole 200kg of shrimp and forged documentation
+   - Shady Distributor Ltd forged certificates using Legit Shrimp Ltd's identity
+   - The contaminated shrimp entered the supply chain through this fraudulent pathway
 
 ## Scenario Overview
 
@@ -74,10 +100,27 @@ The investigation reveals a complex web of document forgery, cargo theft, and id
 
 ## Supply Chain Documents
 
+### Legitimate Documents
+
+These are the original documents, because they are digitally signed, they cannot be altered without being detected.
+
 | Document | Schema | From (Issuer) | To (Holder) | Status |
 |---------------|--------|---------------|-------------|---------|
 | **Purchase Order** | `purchase-order-credential.yaml` | `https://chompchomp.example/entity/bvi-001` | `https://camaron-corriente.example/entity/ve-pbc-001` | ✅ Legitimate |
 | **Commercial Invoice** | `commercial-invoice-credential.yaml` | `https://camaron-corriente.example/entity/ve-pbc-001` | `https://chompchomp.example/entity/bvi-001` | ✅ Legitimate |
-| **Bill of Lading** | `bill-of-lading-credential.yaml` | `https://shady-carrier.example/entity/aw-oru-001` | `https://chompchomp.example/entity/bvi-001` | ⚠️ **Suspicious** (quantity discrepancy) |
-| **Certificate of Origin** | `certificate-of-origin-credential.yaml` | `https://legit-shrimp.example/entity/tt-pos-001` (forged) | `https://shady-distributor.example/entity/bvi-002` | 🚨 **Fraudulent** (forged signature) |
+| **Bill of Lading** | `bill-of-lading-credential.yaml` | `https://cargo-line.example/entity/pr-sju-001` | `https://chompchomp.example/entity/bvi-001` | ✅ **Should Have Been** (1000kg complete) |
+| **Certificate of Origin** | `certificate-of-origin-credential.yaml` | `https://legit-shrimp.example/entity/tt-pos-001` | `https://camaron-corriente.example/entity/ve-pbc-001` | ✅ **Should Have Been** (actual Legit Shrimp supply) |
+| **Secondary Purchase Order** | `purchase-order-credential.yaml` | `https://anonymous-distributor.example/entity/vi-stt-001` | `https://shady-distributor.example/entity/bvi-002` | ✅ Legitimate (but to fraudulent entity) |
+| **Secondary Commercial Invoice** | `commercial-invoice-credential.yaml` | `https://shady-distributor.example/entity/bvi-002` | `https://anonymous-distributor.example/entity/vi-stt-001` | ✅ Legitimate (but from fraudulent entity) |
+| **Secondary Bill of Lading** | `bill-of-lading-credential.yaml` | `https://cargo-line.example/entity/pr-sju-001` | `https://anonymous-distributor.example/entity/vi-stt-001` | ✅ Legitimate (post-repair delivery) |
+
+### Fraudulent Documents 
+
+These are the fraudulent documents. They appear completely legitimate in all ways except for being signed by the wrong entity.
+These documents are substitutes for the original documents, and they are used to cover up the fraud.
+
+| Document | Schema | From (Issuer) | To (Holder) | Status |
+|---------------|--------|---------------|-------------|---------|
+| **Fraudulent Bill of Lading** | `bill-of-lading-credential.yaml` | `https://shady-carrier.example/entity/aw-oru-001` | `https://chompchomp.example/entity/bvi-001` | ⚠️ **Suspicious** (quantity discrepancy) |
+| **Fraudulent Certificate of Origin** | `certificate-of-origin-credential.yaml` | `https://legit-shrimp.example/entity/tt-pos-001` (forged) | `https://shady-distributor.example/entity/bvi-002` | 🚨 **Fraudulent** (forged signature) |
 
