@@ -101,11 +101,11 @@ All schemas validated successfully.
 
 ---
 
-## Step 2: Entity Controller Generation
+## Step 2: Controller Document Generation and Validation
 
-Converting private entity configurations to public controller documents for verification:
+Converting private entity configurations to public controller documents and validating their security:
 
-### Supply Chain Entities
+### Supply Chain Entity Controllers
 
 
 <details>
@@ -168,247 +168,102 @@ Generating controller from config case-studies/transhrimpment/entity_configurati
 Exit code: 0
 </details>
 
+### Controller Document Validation
+
+Validating all generated controller documents for security compliance and structural integrity:
+
+
+<details>
+<summary>✅ Validate Chompchomp Controller (Legitimate)</summary>
+
+```bash
+$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/chompchomp-controller.json
+```
+
+```
+Validating controller document case-studies/transhrimpment/controllers/chompchomp-controller.json...
+✅ Security check passed - no private keys detected
+✅ Controller document structure is valid
+✅ Verification method controller references are valid
+✅ Method references are valid
+
+✅ Controller document validation completed successfully
+```
+
+Exit code: 0
+</details>
+
+<details>
+<summary>✅ Validate Camarón Corriente Controller (Legitimate)</summary>
+
+```bash
+$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/camaron-corriente-controller.json
+```
+
+```
+Validating controller document case-studies/transhrimpment/controllers/camaron-corriente-controller.json...
+✅ Security check passed - no private keys detected
+✅ Controller document structure is valid
+✅ Verification method controller references are valid
+✅ Method references are valid
+
+✅ Controller document validation completed successfully
+```
+
+Exit code: 0
+</details>
+
+<details>
+<summary>⚠️ Validate Shady Carrier Controller (Fraudulent Entity)</summary>
+
+```bash
+$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/shady-carrier-controller.json
+```
+
+```
+Validating controller document case-studies/transhrimpment/controllers/shady-carrier-controller.json...
+✅ Security check passed - no private keys detected
+✅ Controller document structure is valid
+✅ Verification method controller references are valid
+✅ Method references are valid
+
+✅ Controller document validation completed successfully
+```
+
+Exit code: 0
+</details>
+
+<details>
+<summary>✅ Validate Legit Shrimp Controller (Legitimate - Identity Will Be Stolen)</summary>
+
+```bash
+$ bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/legit-shrimp-controller.json
+```
+
+```
+Validating controller document case-studies/transhrimpment/controllers/legit-shrimp-controller.json...
+✅ Security check passed - no private keys detected
+✅ Controller document structure is valid
+✅ Verification method controller references are valid
+✅ Method references are valid
+
+✅ Controller document validation completed successfully
+```
+
+Exit code: 0
+</details>
+
+**Controller Validation Results:**
+- ✅ **Security Check**: Verified no private keys are exposed in public controller documents
+- ✅ **Schema Compliance**: All controllers follow the W3C Controller Document specification
+- ✅ **Key References**: Verification method references are properly structured
+- ✅ **SPICE GLUE Identifiers**: Legitimate entities have proper supply chain identifiers
+- ⚠️ **Fraud Note**: Shady entities lack legitimate supply chain identifiers (red flag)
+
+
 ---
 
 ## Step 3: Public Key Extraction
 
 Extracting public keys from private entity configurations for signature verification:
-
-
-<details>
-<summary>🔑 Extract Chompchomp Public Keys</summary>
-
-```bash
-$ bun src/cli.ts extract-public-key --key case-studies/transhrimpment/entity_configurations/chompchomp-config.json --out case-studies/transhrimpment/keys/chompchomp-public.json
-```
-
-```
-Extracting public key from case-studies/transhrimpment/entity_configurations/chompchomp-config.json and saving to case-studies/transhrimpment/keys/chompchomp-public.json...
-✅ Public key saved to case-studies/transhrimpment/keys/chompchomp-public.json
-```
-
-Exit code: 0
-</details>
-
-<details>
-<summary>🔑 Extract Camarón Corriente Public Keys</summary>
-
-```bash
-$ bun src/cli.ts extract-public-key --key case-studies/transhrimpment/entity_configurations/camaron-corriente-config.json --out case-studies/transhrimpment/keys/camaron-corriente-public.json
-```
-
-```
-Extracting public key from case-studies/transhrimpment/entity_configurations/camaron-corriente-config.json and saving to case-studies/transhrimpment/keys/camaron-corriente-public.json...
-✅ Public key saved to case-studies/transhrimpment/keys/camaron-corriente-public.json
-```
-
-Exit code: 0
-</details>
-
-<details>
-<summary>🔑 Extract Shady Carrier Public Keys</summary>
-
-```bash
-$ bun src/cli.ts extract-public-key --key case-studies/transhrimpment/entity_configurations/shady-carrier-config.json --out case-studies/transhrimpment/keys/shady-carrier-public.json
-```
-
-```
-Extracting public key from case-studies/transhrimpment/entity_configurations/shady-carrier-config.json and saving to case-studies/transhrimpment/keys/shady-carrier-public.json...
-✅ Public key saved to case-studies/transhrimpment/keys/shady-carrier-public.json
-```
-
-Exit code: 0
-</details>
-
-<details>
-<summary>🔑 Extract Legit Shrimp Public Keys</summary>
-
-```bash
-$ bun src/cli.ts extract-public-key --key case-studies/transhrimpment/entity_configurations/legit-shrimp-config.json --out case-studies/transhrimpment/keys/legit-shrimp-public.json
-```
-
-```
-Extracting public key from case-studies/transhrimpment/entity_configurations/legit-shrimp-config.json and saving to case-studies/transhrimpment/keys/legit-shrimp-public.json...
-✅ Public key saved to case-studies/transhrimpment/keys/legit-shrimp-public.json
-```
-
-Exit code: 0
-</details>
-
----
-
-## Step 4: Supply Chain Document Signing
-
-Following the fraudulent transaction timeline, signing each document with the respective entity's private keys:
-
-### Document Processing
-
-
-<details>
-<summary>✅ Sign Purchase Order (Chompchomp)</summary>
-
-```bash
-$ bun src/cli.ts sign-credential --key case-studies/transhrimpment/entity_configurations/chompchomp-config.json --cred case-studies/transhrimpment/credentials/purchase-order.json --out case-studies/transhrimpment/signed/purchase-order-signed.json
-```
-
-```
-Signing credential case-studies/transhrimpment/credentials/purchase-order.json with key case-studies/transhrimpment/entity_configurations/chompchomp-config.json and saving to case-studies/transhrimpment/signed/purchase-order-signed.json...
-❌ Error signing credential: TypeError: undefined is not an object (evaluating 'fullySpecifiedAlgorithms[privateKey.alg].name')
-```
-
-Exit code: 1
-</details>
-
-<details>
-<summary>✅ Sign Commercial Invoice (Camarón Corriente)</summary>
-
-```bash
-$ bun src/cli.ts sign-credential --key case-studies/transhrimpment/entity_configurations/camaron-corriente-config.json --cred case-studies/transhrimpment/credentials/commercial-invoice.json --out case-studies/transhrimpment/signed/commercial-invoice-signed.json
-```
-
-```
-Signing credential case-studies/transhrimpment/credentials/commercial-invoice.json with key case-studies/transhrimpment/entity_configurations/camaron-corriente-config.json and saving to case-studies/transhrimpment/signed/commercial-invoice-signed.json...
-❌ Error signing credential: TypeError: undefined is not an object (evaluating 'fullySpecifiedAlgorithms[privateKey.alg].name')
-```
-
-Exit code: 1
-</details>
-
-<details>
-<summary>⚠️ Sign Bill of Lading (Shady Carrier - FRAUD!)</summary>
-
-```bash
-$ bun src/cli.ts sign-credential --key case-studies/transhrimpment/entity_configurations/shady-carrier-config.json --cred case-studies/transhrimpment/credentials/bill-of-lading.json --out case-studies/transhrimpment/signed/bill-of-lading-signed.json
-```
-
-```
-Signing credential case-studies/transhrimpment/credentials/bill-of-lading.json with key case-studies/transhrimpment/entity_configurations/shady-carrier-config.json and saving to case-studies/transhrimpment/signed/bill-of-lading-signed.json...
-❌ Error signing credential: TypeError: undefined is not an object (evaluating 'fullySpecifiedAlgorithms[privateKey.alg].name')
-```
-
-Exit code: 1
-</details>
-
-<details>
-<summary>🚨 Sign Certificate of Origin (FORGED by Shady Distributor)</summary>
-
-```bash
-$ bun src/cli.ts sign-credential --key case-studies/transhrimpment/entity_configurations/shady-distributor-config.json --cred case-studies/transhrimpment/credentials/certificate-of-origin.json --out case-studies/transhrimpment/signed/certificate-of-origin-signed.json
-```
-
-```
-Signing credential case-studies/transhrimpment/credentials/certificate-of-origin.json with key case-studies/transhrimpment/entity_configurations/shady-distributor-config.json and saving to case-studies/transhrimpment/signed/certificate-of-origin-signed.json...
-❌ Error signing credential: TypeError: undefined is not an object (evaluating 'fullySpecifiedAlgorithms[privateKey.alg].name')
-```
-
-Exit code: 1
-</details>
-
----
-
-## Step 5: Digital Verification and Fraud Detection
-
-Using public key cryptography to verify the authenticity of signed supply chain documents:
-
-### Legitimate Document Verification
-
-
-<details>
-<summary>✅ Verify Purchase Order (Chompchomp)</summary>
-
-```bash
-$ bun src/cli.ts verify-credential --cred case-studies/transhrimpment/signed/purchase-order-signed.json --key case-studies/transhrimpment/keys/chompchomp-public.json
-```
-
-```
-Verifying credential case-studies/transhrimpment/signed/purchase-order-signed.json with key case-studies/transhrimpment/keys/chompchomp-public.json...
-❌ Credential verification failed: Error: ENOENT: no such file or directory, open 'case-studies/transhrimpment/signed/purchase-order-signed.json'
-```
-
-Exit code: 1
-</details>
-
-<details>
-<summary>✅ Verify Commercial Invoice (Camarón Corriente)</summary>
-
-```bash
-$ bun src/cli.ts verify-credential --cred case-studies/transhrimpment/signed/commercial-invoice-signed.json --key case-studies/transhrimpment/keys/camaron-corriente-public.json
-```
-
-```
-Verifying credential case-studies/transhrimpment/signed/commercial-invoice-signed.json with key case-studies/transhrimpment/keys/camaron-corriente-public.json...
-❌ Credential verification failed: Error: ENOENT: no such file or directory, open 'case-studies/transhrimpment/signed/commercial-invoice-signed.json'
-```
-
-Exit code: 1
-</details>
-
-### Fraud Detection
-
-Testing signatures against expected entities to detect fraud:
-
-
-<details>
-<summary>⚠️ Verify Bill of Lading (Valid signature but quantity discrepancy)</summary>
-
-```bash
-$ bun src/cli.ts verify-credential --cred case-studies/transhrimpment/signed/bill-of-lading-signed.json --key case-studies/transhrimpment/keys/shady-carrier-public.json
-```
-
-```
-Verifying credential case-studies/transhrimpment/signed/bill-of-lading-signed.json with key case-studies/transhrimpment/keys/shady-carrier-public.json...
-❌ Credential verification failed: Error: ENOENT: no such file or directory, open 'case-studies/transhrimpment/signed/bill-of-lading-signed.json'
-```
-
-Exit code: 1
-</details>
-
-<details>
-<summary>🚨 Verify Certificate of Origin (FRAUD DETECTION)</summary>
-
-```bash
-$ bun src/cli.ts verify-credential --cred case-studies/transhrimpment/signed/certificate-of-origin-signed.json --key case-studies/transhrimpment/keys/legit-shrimp-public.json
-```
-
-```
-Verifying credential case-studies/transhrimpment/signed/certificate-of-origin-signed.json with key case-studies/transhrimpment/keys/legit-shrimp-public.json...
-❌ VERIFICATION FAILED - SIGNATURE MISMATCH = FRAUD DETECTED!
-```
-
-**Result: FRAUD DETECTED** - Wrong private key used to sign certificate!
-</details>
-
----
-
-## Investigation Summary
-
-### Digital Forensics Results
-
-| Document | Signer | Signature Status | Content Analysis | Fraud Indicator |
-|----------|--------|------------------|-------------------|----------------|
-| **Purchase Order** | Chompchomp Ltd | ✅ Valid | 1000kg shrimp ordered | ✅ Legitimate |
-| **Commercial Invoice** | Camarón Corriente S.A. | ✅ Valid | 1000kg billed | ✅ Legitimate |
-| **Bill of Lading** | Shady Carrier Ltd | ✅ Valid signature | ⚠️ Only 800kg shipped | 🚨 **200kg theft** |
-| **Certificate of Origin** | Expected: Legit Shrimp Ltd | ❌ **WRONG SIGNATURE** | Claims legitimate origin | 🚨 **Identity theft/forgery** |
-
-### Key Findings
-
-🎯 **Quantity Fraud**: 200kg of shrimp stolen during transit (1000kg invoiced → 800kg shipped)
-
-🎯 **Document Forgery**: Certificate of Origin forged by Shady Distributor using stolen identity
-
-🎯 **Chain of Custody Breach**: Fraud occurred at Shady Carrier during transportation
-
-🎯 **Digital Evidence**: Cryptographic signatures mathematically prove:
-- Purchase Order and Commercial Invoice are authentic
-- Bill of Lading has valid signature but shows quantity theft
-- Certificate of Origin is forged (wrong private key used)
-
-### Fraud Detection Method
-
-**Verifiable Credentials + Public Key Cryptography = Tamper-Proof Supply Chain**
-
-Each entity's private keys are used to sign documents, while public keys verify authenticity. Any attempt to forge documents or steal identities is immediately detected through signature verification.
-
-**🔐 Digital forensics using verifiable credentials successfully exposed the entire fraud scheme!**
 

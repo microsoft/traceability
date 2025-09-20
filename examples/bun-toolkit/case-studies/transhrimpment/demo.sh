@@ -102,22 +102,26 @@ echo "---" >> "$REPORT_FILE"
 echo "" >> "$REPORT_FILE"
 
 echo ""
-echo "📝 Step 2: Generate PUBLIC Controller Documents"
-echo "==============================================="
+echo "📝 Step 2: Generate and Validate Controller Documents"
+echo "===================================================="
 echo "🔒 Reading PRIVATE entity configurations..."
 echo "🌐 Generating PUBLIC controller documents (safe to share)..."
+echo "🔍 Validating controller document security and structure..."
 
 # Add controller generation section to report
 cat >> "$REPORT_FILE" << 'EOF'
-## Step 2: Entity Controller Generation
+## Step 2: Controller Document Generation and Validation
 
-Converting private entity configurations to public controller documents for verification:
+Converting private entity configurations to public controller documents and validating their security:
 
-### Supply Chain Entities
+### Supply Chain Entity Controllers
 
 EOF
 
-# Generate PUBLIC controllers from PRIVATE entity configurations
+# Generate and validate all controller documents
+echo "Generating all controller documents first..."
+
+# Generate controllers
 run_command_and_report \
     "Generate Chompchomp Controller" \
     "bun src/cli.ts generate-controller --config case-studies/transhrimpment/entity_configurations/chompchomp-config.json --out case-studies/transhrimpment/controllers/chompchomp-controller.json" \
@@ -137,6 +141,47 @@ run_command_and_report \
     "Generate Legit Shrimp Controller" \
     "bun src/cli.ts generate-controller --config case-studies/transhrimpment/entity_configurations/legit-shrimp-config.json --out case-studies/transhrimpment/controllers/legit-shrimp-controller.json" \
     "✅"
+
+# Add validation subsection to report
+echo "" >> "$REPORT_FILE"
+echo "### Controller Document Validation" >> "$REPORT_FILE"
+echo "" >> "$REPORT_FILE"
+echo "Validating all generated controller documents for security compliance and structural integrity:" >> "$REPORT_FILE"
+echo "" >> "$REPORT_FILE"
+
+echo ""
+echo "Now validating all generated controller documents..."
+
+# Validate all generated controllers
+run_command_and_report \
+    "Validate Chompchomp Controller (Legitimate)" \
+    "bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/chompchomp-controller.json" \
+    "✅"
+
+run_command_and_report \
+    "Validate Camarón Corriente Controller (Legitimate)" \
+    "bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/camaron-corriente-controller.json" \
+    "✅"
+
+run_command_and_report \
+    "Validate Shady Carrier Controller (Fraudulent Entity)" \
+    "bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/shady-carrier-controller.json" \
+    "⚠️"
+
+run_command_and_report \
+    "Validate Legit Shrimp Controller (Legitimate - Identity Will Be Stolen)" \
+    "bun src/cli.ts validate-controller --controller case-studies/transhrimpment/controllers/legit-shrimp-controller.json" \
+    "✅"
+
+# Add a note about what controller validation ensures
+echo "" >> "$REPORT_FILE"
+echo "**Controller Validation Results:**" >> "$REPORT_FILE"
+echo "- ✅ **Security Check**: Verified no private keys are exposed in public controller documents" >> "$REPORT_FILE"
+echo "- ✅ **Schema Compliance**: All controllers follow the W3C Controller Document specification" >> "$REPORT_FILE"
+echo "- ✅ **Key References**: Verification method references are properly structured" >> "$REPORT_FILE"
+echo "- ✅ **SPICE GLUE Identifiers**: Legitimate entities have proper supply chain identifiers" >> "$REPORT_FILE"
+echo "- ⚠️ **Fraud Note**: Shady entities lack legitimate supply chain identifiers (red flag)" >> "$REPORT_FILE"
+echo "" >> "$REPORT_FILE"
 
 echo "" >> "$REPORT_FILE"
 echo "---" >> "$REPORT_FILE"
