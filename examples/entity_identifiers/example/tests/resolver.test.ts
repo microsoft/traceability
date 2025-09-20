@@ -536,3 +536,110 @@ test("verify presentation with algorithm mismatch through resolver fails", async
   // This should throw an error due to algorithm mismatch
   await expect(assertionVerifier.verify(signedPresentation)).rejects.toThrow("Algorithm mismatch");
 });
+
+test("credential with holder as subject and cnf claim", async () => {
+  // Create issuer controller
+  const issuerController = await createController(
+    "https://issuer.example/geo/9q8yyk",
+    ["https://issuer.example"],
+    issuerGeometry,
+    issuerAddress,
+    "ES256"
+  );
+
+  // Create holder controller
+  const holderController = await createController(
+    "https://holder.example/geo/abc123",
+    ["https://holder.example"],
+    holderGeometry,
+    holderAddress,
+    "ES256"
+  );
+
+  // Get holder's authentication key ID
+  const holderAuthKeyId = holderController.controller.verificationMethod.find(
+    vm => holderController.controller.authentication.includes(vm.id)
+  )?.id;
+
+  // Create credential with holder as subject and cnf claim
+  const credentialWithCnf: VerifiableCredential = {
+    "@context": [
+      "https://www.w3.org/ns/credentials/v2",
+      "https://www.w3.org/ns/credentials/examples/v2",
+      "https://geojson.org/geojson-ld/geojson-context.jsonld"
+    ],
+    type: ["VerifiableCredential", "RouteCredential"],
+    issuer: "https://issuer.example/geo/9q8yyk",
+    credentialSubject: {
+      id: "https://holder.example/geo/abc123", // Holder as subject
+      type: "Route",
+      name: "Holder's Route",
+      description: "A route assigned to the holder",
+      geometry: holderGeometry,
+      properties: {
+        name: "Holder's Route",
+        description: "A route assigned to the holder"
+      }
+    },
+    cnf: {
+      kid: holderAuthKeyId // Holder's authentication key as confirmation (top-level)
+    }
+  };
+
+  // Create controller resolver
+  const controllerResolver = await resolver.createControllerResolver([
+    ["https://issuer.example/geo/9q8yyk", issuerController.controller],
+    ["https://holder.example/geo/abc123", holderController.controller]
+  ]);
+
+  // Sign credential with issuer's private key
+  const credentialSigner = await credential.signer(issuerController.privateKey);
+  const signedCredential = await credentialSigner.sign(credentialWithCnf);
+
+  // Verify credential using issuer's assertion key through resolver
+  const issuerResolvers = await controllerResolver.resolve("https://issuer.example/geo/9q8yyk");
+  const assertionKeyResolver = await issuerResolvers.assertion;
+  const issuerVerificationMethodId = issuerController.controller.verificationMethod[0]!.id;
+  const assertionVerifier = await assertionKeyResolver.resolve(issuerVerificationMethodId);
+  const verifiedCredential = await assertionVerifier.verify(signedCredential);
+
+  // Verify the credential content
+  expect(verifiedCredential.credentialSubject.id).toBe("https://holder.example/geo/abc123");
+  expect(verifiedCredential.cnf?.kid).toBe(holderAuthKeyId);
+
+  // Create presentation with the credential
+  const envelopedCredential = credential.createEnvelopedVerifiableCredential(signedCredential);
+  const presentationData: VerifiablePresentation = {
+    "@context": [
+      "https://www.w3.org/ns/credentials/v2",
+      "https://www.w3.org/ns/credentials/examples/v2"
+    ],
+    type: ["VerifiablePresentation"],
+    holder: "https://holder.example/geo/abc123",
+    verifiableCredential: [envelopedCredential]
+  };
+
+  // Sign presentation with holder's private key
+  const presentationSigner = await presentation.signer(holderController.privateKey);
+  const signedPresentation = await presentationSigner.sign(presentationData);
+
+  // Verify presentation using holder's authentication key through resolver
+  const holderResolvers = await controllerResolver.resolve("https://holder.example/geo/abc123");
+  const authenticationKeyResolver = await holderResolvers.authentication;
+  const holderVerificationMethodId = holderController.controller.verificationMethod[0]!.id;
+  const authenticationVerifier = await authenticationKeyResolver.resolve(holderVerificationMethodId);
+  const verifiedPresentation = await authenticationVerifier.verify(signedPresentation);
+
+  // Verify the presentation and contained credential
+  expect(verifiedPresentation.holder).toBe("https://holder.example/geo/abc123");
+  expect(verifiedPresentation.verifiableCredential).toHaveLength(1);
+
+  // Extract and verify the credential from the presentation
+  const credentialFromPresentation = credential.createJsonWebSignatureFromEnvelopedVerifiableCredential(
+    verifiedPresentation.verifiableCredential[0] as any
+  );
+  const reVerifiedCredential = await assertionVerifier.verify(credentialFromPresentation);
+
+  expect(reVerifiedCredential.credentialSubject.id).toBe("https://holder.example/geo/abc123");
+  expect(reVerifiedCredential.cnf?.kid).toBe(holderAuthKeyId);
+});

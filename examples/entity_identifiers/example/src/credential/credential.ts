@@ -7,6 +7,9 @@ export interface VerifiableCredential {
   validFrom?: string;
   validUntil?: string;
   credentialSubject: CredentialSubject;
+  cnf?: {
+    kid: string;
+  };
 }
 
 export interface CredentialSubject {
