@@ -1,0 +1,81 @@
+{
+  "controller": {
+    "@context": [
+      "https://www.w3.org/ns/cid/v1",
+      "https://geojson.org/geojson-ld/geojson-context.jsonld"
+    ],
+    "id": "https://legit-shrimp.example/entity/tt-pos-001",
+    "verificationMethod": [
+      {
+        "id": "https://legit-shrimp.example/entity/tt-pos-001#oU4qOMvDbNIxoMPWp5sGaYOJvT2Io7pPsGmiZ31z_b2",
+        "type": "JsonWebKey",
+        "controller": "https://legit-shrimp.example/entity/tt-pos-001",
+        "publicKeyJwk": {
+          "kid": "oU4qOMvDbNIxoMPWp5sGaYOJvT2Io7pPsGmiZ31z_b2",
+          "kty": "EC",
+          "crv": "P-256",
+          "alg": "ES256",
+          "x": "UgGJQJxEM6KzqQ_ZpPvJc1QJxU2Io8sPtGmiZ31z_b3",
+          "y": "6cbGtK2PNLMzoR_aoQwKd2RKyV3Jp9tQumoh_42a_c4",
+          "key_ops": [
+            "verify"
+          ]
+        }
+      },
+      {
+        "id": "https://legit-shrimp.example/entity/tt-pos-001#pV5rPNwEcOJypNQXq6tHbZPKwU3Jp0uQuOqc_64c_e6",
+        "type": "JsonWebKey",
+        "controller": "https://legit-shrimp.example/entity/tt-pos-001",
+        "publicKeyJwk": {
+          "kid": "pV5rPNwEcOJypNQXq6tHbZPKwU3Jp0uQuOqc_64c_e6",
+          "kty": "EC",
+          "crv": "P-256",
+          "alg": "ES256",
+          "x": "VhHKRKyFN7L0rT_crSyMf4TLzX5Ks1wSwPrnd_65d_f7",
+          "y": "7deIuM4RO8O2sU_dsSzNg5UMzY6Lt2xTxQsoe_76e_g8",
+          "key_ops": [
+            "verify"
+          ]
+        }
+      }
+    ],
+    "assertionMethod": [
+      "https://legit-shrimp.example/entity/tt-pos-001#oU4qOMvDbNIxoMPWp5sGaYOJvT2Io7pPsGmiZ31z_b2"
+    ],
+    "authentication": [
+      "https://legit-shrimp.example/entity/tt-pos-001#pV5rPNwEcOJypNQXq6tHbZPKwU3Jp0uQuOqc_64c_e6"
+    ],
+    "alsoKnownAs": [
+      "urn:ietf:spice:glue:gln:4598765432103",
+      "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34323",
+      "urn:ietf:spice:glue:pen:12347"
+    ],
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -61.5167,
+            10.6596
+          ]
+        },
+        "properties": {
+          "name": "Legit Shrimp Ltd Facility",
+          "type": "Seafood Supplier",
+          "role": "supplier",
+          "address": {
+            "streetAddress": "Port of Spain Harbor",
+            "addressLocality": "Port of Spain",
+            "addressRegion": "Port of Spain",
+            "addressCountry": "TT"
+          },
+          "legitimacy": "legitimate-identity-stolen"
+        }
+      }
+    ]
+  },
+  "generatedKeys": {},
+  "generated": "2025-09-20T20:41:09.404Z"
+}

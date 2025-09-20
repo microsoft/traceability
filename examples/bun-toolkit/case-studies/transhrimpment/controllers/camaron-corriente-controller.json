@@ -1,0 +1,80 @@
+{
+  "controller": {
+    "@context": [
+      "https://www.w3.org/ns/cid/v1",
+      "https://geojson.org/geojson-ld/geojson-context.jsonld"
+    ],
+    "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+    "verificationMethod": [
+      {
+        "id": "https://camaron-corriente.example/entity/ve-pbc-001#HHFqBJN8KDHOE7hDJ8LzC2bG5jgNrGBt8x5Jmh7vt34",
+        "type": "JsonWebKey",
+        "controller": "https://camaron-corriente.example/entity/ve-pbc-001",
+        "publicKeyJwk": {
+          "kid": "HHFqBJN8KDHOE7hDJ8LzC2bG5jgNrGBt8x5Jmh7vt34",
+          "kty": "EC",
+          "crv": "P-256",
+          "alg": "ES256",
+          "x": "0N5z_5qYY8m1h9VCtOhsJeLIz7aCO2_9BYJzZ4PL8Q4",
+          "y": "V0VfEJ8qrOzG8qs7_BmqPYB8MhYIHhQ8NZpqHyBn7Ow",
+          "key_ops": [
+            "verify"
+          ]
+        }
+      },
+      {
+        "id": "https://camaron-corriente.example/entity/ve-pbc-001#vKT4nP8j-R4qwI_d9s6kY1D5FotfGW1_M7JlR9nSzxo",
+        "type": "JsonWebKey",
+        "controller": "https://camaron-corriente.example/entity/ve-pbc-001",
+        "publicKeyJwk": {
+          "kid": "vKT4nP8j-R4qwI_d9s6kY1D5FotfGW1_M7JlR9nSzxo",
+          "kty": "EC",
+          "crv": "P-256",
+          "alg": "ES256",
+          "x": "J3s5dYJoXlSbMjGhUMvZB7qFDq3YvLe8WGLRn9lYH7E",
+          "y": "WX0MnFY8CjhUZK4yJGVfDq3Y7LdO8WLPn9pYI5eH1tO",
+          "key_ops": [
+            "verify"
+          ]
+        }
+      }
+    ],
+    "assertionMethod": [
+      "https://camaron-corriente.example/entity/ve-pbc-001#HHFqBJN8KDHOE7hDJ8LzC2bG5jgNrGBt8x5Jmh7vt34"
+    ],
+    "authentication": [
+      "https://camaron-corriente.example/entity/ve-pbc-001#vKT4nP8j-R4qwI_d9s6kY1D5FotfGW1_M7JlR9nSzxo"
+    ],
+    "alsoKnownAs": [
+      "urn:ietf:spice:glue:gln:4598765432102",
+      "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34322",
+      "urn:ietf:spice:glue:pen:12346"
+    ],
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -68.0125,
+            10.4647
+          ]
+        },
+        "properties": {
+          "name": "Camarón Corriente S.A. Port Facility",
+          "type": "Seafood Distributor",
+          "role": "export-facility",
+          "address": {
+            "streetAddress": "Puerto Cabello Port",
+            "addressLocality": "Puerto Cabello",
+            "addressRegion": "Carabobo",
+            "addressCountry": "VE"
+          }
+        }
+      }
+    ]
+  },
+  "generatedKeys": {},
+  "generated": "2025-09-20T20:41:09.322Z"
+}
