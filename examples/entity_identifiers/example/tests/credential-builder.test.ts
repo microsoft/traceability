@@ -149,129 +149,168 @@ function createCredentialBuilder(): CredentialBuilder {
 }
 
 test("credential builder basic usage", async () => {
-  // Build a basic supply chain credential
+  // Build a basic route credential
   const builder = createCredentialBuilder()
-    .issuer("https://manufacturer.example/supplier/123")
-    .type("ProductionCredential")
-    .context("https://w3id.org/traceability/v1")
-    .subjectId("https://products.example/items/organic-cotton-shirt-001")
-    .subjectType("Product")
-    .subjectProperty("productName", "Organic Cotton T-Shirt")
-    .subjectProperty("batchNumber", "OCS-2024-001")
-    .subjectProperty("materialComposition", "100% Organic Cotton");
+    .issuer("https://logistics.example/carrier/123")
+    .type("RouteCredential")
+    .context("https://geojson.org/geojson-ld/geojson-context.jsonld")
+    .subjectId("https://routes.example/delivery-route-001")
+    .subjectType("Route")
+    .subjectProperty("name", "Downtown Delivery Route")
+    .subjectProperty("description", "Primary delivery route through downtown area")
+    .subjectProperty("geometry", {
+      type: "LineString",
+      coordinates: [
+        [-122.4194, 37.7749],
+        [-122.4094, 37.7849],
+        [-122.3994, 37.7949]
+      ]
+    });
 
   const credential = builder.build();
 
   // Verify the built credential
-  expect(credential.issuer).toBe("https://manufacturer.example/supplier/123");
-  expect(credential.type).toEqual(["VerifiableCredential", "ProductionCredential"]);
+  expect(credential.issuer).toBe("https://logistics.example/carrier/123");
+  expect(credential.type).toEqual(["VerifiableCredential", "RouteCredential"]);
   expect(credential["@context"]).toEqual([
     "https://www.w3.org/ns/credentials/v2",
-    "https://w3id.org/traceability/v1"
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ]);
-  expect(credential.credentialSubject.id).toBe("https://products.example/items/organic-cotton-shirt-001");
-  expect(credential.credentialSubject.type).toEqual(["Product"]);
-  expect(credential.credentialSubject.productName).toBe("Organic Cotton T-Shirt");
-  expect(credential.credentialSubject.batchNumber).toBe("OCS-2024-001");
+  expect(credential.credentialSubject.id).toBe("https://routes.example/delivery-route-001");
+  expect(credential.credentialSubject.type).toEqual(["Route"]);
+  expect(credential.credentialSubject.name).toBe("Downtown Delivery Route");
+  expect(credential.credentialSubject.geometry.type).toBe("LineString");
 });
 
 test("credential builder with validity periods and schema", async () => {
   const credential = createCredentialBuilder()
-    .issuer("https://certifier.example/org/gots")
-    .id("https://certifier.example/credentials/gots-2024-001")
-    .type("CertificationCredential")
-    .context("https://w3id.org/traceability/v1")
+    .issuer("https://transport.example/authority/nyc")
+    .id("https://transport.example/credentials/route-permit-2024-001")
+    .type("RoutePermitCredential")
+    .context("https://geojson.org/geojson-ld/geojson-context.jsonld")
     .validFrom("2024-01-01T00:00:00Z")
     .validUntil("2025-01-01T00:00:00Z")
-    .addSchema("https://example.org/schemas/gots-certification.json", "JsonSchema")
-    .subjectId("https://manufacturer.example/facility/001")
-    .subjectType("ManufacturingFacility")
-    .subjectProperty("certificationLevel", "GOTS Level 1")
-    .subjectProperty("certificationNumber", "GOTS-2024-001")
-    .subjectProperty("auditDate", "2024-01-15T10:00:00Z")
+    .addSchema("https://example.org/schemas/route-permit.json", "JsonSchema")
+    .subjectId("https://routes.example/commercial-route/downtown-001")
+    .subjectType("CommercialRoute")
+    .subjectProperty("permitNumber", "RP-NYC-2024-001")
+    .subjectProperty("routeType", "Commercial Delivery")
+    .subjectProperty("authorizedVehicles", ["truck", "van"])
+    .subjectProperty("geometry", {
+      type: "MultiLineString",
+      coordinates: [
+        [[-74.0059, 40.7128], [-74.0000, 40.7200]],
+        [[-74.0000, 40.7200], [-73.9950, 40.7300]]
+      ]
+    })
     .build();
 
-  expect(credential.id).toBe("https://certifier.example/credentials/gots-2024-001");
+  expect(credential.id).toBe("https://transport.example/credentials/route-permit-2024-001");
   expect(credential.validFrom).toBe("2024-01-01T00:00:00Z");
   expect(credential.validUntil).toBe("2025-01-01T00:00:00Z");
   expect(credential.credentialSchema).toHaveLength(1);
   expect(credential.credentialSchema[0]).toEqual({
-    id: "https://example.org/schemas/gots-certification.json",
+    id: "https://example.org/schemas/route-permit.json",
     type: "JsonSchema"
   });
 });
 
 test("credential builder incremental subject building", async () => {
   const builder = createCredentialBuilder()
-    .issuer("https://logistics.example/shipper/dhl")
-    .type("ShippingCredential")
-    .subjectId("https://shipments.example/tracking/ABC123456")
-    .subjectType("Shipment");
+    .issuer("https://mapping.example/service/osm")
+    .type("RouteOptimizationCredential")
+    .context("https://geojson.org/geojson-ld/geojson-context.jsonld")
+    .subjectId("https://routes.example/optimized/delivery-001")
+    .subjectType("OptimizedRoute");
 
   // Add properties incrementally
   builder
-    .subjectProperty("origin", "Atlanta, GA")
-    .subjectProperty("destination", "New York, NY")
-    .subjectProperty("trackingNumber", "ABC123456");
+    .subjectProperty("routeName", "Multi-Stop Delivery Route")
+    .subjectProperty("startLocation", "Distribution Center")
+    .subjectProperty("endLocation", "Distribution Center");
 
   // Add more properties in bulk
   builder.subjectProperties({
-    estimatedDelivery: "2024-01-20T15:00:00Z",
-    carrier: "DHL Express",
-    weight: "2.5 kg",
-    dimensions: { length: 30, width: 20, height: 15, unit: "cm" }
+    totalDistance: "45.2 km",
+    estimatedDuration: "3h 15m",
+    numberOfStops: 8,
+    optimizationMethod: "Shortest Path Algorithm"
   });
 
-  // Add another individual property
-  builder.subjectProperty("temperature", "ambient");
+  // Add GeoJSON geometry
+  builder.subjectProperty("geometry", {
+    type: "LineString",
+    coordinates: [
+      [-122.4194, 37.7749], // Start: Distribution Center
+      [-122.4094, 37.7849], // Stop 1
+      [-122.3994, 37.7949], // Stop 2
+      [-122.3894, 37.8049], // Stop 3
+      [-122.4194, 37.7749]  // End: Back to Distribution Center
+    ]
+  });
 
   const credential = builder.build();
 
-  expect(credential.credentialSubject.origin).toBe("Atlanta, GA");
-  expect(credential.credentialSubject.destination).toBe("New York, NY");
-  expect(credential.credentialSubject.estimatedDelivery).toBe("2024-01-20T15:00:00Z");
-  expect(credential.credentialSubject.dimensions.length).toBe(30);
-  expect(credential.credentialSubject.temperature).toBe("ambient");
+  expect(credential.credentialSubject.routeName).toBe("Multi-Stop Delivery Route");
+  expect(credential.credentialSubject.totalDistance).toBe("45.2 km");
+  expect(credential.credentialSubject.numberOfStops).toBe(8);
+  expect(credential.credentialSubject.geometry.type).toBe("LineString");
+  expect(credential.credentialSubject.geometry.coordinates).toHaveLength(5);
 });
 
 test("credential builder with multiple types and contexts", async () => {
   const credential = createCredentialBuilder()
-    .issuer("https://multi-org.example/issuer")
-    .type("QualityCredential", "SustainabilityCredential")
-    .context("https://w3id.org/traceability/v1", "https://example.org/sustainability/v1")
-    .context("https://example.org/quality/v1") // Additional context
-    .subjectId("https://products.example/batch/sustainable-001")
-    .subjectType("ProductBatch", "SustainableProduct")
-    .subjectProperty("qualityScore", 95)
-    .subjectProperty("sustainabilityRating", "A+")
+    .issuer("https://navigation.example/issuer")
+    .type("RouteCredential", "TrafficCredential")
+    .context("https://geojson.org/geojson-ld/geojson-context.jsonld", "https://example.org/traffic/v1")
+    .context("https://example.org/navigation/v1") // Additional context
+    .subjectId("https://routes.example/monitored/highway-101")
+    .subjectType("MonitoredRoute", "HighwaySegment")
+    .subjectProperty("trafficLevel", "moderate")
+    .subjectProperty("averageSpeed", "65 mph")
+    .subjectProperty("geometry", {
+      type: "LineString",
+      coordinates: [
+        [-122.4, 37.7],
+        [-122.3, 37.8],
+        [-122.2, 37.9]
+      ]
+    })
     .build();
 
   expect(credential.type).toEqual([
     "VerifiableCredential",
-    "QualityCredential",
-    "SustainabilityCredential"
+    "RouteCredential",
+    "TrafficCredential"
   ]);
   expect(credential["@context"]).toEqual([
     "https://www.w3.org/ns/credentials/v2",
-    "https://w3id.org/traceability/v1",
-    "https://example.org/sustainability/v1",
-    "https://example.org/quality/v1"
+    "https://geojson.org/geojson-ld/geojson-context.jsonld",
+    "https://example.org/traffic/v1",
+    "https://example.org/navigation/v1"
   ]);
-  expect(credential.credentialSubject.type).toEqual(["ProductBatch", "SustainableProduct"]);
+  expect(credential.credentialSubject.type).toEqual(["MonitoredRoute", "HighwaySegment"]);
 });
 
 test("credential builder with confirmation key", async () => {
   const assertionKey = await exportPublicKey(await generatePrivateKey("ES256"));
 
   const credential = createCredentialBuilder()
-    .issuer("https://issuer.example")
-    .type("IdentityCredential")
+    .issuer("https://gps.example/provider")
+    .type("LocationCredential")
+    .context("https://geojson.org/geojson-ld/geojson-context.jsonld")
     .confirmationKey(assertionKey.kid!)
-    .subjectId("https://holder.example/did/123")
-    .subjectProperty("name", "Supply Chain Entity")
+    .subjectId("https://vehicles.example/fleet/truck-001")
+    .subjectType("Vehicle")
+    .subjectProperty("vehicleId", "TRUCK-001")
+    .subjectProperty("currentLocation", {
+      type: "Point",
+      coordinates: [-122.4194, 37.7749]
+    })
     .build();
 
   expect(credential.cnf).toEqual({ kid: assertionKey.kid });
+  expect(credential.credentialSubject.currentLocation.type).toBe("Point");
 });
 
 test("credential builder serialization", async () => {
@@ -327,85 +366,111 @@ test("credential builder deduplicates contexts and types", () => {
   expect(credential.credentialSubject.type).toEqual(["TestSubject"]);
 });
 
-test("supply chain end-to-end credential scenario", () => {
-  // Production credential from manufacturer
-  const productionCredential = createCredentialBuilder()
-    .issuer("https://textile-mill.example/facility/001")
-    .id("https://textile-mill.example/credentials/production-2024-001")
-    .type("ProductionCredential")
-    .context("https://w3id.org/traceability/v1")
+test("transportation and routing end-to-end credential scenario", () => {
+  // Route planning credential from mapping service
+  const routePlanningCredential = createCredentialBuilder()
+    .issuer("https://mapping.example/service/001")
+    .id("https://mapping.example/credentials/route-plan-2024-001")
+    .type("RoutePlanCredential")
+    .context("https://geojson.org/geojson-ld/geojson-context.jsonld")
     .validFrom("2024-01-15T08:00:00Z")
-    .addSchema("https://w3id.org/traceability/schemas/ProductionCredential.json", "JsonSchema")
-    .subjectId("https://products.example/batch/organic-cotton-2024-001")
-    .subjectType("ProductBatch")
+    .addSchema("https://example.org/schemas/RoutePlanCredential.json", "JsonSchema")
+    .subjectId("https://routes.example/plan/delivery-run-001")
+    .subjectType("DeliveryRoute")
     .subjectProperties({
-      materialType: "Organic Cotton",
-      quantity: "500 units",
-      productionDate: "2024-01-15",
-      qualityGrade: "Premium",
-      certifications: ["GOTS", "OEKO-TEX Standard 100"]
+      routeName: "Daily Delivery Circuit",
+      plannedDate: "2024-01-15",
+      totalDistance: "85.3 km",
+      estimatedDuration: "4h 30m",
+      numberOfStops: 12,
+      geometry: {
+        type: "LineString",
+        coordinates: [
+          [-122.4194, 37.7749], // Depot
+          [-122.4094, 37.7849], // Stop 1
+          [-122.3994, 37.7949], // Stop 2
+          [-122.3894, 37.8049], // Stop 3
+          [-122.4194, 37.7749]  // Return to depot
+        ]
+      }
     })
     .build();
 
-  // Quality inspection credential from third party
-  const qualityCredential = createCredentialBuilder()
-    .issuer("https://quality-labs.example/lab/central")
-    .id("https://quality-labs.example/credentials/inspection-2024-001")
-    .type("QualityInspectionCredential")
-    .context("https://w3id.org/traceability/v1")
-    .validFrom("2024-01-16T14:00:00Z")
-    .validUntil("2025-01-16T14:00:00Z")
-    .subjectId("https://products.example/batch/organic-cotton-2024-001")
-    .subjectType("ProductBatch")
+  // Traffic analysis credential from traffic monitoring system
+  const trafficCredential = createCredentialBuilder()
+    .issuer("https://traffic.example/monitoring/central")
+    .id("https://traffic.example/credentials/analysis-2024-001")
+    .type("TrafficAnalysisCredential")
+    .context("https://geojson.org/geojson-ld/geojson-context.jsonld")
+    .validFrom("2024-01-15T14:00:00Z")
+    .validUntil("2024-01-15T18:00:00Z")
+    .subjectId("https://routes.example/plan/delivery-run-001")
+    .subjectType("DeliveryRoute")
     .subjectProperties({
-      inspectionDate: "2024-01-16T14:00:00Z",
-      inspector: "Certified Quality Inspector #QI-2024-05",
-      testResults: {
-        tensileStrength: "Pass",
-        colorFastness: "Pass",
-        shrinkageTest: "Pass"
-      },
-      overallGrade: "A",
-      complianceStatus: "Fully Compliant"
+      analysisTime: "2024-01-15T14:00:00Z",
+      trafficConditions: "moderate",
+      averageSpeed: "45 km/h",
+      congestionPoints: [
+        {
+          type: "Point",
+          coordinates: [-122.4094, 37.7849],
+          description: "Construction zone - 10 min delay"
+        },
+        {
+          type: "Point",
+          coordinates: [-122.3994, 37.7949],
+          description: "School zone - reduced speed"
+        }
+      ],
+      recommendedAdjustments: ["Use alternate route for stop 2", "Allow extra 15 minutes"]
     })
     .build();
 
-  // Shipping credential from logistics provider
-  const shippingCredential = createCredentialBuilder()
-    .issuer("https://logistics.example/carrier/global-express")
-    .type("ShippingCredential")
-    .context("https://w3id.org/traceability/v1")
-    .subjectId("https://shipments.example/tracking/TE2024001")
-    .subjectType("Shipment")
+  // Vehicle tracking credential from GPS provider
+  const trackingCredential = createCredentialBuilder()
+    .issuer("https://gps.example/fleet-tracking")
+    .type("VehicleTrackingCredential")
+    .context("https://geojson.org/geojson-ld/geojson-context.jsonld")
+    .subjectId("https://vehicles.example/fleet/van-007")
+    .subjectType("DeliveryVehicle")
     .subjectProperties({
-      trackingNumber: "TE2024001",
-      origin: {
-        facility: "https://textile-mill.example/facility/001",
-        address: "789 Textile Way, Atlanta, GA 30309"
+      vehicleId: "VAN-007",
+      driverId: "D-2024-042",
+      routeAssigned: "https://routes.example/plan/delivery-run-001",
+      actualPath: {
+        type: "LineString",
+        coordinates: [
+          [-122.4194, 37.7749, 0],    // Start time: 08:00
+          [-122.4144, 37.7799, 15],   // 15 mins
+          [-122.4094, 37.7849, 35],   // 35 mins (delayed by construction)
+          [-122.4044, 37.7899, 50],   // 50 mins
+          [-122.3994, 37.7949, 75],   // 1h 15m
+          [-122.3944, 37.7999, 90],   // 1h 30m
+          [-122.4194, 37.7749, 120]   // Return: 2h (ahead of schedule)
+        ]
       },
-      destination: {
-        facility: "https://distribution.example/warehouse/east",
-        address: "456 Warehouse Dr, Richmond, VA 23230"
-      },
-      shipmentDate: "2024-01-17T09:00:00Z",
-      estimatedArrival: "2024-01-19T15:00:00Z",
-      packagedItems: ["https://products.example/batch/organic-cotton-2024-001"]
+      departureTime: "2024-01-15T08:00:00Z",
+      completionTime: "2024-01-15T10:00:00Z",
+      actualDistance: "82.1 km"
     })
     .build();
 
   // Verify all credentials have proper structure
-  expect(productionCredential.issuer).toBe("https://textile-mill.example/facility/001");
-  expect(productionCredential.credentialSubject.certifications).toEqual(["GOTS", "OEKO-TEX Standard 100"]);
+  expect(routePlanningCredential.issuer).toBe("https://mapping.example/service/001");
+  expect(routePlanningCredential.credentialSubject.numberOfStops).toBe(12);
+  expect(routePlanningCredential.credentialSubject.geometry.type).toBe("LineString");
 
-  expect(qualityCredential.credentialSubject.testResults.tensileStrength).toBe("Pass");
-  expect(qualityCredential.validUntil).toBe("2025-01-16T14:00:00Z");
+  expect(trafficCredential.credentialSubject.trafficConditions).toBe("moderate");
+  expect(trafficCredential.credentialSubject.congestionPoints).toHaveLength(2);
+  expect(trafficCredential.validUntil).toBe("2024-01-15T18:00:00Z");
 
-  expect(shippingCredential.credentialSubject.trackingNumber).toBe("TE2024001");
-  expect(shippingCredential.credentialSubject.packagedItems).toContain("https://products.example/batch/organic-cotton-2024-001");
+  expect(trackingCredential.credentialSubject.vehicleId).toBe("VAN-007");
+  expect(trackingCredential.credentialSubject.actualPath.coordinates).toHaveLength(7);
+  expect(trackingCredential.credentialSubject.actualDistance).toBe("82.1 km");
 
-  // All should have proper contexts
-  expect(productionCredential["@context"]).toEqual([
+  // All should have proper GeoJSON contexts
+  expect(routePlanningCredential["@context"]).toEqual([
     "https://www.w3.org/ns/credentials/v2",
-    "https://w3id.org/traceability/v1"
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ]);
 });

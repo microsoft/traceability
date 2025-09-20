@@ -259,23 +259,32 @@ function createCredentialBuilder(): CredentialBuilder {
 
 test("enhanced credential builder with validation", async () => {
   const credential = createCredentialBuilder()
-    .issuer("https://manufacturer.example/supplier/123")
-    .id("https://manufacturer.example/credentials/production-2024-001")
-    .type("ProductionCredential")
-    .context("https://w3id.org/traceability/v1")
+    .issuer("https://navigation.example/provider/123")
+    .id("https://navigation.example/credentials/route-2024-001")
+    .type("RouteCredential")
+    .context("https://geojson.org/geojson-ld/geojson-context.jsonld")
     .validFrom("2024-01-15T08:00:00Z")
     .validUntil("2024-12-31T23:59:59Z")
-    .subject("https://products.example/batch/cotton-001")
-    .subjectType("ProductBatch")
-    .subjectProperty("productName", "Organic Cotton Batch")
-    .subjectProperty("quantity", "500 units")
+    .subject("https://routes.example/optimized/city-001")
+    .subjectType("OptimizedRoute")
+    .subjectProperty("routeName", "City Center Loop")
+    .subjectProperty("distance", "12.5 km")
+    .subjectProperty("geometry", {
+      type: "LineString",
+      coordinates: [
+        [-122.4194, 37.7749],
+        [-122.4094, 37.7849],
+        [-122.3994, 37.7949]
+      ]
+    })
     .build();
 
-  expect(credential.issuer).toBe("https://manufacturer.example/supplier/123");
-  expect(credential.id).toBe("https://manufacturer.example/credentials/production-2024-001");
-  expect(credential.type).toEqual(["VerifiableCredential", "ProductionCredential"]);
-  expect(credential.credentialSubject.id).toBe("https://products.example/batch/cotton-001");
-  expect(credential.credentialSubject.productName).toBe("Organic Cotton Batch");
+  expect(credential.issuer).toBe("https://navigation.example/provider/123");
+  expect(credential.id).toBe("https://navigation.example/credentials/route-2024-001");
+  expect(credential.type).toEqual(["VerifiableCredential", "RouteCredential"]);
+  expect(credential.credentialSubject.id).toBe("https://routes.example/optimized/city-001");
+  expect(credential.credentialSubject.routeName).toBe("City Center Loop");
+  expect(credential.credentialSubject.geometry.type).toBe("LineString");
 });
 
 test("builder validation errors", () => {
@@ -348,36 +357,47 @@ test("credential builder clone and reset", () => {
 test("context and type deduplication", () => {
   const credential = createCredentialBuilder()
     .issuer("https://test.example")
-    .type("TestCredential")
-    .type("TestCredential") // duplicate
-    .context("https://example.org/test/v1")
-    .context("https://example.org/test/v1") // duplicate
+    .type("RouteCredential")
+    .type("RouteCredential") // duplicate
+    .context("https://geojson.org/geojson-ld/geojson-context.jsonld")
+    .context("https://geojson.org/geojson-ld/geojson-context.jsonld") // duplicate
     .context("https://www.w3.org/ns/credentials/v2") // duplicate of default
-    .subject("https://test.example/subject")
-    .subjectType("TestSubject")
-    .subjectType("TestSubject") // duplicate
+    .subject("https://test.example/route")
+    .subjectType("TestRoute")
+    .subjectType("TestRoute") // duplicate
+    .subjectProperty("geometry", {
+      type: "Point",
+      coordinates: [-122.4194, 37.7749]
+    })
     .build();
 
-  expect(credential.type).toEqual(["VerifiableCredential", "TestCredential"]);
+  expect(credential.type).toEqual(["VerifiableCredential", "RouteCredential"]);
   expect(credential["@context"]).toEqual([
     "https://www.w3.org/ns/credentials/v2",
-    "https://example.org/test/v1"
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ]);
-  expect(credential.credentialSubject.type).toBe("TestSubject"); // Single type simplified to string
+  expect(credential.credentialSubject.type).toBe("TestRoute"); // Single type simplified to string
 });
 
 test("credential builder with confirmation key", async () => {
   const assertionKey = await exportPublicKey(await generatePrivateKey("ES256"));
 
   const credential = createCredentialBuilder()
-    .issuer("https://issuer.example")
-    .type("IdentityCredential")
+    .issuer("https://gps.example/tracking")
+    .type("LocationCredential")
+    .context("https://geojson.org/geojson-ld/geojson-context.jsonld")
     .confirmationKey(assertionKey.kid!)
-    .subject("https://holder.example/did/123")
-    .subjectProperty("name", "Supply Chain Entity")
+    .subject("https://vehicles.example/truck/123")
+    .subjectType("Vehicle")
+    .subjectProperty("vehicleId", "TRUCK-123")
+    .subjectProperty("currentPosition", {
+      type: "Point",
+      coordinates: [-122.4194, 37.7749]
+    })
     .build();
 
   expect(credential.cnf).toEqual({ kid: assertionKey.kid });
+  expect(credential.credentialSubject.currentPosition.type).toBe("Point");
 });
 
 test("single values simplified to strings", () => {
@@ -394,104 +414,120 @@ test("single values simplified to strings", () => {
   expect(credential["@context"]).toBe("https://www.w3.org/ns/credentials/v2"); // Single context simplified to string
 });
 
-test("supply chain traceability credential scenario", () => {
-  // Cotton cultivation credential
-  const cultivationCredential = createCredentialBuilder()
-    .issuer("https://organic-farm.example/farm/texas-001")
-    .id("https://organic-farm.example/credentials/cultivation-2024-spring")
-    .type("CultivationCredential")
-    .context("https://w3id.org/traceability/v1", "https://w3id.org/agriculture/v1")
+test("transportation and route management credential scenario", () => {
+  // Route planning credential
+  const routePlanningCredential = createCredentialBuilder()
+    .issuer("https://mapping.example/planning/service")
+    .id("https://mapping.example/credentials/route-plan-2024-spring")
+    .type("RoutePlanningCredential")
+    .context("https://geojson.org/geojson-ld/geojson-context.jsonld", "https://example.org/logistics/v1")
     .validFrom("2024-03-01T00:00:00Z")
     .validUntil("2025-03-01T00:00:00Z")
-    .addSchema("https://w3id.org/traceability/schemas/CultivationCredential.json", "JsonSchema")
-    .subject("https://crops.example/harvest/organic-cotton-spring-2024")
-    .subjectType("CottonHarvest")
+    .addSchema("https://example.org/schemas/RoutePlanningCredential.json", "JsonSchema")
+    .subject("https://routes.example/plan/regional-delivery-2024")
+    .subjectType("RegionalDeliveryPlan")
     .subjectProperties({
-      cropType: "Organic Cotton",
-      varietyName: "Pima Cotton",
-      plantingDate: "2024-03-01",
-      harvestDate: "2024-09-15",
-      fieldLocation: {
-        latitude: 32.7767,
-        longitude: -96.7970,
-        address: "Rural Route 1, Dallas County, TX"
+      planName: "Regional Hub Distribution",
+      coverage: "San Francisco Bay Area",
+      planningDate: "2024-03-01",
+      numberOfRoutes: 15,
+      serviceArea: {
+        type: "Polygon",
+        coordinates: [[
+          [-122.5, 37.7],
+          [-122.3, 37.7],
+          [-122.3, 37.9],
+          [-122.5, 37.9],
+          [-122.5, 37.7]
+        ]]
       },
-      organicCertification: "USDA Organic",
-      yieldPerAcre: "800 lbs",
-      totalYield: "40,000 lbs",
-      qualityGrade: "Middling",
-      moistureContent: "7.5%"
+      totalDistance: "450 km",
+      estimatedVehicles: 12,
+      operatingHours: "06:00-18:00",
+      optimization: "Shortest Distance with Traffic"
     })
     .build();
 
-  // Ginning process credential
-  const ginningCredential = createCredentialBuilder()
-    .issuer("https://cotton-gin.example/facility/dallas")
-    .type("ProcessingCredential", "GinningCredential")
-    .context("https://w3id.org/traceability/v1")
-    .validFrom("2024-09-20T00:00:00Z")
-    .subject("https://processing.example/batch/ginned-cotton-2024-001")
-    .subjectType("ProcessedCotton")
+  // Traffic monitoring credential
+  const trafficCredential = createCredentialBuilder()
+    .issuer("https://traffic.example/monitoring/bay-area")
+    .type("TrafficMonitoringCredential", "RouteOptimizationCredential")
+    .context("https://geojson.org/geojson-ld/geojson-context.jsonld")
+    .validFrom("2024-03-15T00:00:00Z")
+    .subject("https://routes.example/optimized/morning-rush-001")
+    .subjectType("OptimizedRoute")
     .subjectProperties({
-      inputMaterial: "https://crops.example/harvest/organic-cotton-spring-2024",
-      processType: "Cotton Ginning",
-      processingDate: "2024-09-20",
-      outputQuantity: "35,000 lbs", // Some loss during processing
-      qualityMetrics: {
-        fiberLength: "1.125 inches",
-        micronaire: "4.2",
-        strength: "29.0 g/tex",
-        uniformity: "82%"
+      routeId: "MR-001",
+      optimizationTime: "2024-03-15T06:00:00Z",
+      trafficData: "Real-time congestion analysis",
+      routeGeometry: {
+        type: "LineString",
+        coordinates: [
+          [-122.4194, 37.7749], // San Francisco
+          [-122.2711, 37.8044], // Oakland
+          [-122.0822, 37.4220], // San Jose
+          [-122.4194, 37.7749]  // Return to SF
+        ]
       },
-      baleNumbers: ["B2024001", "B2024002", "B2024003", "B2024004"],
-      processingFacility: "https://cotton-gin.example/facility/dallas"
+      trafficHotspots: [
+        {
+          type: "Point",
+          coordinates: [-122.4094, 37.7849],
+          description: "Bay Bridge - Heavy congestion"
+        }
+      ],
+      alternativeRoutes: 3,
+      travelTimeReduction: "25%"
     })
     .build();
 
-  // Textile manufacturing credential
-  const manufacturingCredential = createCredentialBuilder()
-    .issuer("https://textile-mill.example/facility/georgia")
-    .id("https://textile-mill.example/credentials/manufacturing-2024-q4")
-    .type("ManufacturingCredential")
-    .context("https://w3id.org/traceability/v1")
-    .validFrom("2024-10-01T00:00:00Z")
-    .subject("https://textiles.example/fabric/organic-cotton-fabric-001")
-    .subjectType("CottonFabric")
+  // Vehicle tracking credential
+  const vehicleTrackingCredential = createCredentialBuilder()
+    .issuer("https://fleet.example/tracking/central")
+    .id("https://fleet.example/credentials/tracking-2024-q2")
+    .type("VehicleTrackingCredential")
+    .context("https://geojson.org/geojson-ld/geojson-context.jsonld")
+    .validFrom("2024-04-01T00:00:00Z")
+    .subject("https://vehicles.example/fleet/electric-van-007")
+    .subjectType("ElectricDeliveryVan")
     .subjectProperties({
-      inputMaterial: "https://processing.example/batch/ginned-cotton-2024-001",
-      fabricType: "Plain Weave Cotton",
-      weight: "5.5 oz/sq yd",
-      width: "60 inches",
-      yardage: "10,000 yards",
-      dyeProcess: "Low-impact reactive dyes",
-      colorway: "Natural Undyed",
-      manufacturingDate: "2024-10-15",
-      qualityControl: {
-        tensileStrength: "Pass",
-        colorfastness: "Grade 4",
-        shrinkage: "< 3%"
+      vehicleId: "EV-007",
+      assignedRoute: "https://routes.example/optimized/morning-rush-001",
+      batteryLevel: "85%",
+      currentTrip: {
+        type: "LineString",
+        coordinates: [
+          [-122.4194, 37.7749, 0, 1710484800],    // Start: SF, timestamp
+          [-122.3500, 37.7900, 0, 1710486000],    // 20 mins later
+          [-122.2711, 37.8044, 0, 1710487800],    // Oakland, 50 mins
+          [-122.1500, 37.6000, 0, 1710489600]     // Current position, 80 mins
+        ]
       },
-      certifications: ["GOTS", "OEKO-TEX Standard 100"]
+      deliveryStatus: "In Progress",
+      completedStops: 8,
+      remainingStops: 4,
+      estimatedCompletion: "2024-03-15T14:30:00Z"
     })
-    .confirmationKey("fabric-batch-key-001")
+    .confirmationKey("vehicle-tracking-key-007")
     .build();
 
   // Verify all credentials
-  expect(cultivationCredential.credentialSubject.cropType).toBe("Organic Cotton");
-  expect(cultivationCredential.credentialSubject.fieldLocation.latitude).toBe(32.7767);
-  expect(cultivationCredential.credentialSchema).toHaveLength(1);
+  expect(routePlanningCredential.credentialSubject.planName).toBe("Regional Hub Distribution");
+  expect(routePlanningCredential.credentialSubject.serviceArea.type).toBe("Polygon");
+  expect(routePlanningCredential.credentialSchema).toHaveLength(1);
 
-  expect(ginningCredential.type).toEqual(["VerifiableCredential", "ProcessingCredential", "GinningCredential"]);
-  expect(ginningCredential.credentialSubject.baleNumbers).toHaveLength(4);
-  expect(ginningCredential.credentialSubject.inputMaterial).toBe("https://crops.example/harvest/organic-cotton-spring-2024");
+  expect(trafficCredential.type).toEqual(["VerifiableCredential", "TrafficMonitoringCredential", "RouteOptimizationCredential"]);
+  expect(trafficCredential.credentialSubject.trafficHotspots).toHaveLength(1);
+  expect(trafficCredential.credentialSubject.routeGeometry.coordinates).toHaveLength(4);
 
-  expect(manufacturingCredential.credentialSubject.certifications).toEqual(["GOTS", "OEKO-TEX Standard 100"]);
-  expect(manufacturingCredential.cnf?.kid).toBe("fabric-batch-key-001");
+  expect(vehicleTrackingCredential.credentialSubject.vehicleId).toBe("EV-007");
+  expect(vehicleTrackingCredential.credentialSubject.batteryLevel).toBe("85%");
+  expect(vehicleTrackingCredential.cnf?.kid).toBe("vehicle-tracking-key-007");
 
-  // All should have proper contexts
-  expect(cultivationCredential["@context"]).toEqual([
+  // All should have proper GeoJSON contexts
+  expect(routePlanningCredential["@context"]).toEqual([
     "https://www.w3.org/ns/credentials/v2",
-    "https://w3id.org/traceability/v1",
-    "https://w3id.org/agriculture/v1"
+    "https://geojson.org/geojson-ld/geojson-context.jsonld",
+    "https://example.org/logistics/v1"
   ]);
 });
