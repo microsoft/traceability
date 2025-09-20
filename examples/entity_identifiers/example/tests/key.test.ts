@@ -1,7 +1,7 @@
 import { test, expect } from "bun:test";
 
 import { key } from "../src";
-import type { PublicKeyJwk } from "../src/types";
+import type { PublicKeyJwk, PublicKey } from "../src/types";
 
 test("generate and export", async () => {
   const privateKey = await key.generatePrivateKey("ES256");
@@ -30,6 +30,6 @@ test("calculate thumbprint", async () => {
     x: 'jJ6Flys3zK9jUhnOHf6G49Dyp5hah6CNP84-gY-n9eo',
     y: 'nhI6iD5eFXgBTLt_1p3aip-5VbZeMhxeFSpjfEAf7Ww',
     key_ops: ['verify'],
-  } as PublicKeyJwk);
+  } as PublicKey);
   expect(thumbprint).toBe("w9eYdC6_s_tLQ8lH6PUpc0mddazaqtPgeC2IgWDiqY8");
 })

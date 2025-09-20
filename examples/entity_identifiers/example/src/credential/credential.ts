@@ -15,3 +15,8 @@ export interface CredentialSubject {
   [key: string]: any;
 }
 
+export interface EnvelopedVerifiableCredential {
+  "@context": "https://www.w3.org/ns/credentials/v2";
+  id: string;
+  type: "EnvelopedVerifiableCredential";
+}
