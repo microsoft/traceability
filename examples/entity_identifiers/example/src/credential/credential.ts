@@ -20,3 +20,18 @@ export interface EnvelopedVerifiableCredential {
   id: string;
   type: "EnvelopedVerifiableCredential";
 }
+
+export const createEnvelopedVerifiableCredential = (jws: string) => {
+  return {
+    "@context": "https://www.w3.org/ns/credentials/v2",
+    id: `data:application/vc+jwt,${jws}`,
+    type: "EnvelopedVerifiableCredential"
+  } as EnvelopedVerifiableCredential;
+}
+
+export const createJsonWebSignatureFromEnvelopedVerifiableCredential = (envelopedVerifiableCredential: EnvelopedVerifiableCredential) => {
+  if (envelopedVerifiableCredential.id.split(",")[0] !== "data:application/vc+jwt") {
+    throw new Error("Invalid enveloped verifiable credential");
+  }
+  return envelopedVerifiableCredential.id.split(",")[1];
+}
