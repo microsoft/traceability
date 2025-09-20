@@ -11,13 +11,13 @@
   ],
   "assertion": [
     {
-      "kid": "k5jZzx9IcjC7vV3MoCyeBXLiPbmFWxdJ3L8RYKYLYLc",
+      "kid": "hHeGtvbEHn5_BapMAE-hRba0wQ4NFGUSOImLWCDfIOg",
       "kty": "EC",
       "crv": "P-256",
       "alg": "ES256",
-      "x": "OGCodAsJrPjr99c_nHmAYf_cSxF-P_dz2khLK_IrJHY",
-      "y": "BceMzBrRPrYYtLz37PJBdj6iFa5CpKE6rdbg2QHT-QM",
-      "d": "Sis1TQeOcC5bQm9Qoa4U6_qR_eG_W3p-OohqcXhXbYA",
+      "x": "w_YRj1aFK4YuQUsBWaNQ2C3q_uK-jezBqjEhtMyCnuI",
+      "y": "5oq2COWNibipGrWD39DYhQVcG31yRAbODkkcvbhGAfs",
+      "d": "d4UBYOf9UQekt2EM4sO4NnIYPnSV_RPdHQJM5zE69RM",
       "key_ops": [
         "sign"
       ]
@@ -25,13 +25,13 @@
   ],
   "authentication": [
     {
-      "kid": "DePLjzPiOjjuEzbMQAVwDXTj5ZOhzK6ocugSinruG70",
+      "kid": "D1ObMQ2nX_MwCpl9OaAmXOvGDK0c9h_8WtNyns95UjE",
       "kty": "EC",
       "crv": "P-256",
       "alg": "ES256",
-      "x": "9ZnSAXoYB09EL80gmeRt14aUwMAU07vrrpF5z8OHqw0",
-      "y": "mR7-SIPQTBWgd9xd4vyYcruHrUa7zijDHCAdTgnFwLM",
-      "d": "cYLSUV90wTTxAkCaKkXahEaK07HX8QwaCHJf52FG1IE",
+      "x": "UGNu60MhAUhdQugecuXMkqQXxic_41yDqyoe-ARRWZw",
+      "y": "An5qk-HEh0GHefjbUUXmmXBjF5ft_p8WxB5uaSl5wPk",
+      "d": "2L6SrvmLJuANcmaLuuP679T8qZ4hFQLVQQyUZLMaMm4",
       "key_ops": [
         "sign"
       ]
