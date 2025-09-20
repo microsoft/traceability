@@ -81,23 +81,3 @@ The investigation reveals a complex web of document forgery, cargo theft, and id
 | **Bill of Lading** | `bill-of-lading-credential.yaml` | `https://shady-carrier.example/entity/aw-oru-001` | `https://chompchomp.example/entity/bvi-001` | ⚠️ **Suspicious** (quantity discrepancy) |
 | **Certificate of Origin** | `certificate-of-origin-credential.yaml` | `https://legit-shrimp.example/entity/tt-pos-001` (forged) | `https://shady-distributor.example/entity/bvi-002` | 🚨 **Fraudulent** (forged signature) |
 
-## Fraud Indicators
-
-| Indicator | Description | Evidence |
-|-----------|-------------|----------|
-| **Quantity Discrepancy** | Bill of Lading shows 1000kg → 800kg | 200kg claimed "lost in transit" |
-| **Forged Signatures** | Certificate of Origin | Shady Distributor impersonating Legit Shrimp |
-| **Geographic Inconsistency** | Goods claimed from Trinidad | Actually originated from Venezuela |
-| **Chain of Custody Break** | Legitimate carrier bypassed | Shady Carrier substituted without proper vetting |
-
-## Investigation Approach
-
-As the auditor, you have access to digitally protected supply chain paperwork. By verifying digital signatures and analyzing the document trail, you can:
-
-1. **Verify Entity Identities**: Cross-reference controller identifiers with known legitimate entities
-2. **Validate Document Signatures**: Check cryptographic signatures against entity public keys
-3. **Trace Geographic Claims**: Verify location claims against actual shipping routes
-4. **Identify Anomalies**: Flag quantity discrepancies and suspicious timing
-
-This case study demonstrates how verifiable credentials with cryptographic proof provide robust protection against supply chain fraud through digital forensics and geographic traceability.
-
