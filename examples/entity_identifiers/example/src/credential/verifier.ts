@@ -55,6 +55,29 @@ export const verifier = async (publicKey: PublicKey) => {
       const payloadBytes = base64url.decode(payload);
       const credential = JSON.parse(new TextDecoder().decode(payloadBytes)) as VerifiableCredential;
 
+      // Validate date fields if present
+      const now = new Date();
+      
+      if (credential.validFrom) {
+        const validFromDate = new Date(credential.validFrom);
+        if (isNaN(validFromDate.getTime())) {
+          throw new Error('Invalid validFrom date format');
+        }
+        if (now < validFromDate) {
+          throw new Error(`Credential is not yet valid. Valid from: ${credential.validFrom}`);
+        }
+      }
+      
+      if (credential.validUntil) {
+        const validUntilDate = new Date(credential.validUntil);
+        if (isNaN(validUntilDate.getTime())) {
+          throw new Error('Invalid validUntil date format');
+        }
+        if (now > validUntilDate) {
+          throw new Error(`Credential has expired. Valid until: ${credential.validUntil}`);
+        }
+      }
+
       return credential;
     }
   };

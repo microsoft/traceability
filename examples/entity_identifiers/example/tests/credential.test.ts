@@ -189,3 +189,153 @@ test("sign and verify credential with different subject data", async () => {
   expect(verifiedCredential.credentialSubject.geometry).toEqual(customCredential.credentialSubject.geometry);
   expect(verifiedCredential.credentialSubject.properties).toEqual(customCredential.credentialSubject.properties);
 });
+
+test("verify credential with valid date range succeeds", async () => {
+  const privateKey = await key.generatePrivateKey("ES256");
+  const publicKey = await key.exportPublicKey(privateKey);
+  
+  const signer = await credential.signer(privateKey);
+  const verifier = await credential.verifier(publicKey);
+  
+  // Create credential with valid date range (past to future)
+  const now = new Date();
+  const pastDate = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString(); // 1 day ago
+  const futureDate = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString(); // 1 day from now
+  
+  const validCredential: VerifiableCredential = {
+    ...sampleCredential,
+    validFrom: pastDate,
+    validUntil: futureDate
+  };
+  
+  const signedCredential = await signer.sign(validCredential);
+  const verifiedCredential = await verifier.verify(signedCredential);
+  
+  expect(verifiedCredential).toEqual(validCredential);
+});
+
+test("verify expired credential fails", async () => {
+  const privateKey = await key.generatePrivateKey("ES256");
+  const publicKey = await key.exportPublicKey(privateKey);
+  
+  const signer = await credential.signer(privateKey);
+  const verifier = await credential.verifier(publicKey);
+  
+  // Create credential that expired yesterday
+  const now = new Date();
+  const pastDate = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000).toISOString(); // 2 days ago
+  const expiredDate = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString(); // 1 day ago
+  
+  const expiredCredential: VerifiableCredential = {
+    ...sampleCredential,
+    validFrom: pastDate,
+    validUntil: expiredDate
+  };
+  
+  const signedCredential = await signer.sign(expiredCredential);
+  
+  await expect(verifier.verify(signedCredential)).rejects.toThrow("Credential has expired");
+});
+
+test("verify not yet valid credential fails", async () => {
+  const privateKey = await key.generatePrivateKey("ES256");
+  const publicKey = await key.exportPublicKey(privateKey);
+  
+  const signer = await credential.signer(privateKey);
+  const verifier = await credential.verifier(publicKey);
+  
+  // Create credential that becomes valid tomorrow
+  const now = new Date();
+  const futureValidFrom = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString(); // 1 day from now
+  const futureValidUntil = new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000).toISOString(); // 2 days from now
+  
+  const futureCredential: VerifiableCredential = {
+    ...sampleCredential,
+    validFrom: futureValidFrom,
+    validUntil: futureValidUntil
+  };
+  
+  const signedCredential = await signer.sign(futureCredential);
+  
+  await expect(verifier.verify(signedCredential)).rejects.toThrow("Credential is not yet valid");
+});
+
+test("verify credential with only validFrom succeeds when current time is after validFrom", async () => {
+  const privateKey = await key.generatePrivateKey("ES256");
+  const publicKey = await key.exportPublicKey(privateKey);
+  
+  const signer = await credential.signer(privateKey);
+  const verifier = await credential.verifier(publicKey);
+  
+  // Create credential with only validFrom (past date)
+  const now = new Date();
+  const pastDate = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString(); // 1 day ago
+  
+  const credentialWithValidFrom: VerifiableCredential = {
+    ...sampleCredential,
+    validFrom: pastDate
+  };
+  
+  const signedCredential = await signer.sign(credentialWithValidFrom);
+  const verifiedCredential = await verifier.verify(signedCredential);
+  
+  expect(verifiedCredential).toEqual(credentialWithValidFrom);
+});
+
+test("verify credential with only validUntil succeeds when current time is before validUntil", async () => {
+  const privateKey = await key.generatePrivateKey("ES256");
+  const publicKey = await key.exportPublicKey(privateKey);
+  
+  const signer = await credential.signer(privateKey);
+  const verifier = await credential.verifier(publicKey);
+  
+  // Create credential with only validUntil (future date)
+  const now = new Date();
+  const futureDate = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString(); // 1 day from now
+  
+  const credentialWithValidUntil: VerifiableCredential = {
+    ...sampleCredential,
+    validUntil: futureDate
+  };
+  
+  const signedCredential = await signer.sign(credentialWithValidUntil);
+  const verifiedCredential = await verifier.verify(signedCredential);
+  
+  expect(verifiedCredential).toEqual(credentialWithValidUntil);
+});
+
+test("verify credential with invalid validFrom date format fails", async () => {
+  const privateKey = await key.generatePrivateKey("ES256");
+  const publicKey = await key.exportPublicKey(privateKey);
+  
+  const signer = await credential.signer(privateKey);
+  const verifier = await credential.verifier(publicKey);
+  
+  // Create credential with invalid validFrom date format
+  const invalidCredential: VerifiableCredential = {
+    ...sampleCredential,
+    validFrom: "invalid-date-format"
+  };
+  
+  const signedCredential = await signer.sign(invalidCredential);
+  
+  await expect(verifier.verify(signedCredential)).rejects.toThrow("Invalid validFrom date format");
+});
+
+test("verify credential with invalid validUntil date format fails", async () => {
+  const privateKey = await key.generatePrivateKey("ES256");
+  const publicKey = await key.exportPublicKey(privateKey);
+  
+  const signer = await credential.signer(privateKey);
+  const verifier = await credential.verifier(publicKey);
+  
+  // Create credential with invalid validUntil date format
+  const invalidCredential: VerifiableCredential = {
+    ...sampleCredential,
+    validUntil: "invalid-date-format"
+  };
+  
+  const signedCredential = await signer.sign(invalidCredential);
+  
+  await expect(verifier.verify(signedCredential)).rejects.toThrow("Invalid validUntil date format");
+});
