@@ -73,260 +73,41 @@ async function initCaseStudy(caseName: string) {
     };
   }
 
-  // Entity configurations for transhrimpment case study
-  const entityConfigs = [
-    {
-      filename: "chompchomp-config.json",
-      data: {
-        "type": "FeatureCollection",
-        "id": "https://chompchomp.example/entity/bvi-001",
-        "alsoKnownAs": [
-          "urn:ietf:spice:glue:gln:1234567890123",
-          "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34321"
-        ],
-        "contexts": [
-          "https://geojson.org/geojson-ld/geojson-context.jsonld"
-        ],
-        "assertion": [entityKeys.chompchomp.assertion],
-        "authentication": [entityKeys.chompchomp.authentication],
-        "features": [
-          {
-            "type": "Feature",
-            "geometry": {
-              "type": "Point",
-              "coordinates": [-64.6208, 18.4167]
-            },
-            "properties": {
-              "name": "Chompchomp Ltd Restaurant Chain HQ",
-              "type": "Restaurant Chain",
-              "role": "buyer",
-              "address": {
-                "streetAddress": "123 Tortola Plaza",
-                "addressLocality": "Road Town",
-                "addressRegion": "Tortola",
-                "addressCountry": "VG"
-              }
-            }
-          }
-        ]
+  // Read existing configurations to preserve all non-key data
+  const existingConfigs = {};
+  for (const entity of entities) {
+    const filename = `${entity}-config.json`;
+    const filepath = `${entityConfigDir}/${filename}`;
+    try {
+      const file = Bun.file(filepath);
+      if (await file.exists()) {
+        const config = await file.json();
+        existingConfigs[entity] = config;
       }
-    },
-    {
-      filename: "camaron-corriente-config.json",
-      data: {
-        "type": "FeatureCollection",
-        "id": "https://camaron-corriente.example/entity/ve-pbc-001",
-        "alsoKnownAs": [
-          "urn:ietf:spice:glue:gln:4598765432102",
-          "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34322",
-          "urn:ietf:spice:glue:pen:12346"
-        ],
-        "contexts": [
-          "https://geojson.org/geojson-ld/geojson-context.jsonld"
-        ],
-        "assertion": [entityKeys['camaron-corriente'].assertion],
-        "authentication": [entityKeys['camaron-corriente'].authentication],
-        "features": [
-          {
-            "type": "Feature",
-            "geometry": {
-              "type": "Point",
-              "coordinates": [-68.0125, 10.4647]
-            },
-            "properties": {
-              "name": "Camarón Corriente S.A. Port Facility",
-              "type": "Seafood Distributor",
-              "role": "export-facility",
-              "address": {
-                "streetAddress": "Puerto Cabello Port",
-                "addressLocality": "Puerto Cabello",
-                "addressRegion": "Carabobo",
-                "addressCountry": "VE"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      filename: "legit-shrimp-config.json",
-      data: {
-        "type": "FeatureCollection",
-        "id": "https://legit-shrimp.example/entity/tt-pos-001",
-        "alsoKnownAs": [
-          "urn:ietf:spice:glue:gln:7890123456789",
-          "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34323"
-        ],
-        "contexts": [
-          "https://geojson.org/geojson-ld/geojson-context.jsonld"
-        ],
-        "assertion": [entityKeys['legit-shrimp'].assertion],
-        "authentication": [entityKeys['legit-shrimp'].authentication],
-        "features": [
-          {
-            "type": "Feature",
-            "geometry": {
-              "type": "Point",
-              "coordinates": [-61.5167, 10.6596]
-            },
-            "properties": {
-              "name": "Legit Shrimp Ltd Port Facility",
-              "type": "Seafood Exporter",
-              "role": "certificate-authority",
-              "address": {
-                "streetAddress": "Port of Spain Harbor",
-                "addressLocality": "Port of Spain",
-                "addressRegion": "Port of Spain",
-                "addressCountry": "TT"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      filename: "shady-carrier-config.json",
-      data: {
-        "type": "FeatureCollection",
-        "id": "https://shady-carrier.example/entity/aw-oru-001",
-        "alsoKnownAs": [
-          "urn:ietf:spice:glue:gln:5555555555555"
-        ],
-        "contexts": [
-          "https://geojson.org/geojson-ld/geojson-context.jsonld"
-        ],
-        "assertion": [entityKeys['shady-carrier'].assertion],
-        "authentication": [entityKeys['shady-carrier'].authentication],
-        "features": [
-          {
-            "type": "Feature",
-            "geometry": {
-              "type": "Point",
-              "coordinates": [-70.0270, 12.5186]
-            },
-            "properties": {
-              "name": "Shady Carrier Ltd Logistics Hub",
-              "type": "Transport Company",
-              "role": "fraudulent-carrier",
-              "address": {
-                "streetAddress": "Oranjestad Port",
-                "addressLocality": "Oranjestad",
-                "addressRegion": "Aruba",
-                "addressCountry": "AW"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      filename: "shady-distributor-config.json",
-      data: {
-        "type": "FeatureCollection",
-        "id": "https://shady-distributor.example/entity/bvi-002",
-        "alsoKnownAs": [
-          "urn:ietf:spice:glue:gln:6666666666666"
-        ],
-        "contexts": [
-          "https://geojson.org/geojson-ld/geojson-context.jsonld"
-        ],
-        "assertion": [entityKeys['shady-distributor'].assertion],
-        "authentication": [entityKeys['shady-distributor'].authentication],
-        "features": [
-          {
-            "type": "Feature",
-            "geometry": {
-              "type": "Point",
-              "coordinates": [-64.6208, 18.4167]
-            },
-            "properties": {
-              "name": "Shady Distributor Ltd Office",
-              "type": "Distribution Company",
-              "role": "identity-thief",
-              "address": {
-                "streetAddress": "456 Tortola Plaza",
-                "addressLocality": "Road Town",
-                "addressRegion": "Tortola",
-                "addressCountry": "VG"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      filename: "cargo-line-config.json",
-      data: {
-        "type": "FeatureCollection",
-        "id": "https://cargo-line.example/entity/pr-sju-001",
-        "alsoKnownAs": [
-          "urn:ietf:spice:glue:gln:9876543210987"
-        ],
-        "contexts": [
-          "https://geojson.org/geojson-ld/geojson-context.jsonld"
-        ],
-        "assertion": [entityKeys['cargo-line'].assertion],
-        "authentication": [entityKeys['cargo-line'].authentication],
-        "features": [
-          {
-            "type": "Feature",
-            "geometry": {
-              "type": "Point",
-              "coordinates": [-66.1057, 18.4655]
-            },
-            "properties": {
-              "name": "Cargo Line Ltd Transport Hub",
-              "type": "Legitimate Carrier",
-              "role": "legitimate-carrier",
-              "address": {
-                "streetAddress": "San Juan Port",
-                "addressLocality": "San Juan",
-                "addressRegion": "Puerto Rico",
-                "addressCountry": "PR"
-              }
-            }
-          }
-        ]
-      }
-    },
-    {
-      filename: "anonymous-distributor-config.json",
-      data: {
-        "type": "FeatureCollection",
-        "id": "https://anonymous-distributor.example/entity/vi-cha-001",
-        "alsoKnownAs": [
-          "urn:ietf:spice:glue:gln:1111111111111"
-        ],
-        "contexts": [
-          "https://geojson.org/geojson-ld/geojson-context.jsonld"
-        ],
-        "assertion": [entityKeys['anonymous-distributor'].assertion],
-        "authentication": [entityKeys['anonymous-distributor'].authentication],
-        "features": [
-          {
-            "type": "Feature",
-            "geometry": {
-              "type": "Point",
-              "coordinates": [-64.9307, 18.3419]
-            },
-            "properties": {
-              "name": "Anonymous Distributor Warehouse",
-              "type": "Distribution Center",
-              "role": "final-distributor",
-              "address": {
-                "streetAddress": "Charlotte Amalie Port",
-                "addressLocality": "Charlotte Amalie",
-                "addressRegion": "St. Thomas",
-                "addressCountry": "VI"
-              }
-            }
-          }
-        ]
-      }
+    } catch (error) {
+      // File doesn't exist or is invalid, will use template
     }
-  ];
+  }
 
-  // Write entity configurations
+  // Create entity configurations, preserving existing data and only updating keys
+  const entityConfigs = [];
+
+  for (const entity of entities) {
+    const filename = `${entity}-config.json`;
+    let configData;
+
+    // Use existing config and only replace keys
+    configData = { ...existingConfigs[entity] };
+    configData.assertion = [entityKeys[entity].assertion];
+    configData.authentication = [entityKeys[entity].authentication];
+
+    entityConfigs.push({
+      filename,
+      data: configData
+    });
+  }
+
+  // Write entity configuration files
   for (const config of entityConfigs) {
     await Bun.write(`${entityConfigDir}/${config.filename}`, JSON.stringify(config.data, null, 2));
   }

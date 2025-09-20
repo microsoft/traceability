@@ -6,26 +6,30 @@
   ],
   "assertion": [
     {
-      "kid": "vu5_0n9e33HnOmYfOYSc7N8w3JcKh2xAtJJjVqZDhSI",
+      "kid": "ARuza_wOzAEwBEHswhblc8XI6-bsX8hIWq1rINUCy1U",
       "kty": "EC",
       "crv": "P-256",
       "alg": "ES256",
-      "x": "RaC2MDuCD1TmBbQpF6Vr_fAy4EjNi3yBuOPlWzaHiTO",
-      "y": "3WUAoGwFE2UpCcRqG7Ws_gBz5FkOj4zCvPQmX0bIjUQ",
-      "d": "5XTCoHxGF3WqDdSsH8Xt_hC06GlPk50DwQRnY1cJkVR",
-      "key_ops": ["sign"]
+      "x": "soVceMFAwqxogqoNfLcxS03I7Kn--ISHGFkQAbgz9D0",
+      "y": "gyTc1BCXCoLi3VlFz7rIVy0C8eCNcsLxmUrgHhgLe6I",
+      "d": "5ML7fNGykHF2VeTUYvGkrhyRDUvM7uz3JKhdf8J9ODw",
+      "key_ops": [
+        "sign"
+      ]
     }
   ],
   "authentication": [
     {
-      "kid": "FY2w6r0u57LrSqcoSceM_bM04PmWl6dGxPVsY4eQmYs",
+      "kid": "Gv0kWvQX4INA7Ucrw1sevlU7R_w9wvt_nw-EB4ppLuE",
       "kty": "EC",
       "crv": "P-256",
       "alg": "ES256",
-      "x": "McF8NGxHG7XtGfduG9dP_cD15QoXm7eHyQWtZ5fRnZT",
-      "y": "4YVBoHyIF4YrEdVvH0eQ_dE26RpYn8fIzRXua6gSoaU",
-      "d": "6ZUDpIyJG4ZsIfWwI9fR_eF37SpZo91EzRZvb7hTlWS",
-      "key_ops": ["sign"]
+      "x": "NCRAv0nGLUOQXpBgEHUW8K5DgYFx8RygYRAi6Hsb2Ao",
+      "y": "vloLwVK5cSjN539jhVpPzr7a_r7GyF5Bpw7jGCzywP8",
+      "d": "Hfj5wlJAIDkj_uFRBaebViRVdUI9_RUkz0lrAj7G_7M",
+      "key_ops": [
+        "sign"
+      ]
     }
   ],
   "features": [
@@ -33,7 +37,10 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [-70.0270, 12.5186]
+        "coordinates": [
+          -70.027,
+          12.5186
+        ]
       },
       "properties": {
         "name": "Shady Carrier Ltd Operations",

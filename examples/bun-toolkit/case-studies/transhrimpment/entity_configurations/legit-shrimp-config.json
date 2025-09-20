@@ -11,26 +11,30 @@
   ],
   "assertion": [
     {
-      "kid": "oU4qOMvDbNIxoMPWp5sGaYOJvT2Io7pPsGmiZ31z_b2",
+      "kid": "x1AvUia30HGgFKgTO9ZdjTaWO50O442-kBxdmHV3QZQ",
       "kty": "EC",
       "crv": "P-256",
       "alg": "ES256",
-      "x": "UgGJQJxEM6KzqQ_ZpPvJc1QJxU2Io8sPtGmiZ31z_b3",
-      "y": "6cbGtK2PNLMzoR_aoQwKd2RKyV3Jp9tQumoh_42a_c4",
-      "d": "9ddHvL3QO8N1rS_bqRxLe3SKzW4Kr0vRvoqb_53b_d5",
-      "key_ops": ["sign"]
+      "x": "AcfDVtp3SRpA73gCXSEITXHuoxyfw7WL6_Wr72nwkCM",
+      "y": "qe5UYttV-N5VpdpzCkB9b8_Mcoq5HMrS2EtY3JsaEXg",
+      "d": "cfLxBxuScXqeoXbDq6LPC6Vd9kJEQEnLFdExgvIoIHs",
+      "key_ops": [
+        "sign"
+      ]
     }
   ],
   "authentication": [
     {
-      "kid": "pV5rPNwEcOJypNQXq6tHbZPKwU3Jp0uQuOqc_64c_e6",
+      "kid": "KxX5cwra31NAH0hVrZktn8UINYnFeGfi6RM9oD7FdLc",
       "kty": "EC",
       "crv": "P-256",
       "alg": "ES256",
-      "x": "VhHKRKyFN7L0rT_crSyMf4TLzX5Ks1wSwPrnd_65d_f7",
-      "y": "7deIuM4RO8O2sU_dsSzNg5UMzY6Lt2xTxQsoe_76e_g8",
-      "d": "0efJvN5SP9P3tV_etT0Oh6VN0Z7Mv3yUyRtpf_87f_h9",
-      "key_ops": ["sign"]
+      "x": "P1omejjO-98UuxD_M7H2mFI9GGdqwj6OTQm3sGVO5jQ",
+      "y": "naLuW5XPk-NQGGmNc1RWB4xXQiza7MWs8K8FSAHp1TQ",
+      "d": "kVKn4z74kIPueY-Uw6jIakWqQbzT6g32bksX4XBzJJU",
+      "key_ops": [
+        "sign"
+      ]
     }
   ],
   "features": [
@@ -38,7 +42,10 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [-61.5167, 10.6596]
+        "coordinates": [
+          -61.5167,
+          10.6596
+        ]
       },
       "properties": {
         "name": "Legit Shrimp Ltd Facility",
