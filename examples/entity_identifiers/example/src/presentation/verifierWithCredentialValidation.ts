@@ -4,16 +4,27 @@ import type { VerifiablePresentation } from "./presentation";
 import type { PublicKey } from "../types";
 import { base64url } from "../encoding";
 import { createJsonWebSignatureFromEnvelopedVerifiableCredential } from "../credential/credential";
-import type { EnvelopedVerifiableCredential } from "../credential/credential";
+import type { EnvelopedVerifiableCredential, VerifiableCredential } from "../credential/credential";
+
+export interface ControllerResolver {
+  resolve: (id: string) => Promise<{
+    assertion: {
+      resolve: (id: string) => Promise<credential.CredentialVerifier>;
+    };
+    authentication: {
+      resolve: (id: string) => Promise<any>;
+    };
+  }>;
+}
 
 export interface PresentationVerifierWithCredentialValidation {
-  verify: (jws: string, credentialVerifiers?: Map<string, credential.CredentialVerifier>) => Promise<VerifiablePresentation>;
+  verify: (jws: string, controllerResolver?: ControllerResolver) => Promise<VerifiablePresentation>;
 }
 
 export const verifierWithCredentialValidation = async (publicKey: PublicKey) => {
   const verifier = await key.verifier(publicKey);
   return {
-    verify: async (jws: string, credentialVerifiers?: Map<string, credential.CredentialVerifier>) => {
+    verify: async (jws: string, controllerResolver?: ControllerResolver) => {
       // Parse JWS: header.payload.signature
       const parts = jws.split('.');
       if (parts.length !== 3) {
@@ -58,25 +69,49 @@ export const verifierWithCredentialValidation = async (publicKey: PublicKey) => 
       const payloadBytes = base64url.decode(payload);
       const presentation = JSON.parse(new TextDecoder().decode(payloadBytes)) as VerifiablePresentation;
 
-      // If credentialVerifiers are provided, verify each credential and check cnf claims
-      if (credentialVerifiers && presentation.verifiableCredential && presentation.verifiableCredential.length > 0) {
+      // If controllerResolver is provided, verify each credential and check cnf claims
+      if (controllerResolver && presentation.verifiableCredential && presentation.verifiableCredential.length > 0) {
         for (const envelopedCred of presentation.verifiableCredential) {
           // Extract JWS from enveloped credential
           const credJws = createJsonWebSignatureFromEnvelopedVerifiableCredential(envelopedCred as EnvelopedVerifiableCredential);
 
-          // Parse credential header to get issuer key ID
+          // Parse credential to get issuer
           const credParts = credJws.split('.');
           if (credParts.length !== 3) {
             throw new Error('Invalid credential JWS format');
           }
 
+          // Decode credential payload to get issuer
+          const credPayloadBytes = base64url.decode(credParts[1]);
+          const credPayload = JSON.parse(new TextDecoder().decode(credPayloadBytes)) as VerifiableCredential;
+
+          // Get the issuer from the credential
+          const issuerId = credPayload.issuer;
+
+          // Resolve the issuer's controller document
+          const issuerController = await controllerResolver.resolve(issuerId);
+
+          // Get the assertion key resolver for the issuer
+          const assertionKeyResolver = await issuerController.assertion;
+
+          // Parse credential header to get the kid used to sign
           const credHeaderBytes = base64url.decode(credParts[0]);
           const credHeader = JSON.parse(new TextDecoder().decode(credHeaderBytes));
 
-          // Find the appropriate verifier for this credential
-          const credentialVerifier = credentialVerifiers.get(credHeader.kid);
-          if (!credentialVerifier) {
-            throw new Error(`No verifier found for credential with kid: ${credHeader.kid}`);
+          // The credential header has the kid, but we need to find the full verification method ID
+          // Try to resolve using the issuer ID + fragment (common pattern)
+          let credentialVerifier;
+          try {
+            // Try with full verification method ID (issuer + # + kid)
+            const verificationMethodId = `${issuerId}#${credHeader.kid}`;
+            credentialVerifier = await assertionKeyResolver.resolve(verificationMethodId);
+          } catch (e) {
+            // If that fails, try with just the kid
+            try {
+              credentialVerifier = await assertionKeyResolver.resolve(credHeader.kid);
+            } catch (e2) {
+              throw new Error(`Cannot find assertion key for credential signed with kid: ${credHeader.kid}`);
+            }
           }
 
           // Verify the credential
@@ -87,9 +122,15 @@ export const verifierWithCredentialValidation = async (publicKey: PublicKey) => 
             // The presentation MUST be signed with the key specified in cnf.kid
             const cnfKid = verifiedCredential.cnf.kid;
 
+            // Extract just the kid part if cnfKid is a full verification method ID
+            let cnfKeyId = cnfKid;
+            if (cnfKid.includes('#')) {
+              cnfKeyId = cnfKid.split('#')[1];
+            }
+
             // The presentation's signing key (publicKey.kid) must match the cnf.kid
-            if (publicKey.kid !== cnfKid) {
-              throw new Error(`Presentation key mismatch: credential requires key ${cnfKid} but presentation was signed with ${publicKey.kid}`);
+            if (publicKey.kid !== cnfKeyId) {
+              throw new Error(`Presentation key mismatch: credential requires key ${cnfKeyId} but presentation was signed with ${publicKey.kid}`);
             }
           }
         }
