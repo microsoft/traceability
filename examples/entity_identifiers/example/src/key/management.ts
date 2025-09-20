@@ -39,40 +39,29 @@ export async function calculateThumbprint(publicKey: PublicKey): Promise<string>
 
 export async function generatePrivateKey(algorithm: ES256 | ES384): Promise<PrivateKey> {
   const keyPair = await generateKeyForAlgorithm(algorithm);
-  const exportedKey = await crypto.subtle.exportKey("jwk", keyPair.privateKey);
+  const exportedPrivateKey = await crypto.subtle.exportKey("jwk", keyPair.privateKey);
+  const exportedPublicKey = await crypto.subtle.exportKey("jwk", keyPair.publicKey);
+  const thumbprint = await calculateThumbprint(exportedPublicKey as PublicKey);
   return {
-    kid: await calculateThumbprint(exportedKey as PublicKey),
-    kty: exportedKey.kty,
-    crv: exportedKey.crv,
+    kid: thumbprint,
+    kty: exportedPrivateKey.kty,
+    crv: exportedPrivateKey.crv,
     alg: algorithm,
-    x: exportedKey.x,
-    y: exportedKey.y,
-    d: exportedKey.d,
+    x: exportedPublicKey.x, // Use public key coordinates
+    y: exportedPublicKey.y, // Use public key coordinates
+    d: exportedPrivateKey.d,
     key_ops: ["sign"]
   } as PrivateKey;
 }
 
 export async function exportPublicKey(privateKey: PrivateKey): Promise<PublicKey> {
-  const publicKeyInfo = {
+  return {
+    kid: privateKey.kid, // Use the same kid as the private key
     kty: privateKey.kty,
     crv: privateKey.crv,
     alg: privateKey.alg,
     x: privateKey.x,
     y: privateKey.y,
-    key_opts: ['verify'] as ['verify']
-  }
-  // ensure the public key is well formed
-  const exportedKey = await crypto.subtle.exportKey("jwk", await crypto.subtle.importKey("jwk", publicKeyInfo, {
-    name: fullySpecifiedAlgorithms[publicKeyInfo.alg].name,
-    namedCurve: fullySpecifiedAlgorithms[publicKeyInfo.alg].namedCurve
-  }, true, publicKeyInfo.key_opts));
-  return {
-    kid: await calculateThumbprint(exportedKey as PublicKey),
-    kty: exportedKey.kty,
-    crv: exportedKey.crv,
-    alg: publicKeyInfo.alg,
-    x: exportedKey.x,
-    y: exportedKey.y,
-    key_ops: publicKeyInfo.key_opts
+    key_ops: ['verify'] as ['verify']
   } as PublicKey;
 }

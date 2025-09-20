@@ -4,7 +4,7 @@ import type { PrivateKey } from "../types";
 import { base64url } from "../encoding";
 
 export interface CredentialSigner {
-  sign: (credential: VerifiableCredential) => Promise<VerifiableCredential>;
+  sign: (credential: VerifiableCredential) => Promise<string>;
 }
 
 export const signer = async (privateKey: PrivateKey) => {

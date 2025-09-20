@@ -4,7 +4,7 @@ import type { PrivateKey } from "../types";
 import { base64url } from "../encoding";
 
 export interface PresentationSigner {
-  sign: (presentation: VerifiablePresentation) => Promise<VerifiablePresentation>;
+  sign: (presentation: VerifiablePresentation) => Promise<string>;
 }
 
 export const signer = async (privateKey: PrivateKey) => {

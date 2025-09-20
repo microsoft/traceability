@@ -27,6 +27,7 @@ export interface Controller {
   "alsoKnownAs": string[];
   "verificationMethod": VerificationMethod[];
   "assertionMethod": string[];
+  "authentication": string[];
   "geometry": Point;
   "address": Address;
 }
@@ -62,6 +63,7 @@ export const createController = async (
       }
     ],
     "assertionMethod": [verificationMethodId],
+    "authentication": [verificationMethodId],
     "geometry": geometry,
     "address": address
   } as Controller;  

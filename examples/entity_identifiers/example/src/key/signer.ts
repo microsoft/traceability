@@ -13,14 +13,15 @@ export async function signer(privateKey: PrivateKey): Promise<Signer> {
   
   return {
     sign: async (data: Uint8Array) => {
-      return new Uint8Array(await crypto.subtle.sign(
+      const signature = await crypto.subtle.sign(
         {
           name: fullySpecifiedAlgorithms[privateKey.alg].name,
           hash: fullySpecifiedAlgorithms[privateKey.alg].hash
         }, 
         cryptoKey, 
         data
-      ));
+      );
+      return new Uint8Array(signature);
     }
   };
 }
