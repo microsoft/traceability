@@ -5,8 +5,8 @@ import type { VerifiableCredential } from "../src/credential/credential";
 import type { VerifiablePresentation } from "../src/presentation/presentation";
 import type { Schema } from "ajv";
 
-// Simple JSON schema for testing
-const simpleSchema: Schema = {
+// Simple JSON schema for supply chain credentials
+const supplyChainSchema: Schema = {
   type: "object",
   required: ["@context", "type", "issuer", "credentialSubject"],
   properties: {
@@ -17,7 +17,9 @@ const simpleSchema: Schema = {
       type: "object",
       required: ["id"],
       properties: {
-        "id": { type: "string" }
+        "id": { type: "string" },
+        "productName": { type: "string" },
+        "batchNumber": { type: "string" }
       }
     }
   }
@@ -26,14 +28,14 @@ const simpleSchema: Schema = {
 test("create generic resolver with initial data", async () => {
   // Create controllers
   const issuerController = await createController(
-    "https://university.example/issuer/123",
+    "https://manufacturer.example/supplier/123",
     [],
     { type: "Point", coordinates: [-122.4194, 37.7749] },
     {}
   );
 
   const holderController = await createController(
-    "https://student.example/students/alice",
+    "https://distributor.example/warehouses/west-coast",
     [],
     { type: "Point", coordinates: [-122.4094, 37.7849] },
     {}
@@ -42,25 +44,25 @@ test("create generic resolver with initial data", async () => {
   // Create generic resolver with controllers and schemas
   const genericResolver = resolver.createGenericResolver(
     [
-      ["https://university.example/issuer/123", issuerController.controller],
-      ["https://student.example/students/alice", holderController.controller]
+      ["https://manufacturer.example/supplier/123", issuerController.controller],
+      ["https://distributor.example/warehouses/west-coast", holderController.controller]
     ],
     [
-      ["https://example.org/schemas/simple.json", simpleSchema]
+      ["https://example.org/schemas/supply-chain.json", supplyChainSchema]
     ]
   );
 
   // Test controller resolution
-  const resolvedIssuer = await genericResolver.resolveController("https://university.example/issuer/123");
+  const resolvedIssuer = await genericResolver.resolveController("https://manufacturer.example/supplier/123");
   expect(resolvedIssuer).toBeDefined();
   expect(resolvedIssuer.assertion).toBeDefined();
 
-  const resolvedHolder = await genericResolver.resolveController("https://student.example/students/alice");
+  const resolvedHolder = await genericResolver.resolveController("https://distributor.example/warehouses/west-coast");
   expect(resolvedHolder).toBeDefined();
   expect(resolvedHolder.authentication).toBeDefined();
 
   // Test schema resolution
-  const schemaValidator = await genericResolver.resolveSchema("https://example.org/schemas/simple.json");
+  const schemaValidator = await genericResolver.resolveSchema("https://example.org/schemas/supply-chain.json");
   expect(schemaValidator).toBeDefined();
   expect(typeof schemaValidator).toBe('function');
 });
@@ -82,28 +84,28 @@ test("add resources dynamically", async () => {
 
   // Create controller
   const controller = await createController(
-    "https://dynamic.example/issuer",
+    "https://logistics.example/shipper",
     [],
     { type: "Point", coordinates: [-122.4194, 37.7749] },
     {}
   );
 
   // Add controller and schema dynamically
-  genericResolver.addController("https://dynamic.example/issuer", controller.controller);
-  genericResolver.addSchema("https://dynamic.example/schema.json", simpleSchema);
+  genericResolver.addController("https://logistics.example/shipper", controller.controller);
+  genericResolver.addSchema("https://logistics.example/schema.json", supplyChainSchema);
 
   // Test that they can now be resolved
-  const resolvedController = await genericResolver.resolveController("https://dynamic.example/issuer");
+  const resolvedController = await genericResolver.resolveController("https://logistics.example/shipper");
   expect(resolvedController).toBeDefined();
 
-  const schemaValidator = await genericResolver.resolveSchema("https://dynamic.example/schema.json");
+  const schemaValidator = await genericResolver.resolveSchema("https://logistics.example/schema.json");
   expect(schemaValidator).toBeDefined();
 });
 
 test("credential verification with generic resolver", async () => {
   // Create controller
   const issuerController = await createController(
-    "https://university.example/issuer/123",
+    "https://manufacturer.example/supplier/123",
     [],
     { type: "Point", coordinates: [-122.4194, 37.7749] },
     {}
@@ -111,17 +113,18 @@ test("credential verification with generic resolver", async () => {
 
   // Create generic resolver
   const genericResolver = resolver.createGenericResolver([
-    ["https://university.example/issuer/123", issuerController.controller]
+    ["https://manufacturer.example/supplier/123", issuerController.controller]
   ]);
 
   // Create credential
   const testCredential: VerifiableCredential = {
     "@context": ["https://www.w3.org/ns/credentials/v2"],
-    type: ["VerifiableCredential", "TestCredential"],
-    issuer: "https://university.example/issuer/123",
+    type: ["VerifiableCredential", "ProductionCredential"],
+    issuer: "https://manufacturer.example/supplier/123",
     credentialSubject: {
-      id: "https://student.example/students/alice",
-      name: "Alice Smith"
+      id: "https://products.example/items/organic-cotton-shirt-001",
+      productName: "Organic Cotton T-Shirt",
+      batchNumber: "OCS-2024-001"
     }
   };
 
@@ -144,14 +147,14 @@ test("credential verification with generic resolver", async () => {
 test("presentation verification with generic resolver", async () => {
   // Create controllers
   const issuerController = await createController(
-    "https://university.example/issuer/123",
+    "https://manufacturer.example/supplier/123",
     [],
     { type: "Point", coordinates: [-122.4194, 37.7749] },
     {}
   );
 
   const holderController = await createController(
-    "https://student.example/students/alice",
+    "https://distributor.example/warehouses/west-coast",
     [],
     { type: "Point", coordinates: [-122.4094, 37.7849] },
     {}
@@ -159,18 +162,19 @@ test("presentation verification with generic resolver", async () => {
 
   // Create generic resolver
   const genericResolver = resolver.createGenericResolver([
-    ["https://university.example/issuer/123", issuerController.controller],
-    ["https://student.example/students/alice", holderController.controller]
+    ["https://manufacturer.example/supplier/123", issuerController.controller],
+    ["https://distributor.example/warehouses/west-coast", holderController.controller]
   ]);
 
   // Create and sign credential
   const testCredential: VerifiableCredential = {
     "@context": ["https://www.w3.org/ns/credentials/v2"],
-    type: ["VerifiableCredential", "TestCredential"],
-    issuer: "https://university.example/issuer/123",
+    type: ["VerifiableCredential", "ProductionCredential"],
+    issuer: "https://manufacturer.example/supplier/123",
     credentialSubject: {
-      id: "https://student.example/students/alice",
-      name: "Alice Smith"
+      id: "https://products.example/items/organic-cotton-shirt-001",
+      productName: "Organic Cotton T-Shirt",
+      batchNumber: "OCS-2024-001"
     }
   };
 
@@ -184,7 +188,7 @@ test("presentation verification with generic resolver", async () => {
   const presentationData: VerifiablePresentation = {
     "@context": ["https://www.w3.org/ns/credentials/v2"],
     type: ["VerifiablePresentation"],
-    holder: "https://student.example/students/alice",
+    holder: "https://distributor.example/warehouses/west-coast",
     verifiableCredential: [envelopedCredential]
   };
 
@@ -208,7 +212,7 @@ test("presentation verification with generic resolver", async () => {
 test("credential schema validation with generic resolver", async () => {
   // Create controller
   const issuerController = await createController(
-    "https://university.example/issuer/123",
+    "https://manufacturer.example/supplier/123",
     [],
     { type: "Point", coordinates: [-122.4194, 37.7749] },
     {}
@@ -217,23 +221,24 @@ test("credential schema validation with generic resolver", async () => {
   // Create generic resolver with schema
   const genericResolver = resolver.createGenericResolver(
     [["https://university.example/issuer/123", issuerController.controller]],
-    [["https://example.org/schemas/simple.json", simpleSchema]]
+    [["https://example.org/schemas/supply-chain.json", supplyChainSchema]]
   );
 
   // Create credential with schema
   const testCredentialWithSchema: VerifiableCredential = {
     "@context": ["https://www.w3.org/ns/credentials/v2"],
-    type: ["VerifiableCredential", "TestCredential"],
+    type: ["VerifiableCredential", "ProductionCredential"],
     issuer: "https://university.example/issuer/123",
     credentialSchema: [
       {
-        "id": "https://example.org/schemas/simple.json",
+        "id": "https://example.org/schemas/supply-chain.json",
         "type": "JsonSchema"
       }
     ],
     credentialSubject: {
-      id: "https://student.example/students/alice",
-      name: "Alice Smith"
+      id: "https://products.example/items/organic-cotton-shirt-001",
+      productName: "Organic Cotton T-Shirt",
+      batchNumber: "OCS-2024-001"
     }
   };
 
@@ -246,23 +251,23 @@ test("credential schema validation with generic resolver", async () => {
   const verifiedCredential = await verifier.verify(signedCredential, { validateSchema: true });
 
   expect(verifiedCredential.credentialSchema).toBeDefined();
-  expect(verifiedCredential.credentialSchema![0].id).toBe("https://example.org/schemas/simple.json");
+  expect(verifiedCredential.credentialSchema![0].id).toBe("https://example.org/schemas/supply-chain.json");
 });
 
 test("default generic resolver works", async () => {
   // Create controller
   const controller = await createController(
-    "https://default.example/issuer",
+    "https://retailer.example/chain/global",
     [],
     { type: "Point", coordinates: [-122.4194, 37.7749] },
     {}
   );
 
   // Add to default resolver
-  resolver.defaultGenericResolver.addController("https://default.example/issuer", controller.controller);
+  resolver.defaultGenericResolver.addController("https://retailer.example/chain/global", controller.controller);
 
   // Test that it works
-  const resolved = await resolver.defaultGenericResolver.resolveController("https://default.example/issuer");
+  const resolved = await resolver.defaultGenericResolver.resolveController("https://retailer.example/chain/global");
   expect(resolved).toBeDefined();
   expect(resolved.assertion).toBeDefined();
 });

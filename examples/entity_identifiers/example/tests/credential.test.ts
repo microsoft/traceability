@@ -400,25 +400,25 @@ test("sign and verify credential with credentialSchema", async () => {
       "https://www.w3.org/ns/credentials/v2",
       "https://www.w3.org/ns/credentials/examples/v2"
     ],
-    type: ["VerifiableCredential", "DegreeCredential"],
-    issuer: "https://university.example/issuer/123",
+    type: ["VerifiableCredential", "ProductionCredential"],
+    issuer: "https://manufacturer.example/supplier/123",
     credentialSchema: [
       {
-        "id": "https://example.org/examples/degree.json",
+        "id": "https://example.org/schemas/production.json",
         "type": "JsonSchema"
       },
       {
-        "id": "https://example.org/examples/alumni.json",
+        "id": "https://example.org/schemas/quality-control.json",
         "type": "JsonSchema"
       }
     ],
     credentialSubject: {
-      id: "https://student.example/students/alice",
-      type: "Student",
-      name: "Alice Smith",
-      degree: {
-        type: "BachelorDegree",
-        name: "Bachelor of Science in Computer Science"
+      id: "https://products.example/items/organic-cotton-shirt-001",
+      type: "Product",
+      productName: "Organic Cotton T-Shirt",
+      production: {
+        type: "TextileProduction",
+        facility: "Sustainable Manufacturing Plant A"
       }
     }
   };
@@ -436,11 +436,11 @@ test("sign and verify credential with credentialSchema", async () => {
   expect(verifiedCredential.credentialSchema).toBeDefined();
   expect(verifiedCredential.credentialSchema).toHaveLength(2);
   expect(verifiedCredential.credentialSchema![0]).toEqual({
-    "id": "https://example.org/examples/degree.json",
+    "id": "https://example.org/schemas/production.json",
     "type": "JsonSchema"
   });
   expect(verifiedCredential.credentialSchema![1]).toEqual({
-    "id": "https://example.org/examples/alumni.json",
+    "id": "https://example.org/schemas/quality-control.json",
     "type": "JsonSchema"
   });
 
@@ -460,19 +460,19 @@ test("sign and verify credential with single credentialSchema", async () => {
   // Create credential with single credentialSchema
   const credentialWithSingleSchema: VerifiableCredential = {
     "@context": ["https://www.w3.org/ns/credentials/v2"],
-    type: ["VerifiableCredential", "EmployeeCredential"],
-    issuer: "https://company.example/hr",
+    type: ["VerifiableCredential", "ShippingCredential"],
+    issuer: "https://logistics.example/shipper",
     credentialSchema: [
       {
-        "id": "https://company.example/schemas/employee.json",
+        "id": "https://logistics.example/schemas/shipment.json",
         "type": "JsonSchema"
       }
     ],
     credentialSubject: {
-      id: "https://company.example/employees/bob",
-      type: "Employee",
-      name: "Bob Johnson",
-      jobTitle: "Software Engineer"
+      id: "https://shipments.example/tracking/SHP-2024-001",
+      type: "Shipment",
+      trackingNumber: "SHP-2024-001",
+      destination: "West Coast Distribution Center"
     }
   };
 
@@ -489,7 +489,7 @@ test("sign and verify credential with single credentialSchema", async () => {
   expect(verifiedCredential.credentialSchema).toBeDefined();
   expect(verifiedCredential.credentialSchema).toHaveLength(1);
   expect(verifiedCredential.credentialSchema![0]).toEqual({
-    "id": "https://company.example/schemas/employee.json",
+    "id": "https://logistics.example/schemas/shipment.json",
     "type": "JsonSchema"
   });
 
