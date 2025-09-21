@@ -28,6 +28,8 @@ A seafood distributor in `Charlotte Amalie, St. Thomas, U.S. Virgin Islands` pla
 
 **Note:** This secondary transaction would have generated legitimate purchase orders and commercial invoices between `Anonymous Distributor` and `Shady Distributor Ltd`, and a legitimate bill of lading from the now-repaired `Cargo Line Ltd`.
 
+**Additional Fraud:** `Shady Distributor Ltd` also attempts to present a legitimate Certificate of Origin that was originally issued by `Legit Shrimp Ltd` to another legitimate importer (`Honest Importer Ltd`). `Shady Distributor Ltd` somehow gained access to this valid certificate (possibly through a data breach or insider access) and tries to present it as proof that their shrimp came from `Legit Shrimp Ltd`, even though they were not the intended holder of this credential.
+
 
 The importer's customs broker files all the paper work for the imported shrimp as hs code 0306.17, originating from `Trinidad and Tobago`.
 Lab tests on the shrimp reveal chemical contamination, and an investigation is launched.
@@ -42,25 +44,28 @@ As the auditor, you would discover the fraud by:
 
 1. **Verifying Digital Signatures**: The fraudulent documents appear legitimate in all ways except for being signed by the wrong entity. Digital signature verification reveals they were not issued by the claimed entities.
 
-2. **Comparing with Legitimate Documents**: By checking what legitimate documents should have been issued (as shown in the table above), you can identify discrepancies:
+2. **Verifying Holder Binding**: When examining presentations of credentials, the holder binding verification (`cnf.kid` field) reveals that some legitimate credentials are being presented by unauthorized parties who cannot prove they are the intended holders.
+
+3. **Comparing with Legitimate Documents**: By checking what legitimate documents should have been issued (as shown in the table above), you can identify discrepancies:
    - The fraudulent bill of lading claims only 800kg was delivered, but the original purchase order was for 1000kg
    - The fraudulent certificate of origin claims Legit Shrimp Ltd as the source, but Legit Shrimp Ltd never issued such a certificate
    - No legitimate bill of lading was ever issued for the original shipment due to Cargo Line Ltd's hurricane damage
 
-3. **Tracing the Supply Chain**: The legitimate documents would show the intended flow:
+4. **Tracing the Supply Chain**: The legitimate documents would show the intended flow:
    - Chompchomp Ltd → Camarón Corriente S.A. (legitimate)
    - Camarón Corriente S.A. → Cargo Line Ltd → Chompchomp Ltd (should have been legitimate, but never happened due to hurricane)
    - Anonymous Distributor → Shady Distributor Ltd → Cargo Line Ltd (legitimate but to fraudulent entity)
 
-4. **Identifying the Fraud**: The investigation reveals:
+5. **Identifying the Fraud**: The investigation reveals:
    - Shady Carrier Ltd stole 200kg of shrimp and forged documentation
    - Shady Distributor Ltd forged certificates using Legit Shrimp Ltd's identity
+   - Shady Distributor Ltd attempted to present a legitimate certificate they weren't authorized to hold
    - The contaminated shrimp entered the supply chain through this fraudulent pathway
 
 ## Scenario Overview
 
 A seafood importer discovers fraud in their supply chain when contaminated shrimp products are traced back through forged documentation. 
-The investigation reveals a complex web of document forgery, cargo theft, and identity theft that spans multiple countries and jurisdictions.
+The investigation reveals a complex web of document forgery, cargo theft, identity theft, and credential theft that spans multiple countries and jurisdictions.
 
 ### Phase 1: Legitimate Transaction Setup
 1. **Chompchomp Ltd** (BVI) signs contract with **Camarón Corriente S.A.** (Venezuela)
@@ -81,9 +86,14 @@ The investigation reveals a complex web of document forgery, cargo theft, and id
 10. **Cargo Line Ltd** (now repaired) delivers the fraudulent goods
 11. Customs broker files paperwork as HS Code 0306.17, Trinidad & Tobago origin
 
-### Phase 5: Discovery and Investigation
-12. Lab tests reveal chemical contamination
-13. Investigation launched - **You are the auditor**
+### Phase 5: Credential Theft Attempt
+12. **Shady Distributor Ltd** gains access to a legitimate Certificate of Origin issued by **Legit Shrimp Ltd** to **Honest Importer Ltd**
+13. **Shady Distributor Ltd** attempts to present this stolen credential as proof of their shrimp's origin
+14. Presentation fails due to holder binding verification (wrong `cnf.kid`)
+
+### Phase 6: Discovery and Investigation
+15. Lab tests reveal chemical contamination
+16. Investigation launched - **You are the auditor**
 
 
 ## Supply Chain Entities
@@ -97,6 +107,7 @@ The investigation reveals a complex web of document forgery, cargo theft, and id
 | **Shady Distributor Ltd** | Road Town, Tortola, British Virgin Islands | `https://shady-distributor.example/entity/bvi-002` | Seafood Distributor / Intermediary | 🚨 **Fraudulent** |
 | **Legit Shrimp Ltd** | Port of Spain, Trinidad and Tobago | `https://legit-shrimp.example/entity/tt-pos-001` | Seafood Supplier / Original | ✅ Legitimate (identity stolen) |
 | **Anonymous Distributor** | Charlotte Amalie, St. Thomas, U.S. Virgin Islands | `https://anonymous-distributor.example/entity/vi-stt-001` | Seafood Distributor / Final Buyer | ✅ Legitimate (victim) |
+| **Honest Importer Ltd** | Port of Spain, Trinidad and Tobago | `https://honest-importer.example/entity/tt-001` | Seafood Importer / Credential Victim | ✅ Legitimate (credential stolen) |
 
 ## Supply Chain Documents
 
@@ -113,6 +124,7 @@ These are the original documents, because they are digitally signed, they cannot
 | **Secondary Purchase Order** | `purchase-order-credential.yaml` | `https://anonymous-distributor.example/entity/vi-stt-001` | `https://shady-distributor.example/entity/bvi-002` |
 | **Secondary Commercial Invoice** | `commercial-invoice-credential.yaml` | `https://shady-distributor.example/entity/bvi-002` | `https://anonymous-distributor.example/entity/vi-stt-001` |
 | **Secondary Bill of Lading** | `bill-of-lading-credential.yaml` | `https://cargo-line.example/entity/pr-sju-001` | `https://anonymous-distributor.example/entity/vi-stt-001`  |
+| **Stolen Certificate of Origin** | `certificate-of-origin-credential.yaml` | `https://legit-shrimp.example/entity/tt-pos-001` | `https://honest-importer.example/entity/tt-001` |
 
 ### Fraudulent Documents 
 
@@ -121,8 +133,19 @@ These documents are substitutes for the original documents, and they are used to
 
 | Document | Schema | From (Issuer) | To (Holder) |
 |---------------|--------|---------------|-------------|---------|
-| **Fraudulent Bill of Lading** | `bill-of-lading-credential.yaml` | `https://shady-carrier.example/entity/aw-oru-001` | `https://chompchomp.example/entity/bvi-001` |
 | **Fraudulent Certificate of Origin** | `certificate-of-origin-credential.yaml` | `https://legit-shrimp.example/entity/tt-pos-001` (forged) | `https://shady-distributor.example/entity/bvi-002` |
+
+**Note:** The fraudulent certificate is not legitimate because it is signed with keys that are not authorized to make assertions on behalf of `Legit Shrimp Ltd`. While the document claims to be issued by `Legit Shrimp Ltd`, the digital signature verification would reveal that it was not signed by `Legit Shrimp Ltd`'s authorized signing keys, and was instead signed with Shady Distributor Ltd's signing keys.
+
+### Fraudulent Presentations
+
+These are legitimate credentials that are being presented by unauthorized parties who are not the intended holders.
+
+| Document | Schema | Original Issuer | Original Holder | Unauthorized Presenter | Detection Method |
+|---------------|--------|-----------------|-----------------|----------------------|------------------|
+| **Stolen Certificate of Origin** | `certificate-of-origin-credential.yaml` | `https://legit-shrimp.example/entity/tt-pos-001` | `https://honest-importer.example/entity/tt-001` | `https://shady-distributor.example/entity/bvi-002` | Holder binding verification failure (`cnf.kid` mismatch) |
+
+**Note:** The stolen certificate is a legitimate credential issued by `Legit Shrimp Ltd` to `Honest Importer Ltd`, but `Shady Distributor Ltd` gained unauthorized access to it and attempted to present it as proof of their shrimp's origin. The presentation fails during verification because `Shady Distributor Ltd` cannot provide the private key corresponding to the `cnf.kid` field that binds the credential to `Honest Importer Ltd`.
 
 ## Analysis
 

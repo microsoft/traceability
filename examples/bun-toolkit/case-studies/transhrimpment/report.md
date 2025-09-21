@@ -10,12 +10,12 @@ This report documents a digital forensic investigation of the "Transhrimpment" s
 
 ## Step 1: Identify Entities
 
-Identifying supply chain entities through their geographic locations and validating their controller documents:
+Identifying supply chain entities, gather their addresses, locations and aliases for comparison to supply chain documents:
 
 
 ### ✅ Chompchomp Ltd
 
-**Controller Document Status:** ✅ Valid
+**Controller Document Status:** Valid
 
 <details>
 <summary>📄 View Controller Document</summary>
@@ -222,7 +222,7 @@ Identifying supply chain entities through their geographic locations and validat
 
 ### ✅ Camarón Corriente S.A.
 
-**Controller Document Status:** ✅ Valid
+**Controller Document Status:** Valid
 
 <details>
 <summary>📄 View Controller Document</summary>
@@ -397,7 +397,7 @@ Identifying supply chain entities through their geographic locations and validat
 
 ### ✅ Legit Shrimp Ltd
 
-**Controller Document Status:** ✅ Valid
+**Controller Document Status:** Valid
 
 <details>
 <summary>📄 View Controller Document</summary>
@@ -574,7 +574,7 @@ Identifying supply chain entities through their geographic locations and validat
 
 ### ✅ Shady Carrier Ltd
 
-**Controller Document Status:** ✅ Valid
+**Controller Document Status:** Valid
 
 <details>
 <summary>📄 View Controller Document</summary>
@@ -741,7 +741,7 @@ Identifying supply chain entities through their geographic locations and validat
 
 ### ✅ Shady Distributor Ltd
 
-**Controller Document Status:** ✅ Valid
+**Controller Document Status:** Valid
 
 <details>
 <summary>📄 View Controller Document</summary>
@@ -908,7 +908,7 @@ Identifying supply chain entities through their geographic locations and validat
 
 ### ✅ Cargo Line Ltd
 
-**Controller Document Status:** ✅ Valid
+**Controller Document Status:** Valid
 
 <details>
 <summary>📄 View Controller Document</summary>
@@ -1085,7 +1085,7 @@ Identifying supply chain entities through their geographic locations and validat
 
 ### ✅ Anonymous Distributor
 
-**Controller Document Status:** ✅ Valid
+**Controller Document Status:** Valid
 
 <details>
 <summary>📄 View Controller Document</summary>
@@ -1250,6 +1250,223 @@ Identifying supply chain entities through their geographic locations and validat
           "addressCountry": "VI"
         },
         "legitimacy": "legitimate-victim"
+      }
+    }
+  ]
+}
+```
+
+
+</details>
+
+
+### ✅ Honest Importer Inc
+
+**Controller Document Status:** Valid
+
+<details>
+<summary>📄 View Controller Document</summary>
+
+```json
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://honest-importer.example/entity/us-mia-001",
+  "verificationMethod": [
+    {
+      "id": "https://honest-importer.example/entity/us-mia-001#Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI",
+      "type": "JsonWebKey",
+      "controller": "https://honest-importer.example/entity/us-mia-001",
+      "publicKeyJwk": {
+        "kid": "Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "ji254yTxwgtXnmK09oIhM38Y-_23wWRv1S3vh2ZXVU8",
+        "y": "QLCAo0sieFK9cfSSakkRg_P0_-UiXwR3HyXIoULlde4",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://honest-importer.example/entity/us-mia-001#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E",
+      "type": "JsonWebKey",
+      "controller": "https://honest-importer.example/entity/us-mia-001",
+      "publicKeyJwk": {
+        "kid": "Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "pWpf2ySOo7Q5YaajR0gwmjS6NFMJaRfK1J9rY-exwDU",
+        "y": "pnKf8E48uq_e4amkTD5Lwm5s9WY2YwXXh6lG4M2PNUY",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://honest-importer.example/entity/us-mia-001#Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI"
+  ],
+  "authentication": [
+    "https://honest-importer.example/entity/us-mia-001#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432107",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34327",
+    "urn:ietf:spice:glue:pen:12351"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.1918,
+          25.7617
+        ]
+      },
+      "properties": {
+        "name": "Honest Importer Inc Headquarters",
+        "type": "Seafood Importer",
+        "role": "headquarters",
+        "address": {
+          "streetAddress": "1001 Biscayne Boulevard",
+          "addressLocality": "Miami",
+          "addressRegion": "Florida",
+          "addressCountry": "US"
+        },
+        "legitimacy": "legitimate"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.1776,
+          25.7877
+        ]
+      },
+      "properties": {
+        "name": "Honest Importer Inc Processing Facility",
+        "type": "Processing Facility",
+        "role": "import-processing",
+        "capacity": "15000kg",
+        "certifications": [
+          "HACCP",
+          "FDA"
+        ]
+      }
+    }
+  ]
+}
+```
+
+</details>
+
+<details>
+<summary>📍 View Geographic Analysis</summary>
+
+
+```geojson
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://honest-importer.example/entity/us-mia-001",
+  "verificationMethod": [
+    {
+      "id": "https://honest-importer.example/entity/us-mia-001#Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI",
+      "type": "JsonWebKey",
+      "controller": "https://honest-importer.example/entity/us-mia-001",
+      "publicKeyJwk": {
+        "kid": "Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "ji254yTxwgtXnmK09oIhM38Y-_23wWRv1S3vh2ZXVU8",
+        "y": "QLCAo0sieFK9cfSSakkRg_P0_-UiXwR3HyXIoULlde4",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://honest-importer.example/entity/us-mia-001#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E",
+      "type": "JsonWebKey",
+      "controller": "https://honest-importer.example/entity/us-mia-001",
+      "publicKeyJwk": {
+        "kid": "Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "pWpf2ySOo7Q5YaajR0gwmjS6NFMJaRfK1J9rY-exwDU",
+        "y": "pnKf8E48uq_e4amkTD5Lwm5s9WY2YwXXh6lG4M2PNUY",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://honest-importer.example/entity/us-mia-001#Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI"
+  ],
+  "authentication": [
+    "https://honest-importer.example/entity/us-mia-001#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432107",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34327",
+    "urn:ietf:spice:glue:pen:12351"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.1918,
+          25.7617
+        ]
+      },
+      "properties": {
+        "name": "Honest Importer Inc Headquarters",
+        "type": "Seafood Importer",
+        "role": "headquarters",
+        "address": {
+          "streetAddress": "1001 Biscayne Boulevard",
+          "addressLocality": "Miami",
+          "addressRegion": "Florida",
+          "addressCountry": "US"
+        },
+        "legitimacy": "legitimate"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.1776,
+          25.7877
+        ]
+      },
+      "properties": {
+        "name": "Honest Importer Inc Processing Facility",
+        "type": "Processing Facility",
+        "role": "import-processing",
+        "capacity": "15000kg",
+        "certifications": [
+          "HACCP",
+          "FDA"
+        ]
       }
     }
   ]

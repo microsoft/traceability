@@ -99,6 +99,7 @@ bun src/cli.ts generate-controller --config case-studies/transhrimpment/entity_c
 bun src/cli.ts generate-controller --config case-studies/transhrimpment/entity_configurations/shady-distributor-config.json --out case-studies/transhrimpment/controllers/shady-distributor-controller.json > /dev/null 2>&1
 bun src/cli.ts generate-controller --config case-studies/transhrimpment/entity_configurations/cargo-line-config.json --out case-studies/transhrimpment/controllers/cargo-line-controller.json > /dev/null 2>&1
 bun src/cli.ts generate-controller --config case-studies/transhrimpment/entity_configurations/anonymous-distributor-config.json --out case-studies/transhrimpment/controllers/anonymous-distributor-controller.json > /dev/null 2>&1
+bun src/cli.ts generate-controller --config case-studies/transhrimpment/entity_configurations/honest-importer-config.json --out case-studies/transhrimpment/controllers/honest-importer-controller.json > /dev/null 2>&1
 
 # Function to extract entity info and GeoJSON preview from validation
 extract_entity_geojson() {
@@ -131,6 +132,7 @@ extract_entity_geojson "Shady Carrier Ltd" "case-studies/transhrimpment/controll
 extract_entity_geojson "Shady Distributor Ltd" "case-studies/transhrimpment/controllers/shady-distributor-controller.json"
 extract_entity_geojson "Cargo Line Ltd" "case-studies/transhrimpment/controllers/cargo-line-controller.json"
 extract_entity_geojson "Anonymous Distributor" "case-studies/transhrimpment/controllers/anonymous-distributor-controller.json"
+extract_entity_geojson "Honest Importer Inc" "case-studies/transhrimpment/controllers/honest-importer-controller.json"
 
 # Add final summary
 echo "" >> "$REPORT_FILE"
