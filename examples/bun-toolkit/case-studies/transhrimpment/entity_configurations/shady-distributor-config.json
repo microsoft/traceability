@@ -1,6 +1,6 @@
 {
   "type": "FeatureCollection",
-  "id": "https://shady-distributor.example/entity/bvi-002",
+  "id": "https://shady-distributor.example",
   "contexts": [
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],

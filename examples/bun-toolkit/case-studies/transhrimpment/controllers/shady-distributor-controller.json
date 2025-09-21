@@ -3,12 +3,12 @@
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://shady-distributor.example/entity/bvi-002",
+  "id": "https://shady-distributor.example",
   "verificationMethod": [
     {
-      "id": "https://shady-distributor.example/entity/bvi-002#4yFP_7YUQvcDt1XLqnWzQ962oehxO8QAy_Y4IMP2uDQ",
+      "id": "https://shady-distributor.example#4yFP_7YUQvcDt1XLqnWzQ962oehxO8QAy_Y4IMP2uDQ",
       "type": "JsonWebKey",
-      "controller": "https://shady-distributor.example/entity/bvi-002",
+      "controller": "https://shady-distributor.example",
       "publicKeyJwk": {
         "kid": "4yFP_7YUQvcDt1XLqnWzQ962oehxO8QAy_Y4IMP2uDQ",
         "kty": "EC",
@@ -22,9 +22,9 @@
       }
     },
     {
-      "id": "https://shady-distributor.example/entity/bvi-002#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
+      "id": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
       "type": "JsonWebKey",
-      "controller": "https://shady-distributor.example/entity/bvi-002",
+      "controller": "https://shady-distributor.example",
       "publicKeyJwk": {
         "kid": "ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
         "kty": "EC",
@@ -39,10 +39,10 @@
     }
   ],
   "assertionMethod": [
-    "https://shady-distributor.example/entity/bvi-002#4yFP_7YUQvcDt1XLqnWzQ962oehxO8QAy_Y4IMP2uDQ"
+    "https://shady-distributor.example#4yFP_7YUQvcDt1XLqnWzQ962oehxO8QAy_Y4IMP2uDQ"
   ],
   "authentication": [
-    "https://shady-distributor.example/entity/bvi-002#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8"
+    "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8"
   ],
   "type": "FeatureCollection",
   "features": [

@@ -3,12 +3,12 @@
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+  "id": "https://camaron-corriente.example",
   "verificationMethod": [
     {
-      "id": "https://camaron-corriente.example/entity/ve-pbc-001#yEO0pZQ6_bFYlZZkmmK6MQLrydeubOdKdtYO-cXKsAg",
+      "id": "https://camaron-corriente.example#yEO0pZQ6_bFYlZZkmmK6MQLrydeubOdKdtYO-cXKsAg",
       "type": "JsonWebKey",
-      "controller": "https://camaron-corriente.example/entity/ve-pbc-001",
+      "controller": "https://camaron-corriente.example",
       "publicKeyJwk": {
         "kid": "yEO0pZQ6_bFYlZZkmmK6MQLrydeubOdKdtYO-cXKsAg",
         "kty": "EC",
@@ -22,9 +22,9 @@
       }
     },
     {
-      "id": "https://camaron-corriente.example/entity/ve-pbc-001#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0",
+      "id": "https://camaron-corriente.example#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0",
       "type": "JsonWebKey",
-      "controller": "https://camaron-corriente.example/entity/ve-pbc-001",
+      "controller": "https://camaron-corriente.example",
       "publicKeyJwk": {
         "kid": "RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0",
         "kty": "EC",
@@ -39,10 +39,10 @@
     }
   ],
   "assertionMethod": [
-    "https://camaron-corriente.example/entity/ve-pbc-001#yEO0pZQ6_bFYlZZkmmK6MQLrydeubOdKdtYO-cXKsAg"
+    "https://camaron-corriente.example#yEO0pZQ6_bFYlZZkmmK6MQLrydeubOdKdtYO-cXKsAg"
   ],
   "authentication": [
-    "https://camaron-corriente.example/entity/ve-pbc-001#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0"
+    "https://camaron-corriente.example#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0"
   ],
   "alsoKnownAs": [
     "urn:ietf:spice:glue:gln:4598765432102",

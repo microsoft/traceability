@@ -3,12 +3,12 @@
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://anonymous-distributor.example/entity/vi-stt-001",
+  "id": "https://anonymous-distributor.example",
   "verificationMethod": [
     {
-      "id": "https://anonymous-distributor.example/entity/vi-stt-001#sjCcIQefWYDejyZh0KvGVhGBP4UQ9tNgP2X5TrMuHa8",
+      "id": "https://anonymous-distributor.example#sjCcIQefWYDejyZh0KvGVhGBP4UQ9tNgP2X5TrMuHa8",
       "type": "JsonWebKey",
-      "controller": "https://anonymous-distributor.example/entity/vi-stt-001",
+      "controller": "https://anonymous-distributor.example",
       "publicKeyJwk": {
         "kid": "sjCcIQefWYDejyZh0KvGVhGBP4UQ9tNgP2X5TrMuHa8",
         "kty": "EC",
@@ -22,9 +22,9 @@
       }
     },
     {
-      "id": "https://anonymous-distributor.example/entity/vi-stt-001#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
+      "id": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
       "type": "JsonWebKey",
-      "controller": "https://anonymous-distributor.example/entity/vi-stt-001",
+      "controller": "https://anonymous-distributor.example",
       "publicKeyJwk": {
         "kid": "-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
         "kty": "EC",
@@ -39,10 +39,10 @@
     }
   ],
   "assertionMethod": [
-    "https://anonymous-distributor.example/entity/vi-stt-001#sjCcIQefWYDejyZh0KvGVhGBP4UQ9tNgP2X5TrMuHa8"
+    "https://anonymous-distributor.example#sjCcIQefWYDejyZh0KvGVhGBP4UQ9tNgP2X5TrMuHa8"
   ],
   "authentication": [
-    "https://anonymous-distributor.example/entity/vi-stt-001#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A"
+    "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A"
   ],
   "alsoKnownAs": [
     "urn:ietf:spice:glue:gln:4598765432106",

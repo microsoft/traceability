@@ -7,11 +7,11 @@
     "VerifiableCredential",
     "PurchaseOrderCredential"
   ],
-  "issuer": "https://chompchomp.example/entity/bvi-001",
+  "issuer": "https://chompchomp.example",
   "validFrom": "2025-01-15T10:00:00Z",
   "validUntil": "2030-12-31T23:59:59Z",
   "cnf": {
-    "kid": "https://shady-distributor.example/entity/bvi-002#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8"
+    "kid": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8"
   },
   "credentialSubject": {
     "id": "https://orders.example/po-2024-001",
@@ -27,11 +27,11 @@
           "type": "PurchaseOrder",
           "orderNumber": "PO-2024-001",
           "buyer": {
-            "id": "https://chompchomp.example/entity/bvi-001",
+            "id": "https://chompchomp.example",
             "name": "Chompchomp Ltd"
           },
           "seller": {
-            "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+            "id": "https://camaron-corriente.example",
             "name": "Camarón Corriente S.A."
           },
           "description": "1000kg frozen shrimp",

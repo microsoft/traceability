@@ -3,12 +3,12 @@
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://chompchomp.example/entity/bvi-001",
+  "id": "https://chompchomp.example",
   "verificationMethod": [
     {
-      "id": "https://chompchomp.example/entity/bvi-001#O80NKS6ISt5XMx8BKM5xZwAPXCCtuj4_yzwjx4_EUuE",
+      "id": "https://chompchomp.example#O80NKS6ISt5XMx8BKM5xZwAPXCCtuj4_yzwjx4_EUuE",
       "type": "JsonWebKey",
-      "controller": "https://chompchomp.example/entity/bvi-001",
+      "controller": "https://chompchomp.example",
       "publicKeyJwk": {
         "kid": "O80NKS6ISt5XMx8BKM5xZwAPXCCtuj4_yzwjx4_EUuE",
         "kty": "EC",
@@ -22,9 +22,9 @@
       }
     },
     {
-      "id": "https://chompchomp.example/entity/bvi-001#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
+      "id": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
       "type": "JsonWebKey",
-      "controller": "https://chompchomp.example/entity/bvi-001",
+      "controller": "https://chompchomp.example",
       "publicKeyJwk": {
         "kid": "wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
         "kty": "EC",
@@ -39,10 +39,10 @@
     }
   ],
   "assertionMethod": [
-    "https://chompchomp.example/entity/bvi-001#O80NKS6ISt5XMx8BKM5xZwAPXCCtuj4_yzwjx4_EUuE"
+    "https://chompchomp.example#O80NKS6ISt5XMx8BKM5xZwAPXCCtuj4_yzwjx4_EUuE"
   ],
   "authentication": [
-    "https://chompchomp.example/entity/bvi-001#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE"
+    "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE"
   ],
   "alsoKnownAs": [
     "urn:ietf:spice:glue:gln:4598765432101",

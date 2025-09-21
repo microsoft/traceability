@@ -3,12 +3,12 @@
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://legit-shrimp.example/entity/tt-pos-001",
+  "id": "https://legit-shrimp.example",
   "verificationMethod": [
     {
-      "id": "https://legit-shrimp.example/entity/tt-pos-001#TTmxpbDxEQJKCTxehUHYHoz6qRQ00YenAsry4wJgwxE",
+      "id": "https://legit-shrimp.example#TTmxpbDxEQJKCTxehUHYHoz6qRQ00YenAsry4wJgwxE",
       "type": "JsonWebKey",
-      "controller": "https://legit-shrimp.example/entity/tt-pos-001",
+      "controller": "https://legit-shrimp.example",
       "publicKeyJwk": {
         "kid": "TTmxpbDxEQJKCTxehUHYHoz6qRQ00YenAsry4wJgwxE",
         "kty": "EC",
@@ -22,9 +22,9 @@
       }
     },
     {
-      "id": "https://legit-shrimp.example/entity/tt-pos-001#F4FzDU1QWvUzDpWAuwlpvO-A4TuixJ-92PXLUwwqKPo",
+      "id": "https://legit-shrimp.example#F4FzDU1QWvUzDpWAuwlpvO-A4TuixJ-92PXLUwwqKPo",
       "type": "JsonWebKey",
-      "controller": "https://legit-shrimp.example/entity/tt-pos-001",
+      "controller": "https://legit-shrimp.example",
       "publicKeyJwk": {
         "kid": "F4FzDU1QWvUzDpWAuwlpvO-A4TuixJ-92PXLUwwqKPo",
         "kty": "EC",
@@ -39,10 +39,10 @@
     }
   ],
   "assertionMethod": [
-    "https://legit-shrimp.example/entity/tt-pos-001#TTmxpbDxEQJKCTxehUHYHoz6qRQ00YenAsry4wJgwxE"
+    "https://legit-shrimp.example#TTmxpbDxEQJKCTxehUHYHoz6qRQ00YenAsry4wJgwxE"
   ],
   "authentication": [
-    "https://legit-shrimp.example/entity/tt-pos-001#F4FzDU1QWvUzDpWAuwlpvO-A4TuixJ-92PXLUwwqKPo"
+    "https://legit-shrimp.example#F4FzDU1QWvUzDpWAuwlpvO-A4TuixJ-92PXLUwwqKPo"
   ],
   "alsoKnownAs": [
     "urn:ietf:spice:glue:gln:4598765432103",

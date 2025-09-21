@@ -28,12 +28,12 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://chompchomp.example/entity/bvi-001",
+  "id": "https://chompchomp.example",
   "verificationMethod": [
     {
-      "id": "https://chompchomp.example/entity/bvi-001#O80NKS6ISt5XMx8BKM5xZwAPXCCtuj4_yzwjx4_EUuE",
+      "id": "https://chompchomp.example#O80NKS6ISt5XMx8BKM5xZwAPXCCtuj4_yzwjx4_EUuE",
       "type": "JsonWebKey",
-      "controller": "https://chompchomp.example/entity/bvi-001",
+      "controller": "https://chompchomp.example",
       "publicKeyJwk": {
         "kid": "O80NKS6ISt5XMx8BKM5xZwAPXCCtuj4_yzwjx4_EUuE",
         "kty": "EC",
@@ -53,12 +53,12 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://chompchomp.example/entity/bvi-001",
+  "id": "https://chompchomp.example",
   "verificationMethod": [
     {
-      "id": "https://chompchomp.example/entity/bvi-001#O80NKS6ISt5XMx8BKM5xZwAPXCCtuj4_yzwjx4_EUuE",
+      "id": "https://chompchomp.example#O80NKS6ISt5XMx8BKM5xZwAPXCCtuj4_yzwjx4_EUuE",
       "type": "JsonWebKey",
-      "controller": "https://chompchomp.example/entity/bvi-001",
+      "controller": "https://chompchomp.example",
       "publicKeyJwk": {
         "kid": "O80NKS6ISt5XMx8BKM5xZwAPXCCtuj4_yzwjx4_EUuE",
         "kty": "EC",
@@ -72,9 +72,9 @@ Identifying supply chain entities, gather their addresses, locations and aliases
       }
     },
     {
-      "id": "https://chompchomp.example/entity/bvi-001#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
+      "id": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
       "type": "JsonWebKey",
-      "controller": "https://chompchomp.example/entity/bvi-001",
+      "controller": "https://chompchomp.example",
       "publicKeyJwk": {
         "kid": "wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
         "kty": "EC",
@@ -89,10 +89,10 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     }
   ],
   "assertionMethod": [
-    "https://chompchomp.example/entity/bvi-001#O80NKS6ISt5XMx8BKM5xZwAPXCCtuj4_yzwjx4_EUuE"
+    "https://chompchomp.example#O80NKS6ISt5XMx8BKM5xZwAPXCCtuj4_yzwjx4_EUuE"
   ],
   "authentication": [
-    "https://chompchomp.example/entity/bvi-001#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE"
+    "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE"
   ],
   "alsoKnownAs": [
     "urn:ietf:spice:glue:gln:4598765432101",
@@ -158,12 +158,12 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+  "id": "https://camaron-corriente.example",
   "verificationMethod": [
     {
-      "id": "https://camaron-corriente.example/entity/ve-pbc-001#yEO0pZQ6_bFYlZZkmmK6MQLrydeubOdKdtYO-cXKsAg",
+      "id": "https://camaron-corriente.example#yEO0pZQ6_bFYlZZkmmK6MQLrydeubOdKdtYO-cXKsAg",
       "type": "JsonWebKey",
-      "controller": "https://camaron-corriente.example/entity/ve-pbc-001",
+      "controller": "https://camaron-corriente.example",
       "publicKeyJwk": {
         "kid": "yEO0pZQ6_bFYlZZkmmK6MQLrydeubOdKdtYO-cXKsAg",
         "kty": "EC",
@@ -183,12 +183,12 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+  "id": "https://camaron-corriente.example",
   "verificationMethod": [
     {
-      "id": "https://camaron-corriente.example/entity/ve-pbc-001#yEO0pZQ6_bFYlZZkmmK6MQLrydeubOdKdtYO-cXKsAg",
+      "id": "https://camaron-corriente.example#yEO0pZQ6_bFYlZZkmmK6MQLrydeubOdKdtYO-cXKsAg",
       "type": "JsonWebKey",
-      "controller": "https://camaron-corriente.example/entity/ve-pbc-001",
+      "controller": "https://camaron-corriente.example",
       "publicKeyJwk": {
         "kid": "yEO0pZQ6_bFYlZZkmmK6MQLrydeubOdKdtYO-cXKsAg",
         "kty": "EC",
@@ -202,9 +202,9 @@ Identifying supply chain entities, gather their addresses, locations and aliases
       }
     },
     {
-      "id": "https://camaron-corriente.example/entity/ve-pbc-001#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0",
+      "id": "https://camaron-corriente.example#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0",
       "type": "JsonWebKey",
-      "controller": "https://camaron-corriente.example/entity/ve-pbc-001",
+      "controller": "https://camaron-corriente.example",
       "publicKeyJwk": {
         "kid": "RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0",
         "kty": "EC",
@@ -219,10 +219,10 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     }
   ],
   "assertionMethod": [
-    "https://camaron-corriente.example/entity/ve-pbc-001#yEO0pZQ6_bFYlZZkmmK6MQLrydeubOdKdtYO-cXKsAg"
+    "https://camaron-corriente.example#yEO0pZQ6_bFYlZZkmmK6MQLrydeubOdKdtYO-cXKsAg"
   ],
   "authentication": [
-    "https://camaron-corriente.example/entity/ve-pbc-001#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0"
+    "https://camaron-corriente.example#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0"
   ],
   "alsoKnownAs": [
     "urn:ietf:spice:glue:gln:4598765432102",
@@ -272,12 +272,12 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://legit-shrimp.example/entity/tt-pos-001",
+  "id": "https://legit-shrimp.example",
   "verificationMethod": [
     {
-      "id": "https://legit-shrimp.example/entity/tt-pos-001#TTmxpbDxEQJKCTxehUHYHoz6qRQ00YenAsry4wJgwxE",
+      "id": "https://legit-shrimp.example#TTmxpbDxEQJKCTxehUHYHoz6qRQ00YenAsry4wJgwxE",
       "type": "JsonWebKey",
-      "controller": "https://legit-shrimp.example/entity/tt-pos-001",
+      "controller": "https://legit-shrimp.example",
       "publicKeyJwk": {
         "kid": "TTmxpbDxEQJKCTxehUHYHoz6qRQ00YenAsry4wJgwxE",
         "kty": "EC",
@@ -297,12 +297,12 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://legit-shrimp.example/entity/tt-pos-001",
+  "id": "https://legit-shrimp.example",
   "verificationMethod": [
     {
-      "id": "https://legit-shrimp.example/entity/tt-pos-001#TTmxpbDxEQJKCTxehUHYHoz6qRQ00YenAsry4wJgwxE",
+      "id": "https://legit-shrimp.example#TTmxpbDxEQJKCTxehUHYHoz6qRQ00YenAsry4wJgwxE",
       "type": "JsonWebKey",
-      "controller": "https://legit-shrimp.example/entity/tt-pos-001",
+      "controller": "https://legit-shrimp.example",
       "publicKeyJwk": {
         "kid": "TTmxpbDxEQJKCTxehUHYHoz6qRQ00YenAsry4wJgwxE",
         "kty": "EC",
@@ -316,9 +316,9 @@ Identifying supply chain entities, gather their addresses, locations and aliases
       }
     },
     {
-      "id": "https://legit-shrimp.example/entity/tt-pos-001#F4FzDU1QWvUzDpWAuwlpvO-A4TuixJ-92PXLUwwqKPo",
+      "id": "https://legit-shrimp.example#F4FzDU1QWvUzDpWAuwlpvO-A4TuixJ-92PXLUwwqKPo",
       "type": "JsonWebKey",
-      "controller": "https://legit-shrimp.example/entity/tt-pos-001",
+      "controller": "https://legit-shrimp.example",
       "publicKeyJwk": {
         "kid": "F4FzDU1QWvUzDpWAuwlpvO-A4TuixJ-92PXLUwwqKPo",
         "kty": "EC",
@@ -333,10 +333,10 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     }
   ],
   "assertionMethod": [
-    "https://legit-shrimp.example/entity/tt-pos-001#TTmxpbDxEQJKCTxehUHYHoz6qRQ00YenAsry4wJgwxE"
+    "https://legit-shrimp.example#TTmxpbDxEQJKCTxehUHYHoz6qRQ00YenAsry4wJgwxE"
   ],
   "authentication": [
-    "https://legit-shrimp.example/entity/tt-pos-001#F4FzDU1QWvUzDpWAuwlpvO-A4TuixJ-92PXLUwwqKPo"
+    "https://legit-shrimp.example#F4FzDU1QWvUzDpWAuwlpvO-A4TuixJ-92PXLUwwqKPo"
   ],
   "alsoKnownAs": [
     "urn:ietf:spice:glue:gln:4598765432103",
@@ -387,12 +387,12 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://shady-carrier.example/entity/aw-oru-001",
+  "id": "https://shady-carrier.example",
   "verificationMethod": [
     {
-      "id": "https://shady-carrier.example/entity/aw-oru-001#5oD1QCp0J1MVNcptL_UPotidwjw8pScO1Ky2cQedt2Q",
+      "id": "https://shady-carrier.example#5oD1QCp0J1MVNcptL_UPotidwjw8pScO1Ky2cQedt2Q",
       "type": "JsonWebKey",
-      "controller": "https://shady-carrier.example/entity/aw-oru-001",
+      "controller": "https://shady-carrier.example",
       "publicKeyJwk": {
         "kid": "5oD1QCp0J1MVNcptL_UPotidwjw8pScO1Ky2cQedt2Q",
         "kty": "EC",
@@ -412,12 +412,12 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://shady-carrier.example/entity/aw-oru-001",
+  "id": "https://shady-carrier.example",
   "verificationMethod": [
     {
-      "id": "https://shady-carrier.example/entity/aw-oru-001#5oD1QCp0J1MVNcptL_UPotidwjw8pScO1Ky2cQedt2Q",
+      "id": "https://shady-carrier.example#5oD1QCp0J1MVNcptL_UPotidwjw8pScO1Ky2cQedt2Q",
       "type": "JsonWebKey",
-      "controller": "https://shady-carrier.example/entity/aw-oru-001",
+      "controller": "https://shady-carrier.example",
       "publicKeyJwk": {
         "kid": "5oD1QCp0J1MVNcptL_UPotidwjw8pScO1Ky2cQedt2Q",
         "kty": "EC",
@@ -431,9 +431,9 @@ Identifying supply chain entities, gather their addresses, locations and aliases
       }
     },
     {
-      "id": "https://shady-carrier.example/entity/aw-oru-001#RZp0CzLsm1iBdc6RyR6ryCFb3sNiOIdzzSf92n7fBJg",
+      "id": "https://shady-carrier.example#RZp0CzLsm1iBdc6RyR6ryCFb3sNiOIdzzSf92n7fBJg",
       "type": "JsonWebKey",
-      "controller": "https://shady-carrier.example/entity/aw-oru-001",
+      "controller": "https://shady-carrier.example",
       "publicKeyJwk": {
         "kid": "RZp0CzLsm1iBdc6RyR6ryCFb3sNiOIdzzSf92n7fBJg",
         "kty": "EC",
@@ -448,10 +448,10 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     }
   ],
   "assertionMethod": [
-    "https://shady-carrier.example/entity/aw-oru-001#5oD1QCp0J1MVNcptL_UPotidwjw8pScO1Ky2cQedt2Q"
+    "https://shady-carrier.example#5oD1QCp0J1MVNcptL_UPotidwjw8pScO1Ky2cQedt2Q"
   ],
   "authentication": [
-    "https://shady-carrier.example/entity/aw-oru-001#RZp0CzLsm1iBdc6RyR6ryCFb3sNiOIdzzSf92n7fBJg"
+    "https://shady-carrier.example#RZp0CzLsm1iBdc6RyR6ryCFb3sNiOIdzzSf92n7fBJg"
   ],
   "type": "FeatureCollection",
   "features": [
@@ -497,12 +497,12 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://shady-distributor.example/entity/bvi-002",
+  "id": "https://shady-distributor.example",
   "verificationMethod": [
     {
-      "id": "https://shady-distributor.example/entity/bvi-002#4yFP_7YUQvcDt1XLqnWzQ962oehxO8QAy_Y4IMP2uDQ",
+      "id": "https://shady-distributor.example#4yFP_7YUQvcDt1XLqnWzQ962oehxO8QAy_Y4IMP2uDQ",
       "type": "JsonWebKey",
-      "controller": "https://shady-distributor.example/entity/bvi-002",
+      "controller": "https://shady-distributor.example",
       "publicKeyJwk": {
         "kid": "4yFP_7YUQvcDt1XLqnWzQ962oehxO8QAy_Y4IMP2uDQ",
         "kty": "EC",
@@ -522,12 +522,12 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://shady-distributor.example/entity/bvi-002",
+  "id": "https://shady-distributor.example",
   "verificationMethod": [
     {
-      "id": "https://shady-distributor.example/entity/bvi-002#4yFP_7YUQvcDt1XLqnWzQ962oehxO8QAy_Y4IMP2uDQ",
+      "id": "https://shady-distributor.example#4yFP_7YUQvcDt1XLqnWzQ962oehxO8QAy_Y4IMP2uDQ",
       "type": "JsonWebKey",
-      "controller": "https://shady-distributor.example/entity/bvi-002",
+      "controller": "https://shady-distributor.example",
       "publicKeyJwk": {
         "kid": "4yFP_7YUQvcDt1XLqnWzQ962oehxO8QAy_Y4IMP2uDQ",
         "kty": "EC",
@@ -541,9 +541,9 @@ Identifying supply chain entities, gather their addresses, locations and aliases
       }
     },
     {
-      "id": "https://shady-distributor.example/entity/bvi-002#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
+      "id": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
       "type": "JsonWebKey",
-      "controller": "https://shady-distributor.example/entity/bvi-002",
+      "controller": "https://shady-distributor.example",
       "publicKeyJwk": {
         "kid": "ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
         "kty": "EC",
@@ -558,10 +558,10 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     }
   ],
   "assertionMethod": [
-    "https://shady-distributor.example/entity/bvi-002#4yFP_7YUQvcDt1XLqnWzQ962oehxO8QAy_Y4IMP2uDQ"
+    "https://shady-distributor.example#4yFP_7YUQvcDt1XLqnWzQ962oehxO8QAy_Y4IMP2uDQ"
   ],
   "authentication": [
-    "https://shady-distributor.example/entity/bvi-002#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8"
+    "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8"
   ],
   "type": "FeatureCollection",
   "features": [
@@ -607,12 +607,12 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://cargo-line.example/entity/pr-sju-001",
+  "id": "https://cargo-line.example",
   "verificationMethod": [
     {
-      "id": "https://cargo-line.example/entity/pr-sju-001#6MubhjOhD3qJYFu9avKeOpH0lr1CnwYEtDkBBGlEctE",
+      "id": "https://cargo-line.example#6MubhjOhD3qJYFu9avKeOpH0lr1CnwYEtDkBBGlEctE",
       "type": "JsonWebKey",
-      "controller": "https://cargo-line.example/entity/pr-sju-001",
+      "controller": "https://cargo-line.example",
       "publicKeyJwk": {
         "kid": "6MubhjOhD3qJYFu9avKeOpH0lr1CnwYEtDkBBGlEctE",
         "kty": "EC",
@@ -632,12 +632,12 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://cargo-line.example/entity/pr-sju-001",
+  "id": "https://cargo-line.example",
   "verificationMethod": [
     {
-      "id": "https://cargo-line.example/entity/pr-sju-001#6MubhjOhD3qJYFu9avKeOpH0lr1CnwYEtDkBBGlEctE",
+      "id": "https://cargo-line.example#6MubhjOhD3qJYFu9avKeOpH0lr1CnwYEtDkBBGlEctE",
       "type": "JsonWebKey",
-      "controller": "https://cargo-line.example/entity/pr-sju-001",
+      "controller": "https://cargo-line.example",
       "publicKeyJwk": {
         "kid": "6MubhjOhD3qJYFu9avKeOpH0lr1CnwYEtDkBBGlEctE",
         "kty": "EC",
@@ -651,9 +651,9 @@ Identifying supply chain entities, gather their addresses, locations and aliases
       }
     },
     {
-      "id": "https://cargo-line.example/entity/pr-sju-001#Is1nmYZZvkaJfQY-rwDp43RW9TbglgOBdkY44P_ialI",
+      "id": "https://cargo-line.example#Is1nmYZZvkaJfQY-rwDp43RW9TbglgOBdkY44P_ialI",
       "type": "JsonWebKey",
-      "controller": "https://cargo-line.example/entity/pr-sju-001",
+      "controller": "https://cargo-line.example",
       "publicKeyJwk": {
         "kid": "Is1nmYZZvkaJfQY-rwDp43RW9TbglgOBdkY44P_ialI",
         "kty": "EC",
@@ -668,10 +668,10 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     }
   ],
   "assertionMethod": [
-    "https://cargo-line.example/entity/pr-sju-001#6MubhjOhD3qJYFu9avKeOpH0lr1CnwYEtDkBBGlEctE"
+    "https://cargo-line.example#6MubhjOhD3qJYFu9avKeOpH0lr1CnwYEtDkBBGlEctE"
   ],
   "authentication": [
-    "https://cargo-line.example/entity/pr-sju-001#Is1nmYZZvkaJfQY-rwDp43RW9TbglgOBdkY44P_ialI"
+    "https://cargo-line.example#Is1nmYZZvkaJfQY-rwDp43RW9TbglgOBdkY44P_ialI"
   ],
   "alsoKnownAs": [
     "urn:ietf:spice:glue:gln:4598765432105",
@@ -722,12 +722,12 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://anonymous-distributor.example/entity/vi-stt-001",
+  "id": "https://anonymous-distributor.example",
   "verificationMethod": [
     {
-      "id": "https://anonymous-distributor.example/entity/vi-stt-001#sjCcIQefWYDejyZh0KvGVhGBP4UQ9tNgP2X5TrMuHa8",
+      "id": "https://anonymous-distributor.example#sjCcIQefWYDejyZh0KvGVhGBP4UQ9tNgP2X5TrMuHa8",
       "type": "JsonWebKey",
-      "controller": "https://anonymous-distributor.example/entity/vi-stt-001",
+      "controller": "https://anonymous-distributor.example",
       "publicKeyJwk": {
         "kid": "sjCcIQefWYDejyZh0KvGVhGBP4UQ9tNgP2X5TrMuHa8",
         "kty": "EC",
@@ -747,12 +747,12 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://anonymous-distributor.example/entity/vi-stt-001",
+  "id": "https://anonymous-distributor.example",
   "verificationMethod": [
     {
-      "id": "https://anonymous-distributor.example/entity/vi-stt-001#sjCcIQefWYDejyZh0KvGVhGBP4UQ9tNgP2X5TrMuHa8",
+      "id": "https://anonymous-distributor.example#sjCcIQefWYDejyZh0KvGVhGBP4UQ9tNgP2X5TrMuHa8",
       "type": "JsonWebKey",
-      "controller": "https://anonymous-distributor.example/entity/vi-stt-001",
+      "controller": "https://anonymous-distributor.example",
       "publicKeyJwk": {
         "kid": "sjCcIQefWYDejyZh0KvGVhGBP4UQ9tNgP2X5TrMuHa8",
         "kty": "EC",
@@ -766,9 +766,9 @@ Identifying supply chain entities, gather their addresses, locations and aliases
       }
     },
     {
-      "id": "https://anonymous-distributor.example/entity/vi-stt-001#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
+      "id": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
       "type": "JsonWebKey",
-      "controller": "https://anonymous-distributor.example/entity/vi-stt-001",
+      "controller": "https://anonymous-distributor.example",
       "publicKeyJwk": {
         "kid": "-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
         "kty": "EC",
@@ -783,10 +783,10 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     }
   ],
   "assertionMethod": [
-    "https://anonymous-distributor.example/entity/vi-stt-001#sjCcIQefWYDejyZh0KvGVhGBP4UQ9tNgP2X5TrMuHa8"
+    "https://anonymous-distributor.example#sjCcIQefWYDejyZh0KvGVhGBP4UQ9tNgP2X5TrMuHa8"
   ],
   "authentication": [
-    "https://anonymous-distributor.example/entity/vi-stt-001#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A"
+    "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A"
   ],
   "alsoKnownAs": [
     "urn:ietf:spice:glue:gln:4598765432106",
@@ -837,12 +837,12 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://honest-importer.example/entity/us-mia-001",
+  "id": "https://honest-importer.example",
   "verificationMethod": [
     {
-      "id": "https://honest-importer.example/entity/us-mia-001#Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI",
+      "id": "https://honest-importer.example#Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI",
       "type": "JsonWebKey",
-      "controller": "https://honest-importer.example/entity/us-mia-001",
+      "controller": "https://honest-importer.example",
       "publicKeyJwk": {
         "kid": "Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI",
         "kty": "EC",
@@ -862,12 +862,12 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://honest-importer.example/entity/us-mia-001",
+  "id": "https://honest-importer.example",
   "verificationMethod": [
     {
-      "id": "https://honest-importer.example/entity/us-mia-001#Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI",
+      "id": "https://honest-importer.example#Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI",
       "type": "JsonWebKey",
-      "controller": "https://honest-importer.example/entity/us-mia-001",
+      "controller": "https://honest-importer.example",
       "publicKeyJwk": {
         "kid": "Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI",
         "kty": "EC",
@@ -881,9 +881,9 @@ Identifying supply chain entities, gather their addresses, locations and aliases
       }
     },
     {
-      "id": "https://honest-importer.example/entity/us-mia-001#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E",
+      "id": "https://honest-importer.example#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E",
       "type": "JsonWebKey",
-      "controller": "https://honest-importer.example/entity/us-mia-001",
+      "controller": "https://honest-importer.example",
       "publicKeyJwk": {
         "kid": "Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E",
         "kty": "EC",
@@ -898,10 +898,10 @@ Identifying supply chain entities, gather their addresses, locations and aliases
     }
   ],
   "assertionMethod": [
-    "https://honest-importer.example/entity/us-mia-001#Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI"
+    "https://honest-importer.example#Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI"
   ],
   "authentication": [
-    "https://honest-importer.example/entity/us-mia-001#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E"
+    "https://honest-importer.example#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E"
   ],
   "alsoKnownAs": [
     "urn:ietf:spice:glue:gln:4598765432107",
@@ -976,32 +976,32 @@ $ bun src/cli.ts create-resolver-cache --controllers case-studies/transhrimpment
 ```
 Creating resolver cache from controllers in case-studies/transhrimpment/controllers and saving to case-studies/transhrimpment/resolver-cache.json...
 📄 Processing case-studies/transhrimpment/controllers/chompchomp-controller.json...
-✅ Added controller https://chompchomp.example/entity/bvi-001 to cache
+✅ Added controller https://chompchomp.example to cache
 📄 Processing case-studies/transhrimpment/controllers/anonymous-distributor-controller.json...
-✅ Added controller https://anonymous-distributor.example/entity/vi-stt-001 to cache
+✅ Added controller https://anonymous-distributor.example to cache
 📄 Processing case-studies/transhrimpment/controllers/shady-distributor-controller.json...
-✅ Added controller https://shady-distributor.example/entity/bvi-002 to cache
+✅ Added controller https://shady-distributor.example to cache
 📄 Processing case-studies/transhrimpment/controllers/legit-shrimp-controller.json...
-✅ Added controller https://legit-shrimp.example/entity/tt-pos-001 to cache
+✅ Added controller https://legit-shrimp.example to cache
 📄 Processing case-studies/transhrimpment/controllers/shady-carrier-controller.json...
-✅ Added controller https://shady-carrier.example/entity/aw-oru-001 to cache
+✅ Added controller https://shady-carrier.example to cache
 📄 Processing case-studies/transhrimpment/controllers/honest-importer-controller.json...
-✅ Added controller https://honest-importer.example/entity/us-mia-001 to cache
+✅ Added controller https://honest-importer.example to cache
 📄 Processing case-studies/transhrimpment/controllers/cargo-line-controller.json...
-✅ Added controller https://cargo-line.example/entity/pr-sju-001 to cache
+✅ Added controller https://cargo-line.example to cache
 📄 Processing case-studies/transhrimpment/controllers/camaron-corriente-controller.json...
-✅ Added controller https://camaron-corriente.example/entity/ve-pbc-001 to cache
+✅ Added controller https://camaron-corriente.example to cache
 ✅ Resolver cache saved to case-studies/transhrimpment/resolver-cache.json with 8 controllers
 
 📋 Resolver Cache Summary:
-   - https://chompchomp.example/entity/bvi-001
-   - https://anonymous-distributor.example/entity/vi-stt-001
-   - https://shady-distributor.example/entity/bvi-002
-   - https://legit-shrimp.example/entity/tt-pos-001
-   - https://shady-carrier.example/entity/aw-oru-001
-   - https://honest-importer.example/entity/us-mia-001
-   - https://cargo-line.example/entity/pr-sju-001
-   - https://camaron-corriente.example/entity/ve-pbc-001
+   - https://chompchomp.example
+   - https://anonymous-distributor.example
+   - https://shady-distributor.example
+   - https://legit-shrimp.example
+   - https://shady-carrier.example
+   - https://honest-importer.example
+   - https://cargo-line.example
+   - https://camaron-corriente.example
 ```
 
 </details>
@@ -1038,9 +1038,9 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
     "VerifiableCredential",
     "PurchaseOrderCredential"
   ],
-  "issuer": "https://chompchomp.example/entity/bvi-001",
+  "issuer": "https://chompchomp.example",
   "cnf": {
-    "kid": "https://camaron-corriente.example/entity/ve-pbc-001#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0"
+    "kid": "https://camaron-corriente.example#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0"
   },
   "credentialSubject": {
     "id": "https://orders.example/po-2024-001",
@@ -1101,9 +1101,9 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
     "VerifiableCredential",
     "CommercialInvoiceCredential"
   ],
-  "issuer": "https://camaron-corriente.example/entity/ve-pbc-001",
+  "issuer": "https://camaron-corriente.example",
   "cnf": {
-    "kid": "https://chompchomp.example/entity/bvi-001#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE"
+    "kid": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE"
   },
   "credentialSubject": {
     "id": "https://invoices.example/inv-2024-001",
@@ -1212,9 +1212,9 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
     "VerifiableCredential",
     "BillOfLadingCredential"
   ],
-  "issuer": "https://shady-carrier.example/entity/aw-oru-001",
+  "issuer": "https://shady-carrier.example",
   "cnf": {
-    "kid": "https://chompchomp.example/entity/bvi-001#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE"
+    "kid": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE"
   },
   "credentialSubject": {
     "id": "https://shipments.example/bol-2024-001",
@@ -1371,9 +1371,9 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
     "VerifiableCredential",
     "BillOfLadingCredential"
   ],
-  "issuer": "https://shady-carrier.example/entity/aw-oru-001",
+  "issuer": "https://shady-carrier.example",
   "cnf": {
-    "kid": "https://anonymous-distributor.example/entity/vi-stt-001#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A"
+    "kid": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A"
   },
   "credentialSubject": {
     "id": "https://shipments.example/bol-2024-001",
@@ -1434,9 +1434,9 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
     "VerifiableCredential",
     "CertificateOfOriginCredential"
   ],
-  "issuer": "https://legit-shrimp.example/entity/tt-pos-001",
+  "issuer": "https://legit-shrimp.example",
   "cnf": {
-    "kid": "https://honest-importer.example/entity/us-mia-001#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E"
+    "kid": "https://honest-importer.example#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E"
   },
   "credentialSubject": {
     "id": "https://certificates.example/coo-2024-001",
@@ -1580,7 +1580,7 @@ bun src/cli.ts verify-presentation --presentation case-studies/transhrimpment/pr
 
 **Test Result:**
 ```
-❌ Presentation verification failed: Error: Presentation key mismatch: credential requires key Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E but presentation was signed with ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8
+❌ Presentation verification failed: Error: Controller not found for id: https://shady-distributor.example/entity/bvi-002
 ```
 
 **✅ CREDENTIAL THEFT SUCCESSFULLY DETECTED**: The presentation failed because the credential was bound to Honest Importer Ltd (via cnf.kid), but Shady Distributor Ltd attempted to present it.

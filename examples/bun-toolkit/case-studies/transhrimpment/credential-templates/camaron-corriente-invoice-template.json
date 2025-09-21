@@ -7,11 +7,11 @@
     "VerifiableCredential",
     "CommercialInvoiceCredential"
   ],
-  "issuer": "https://camaron-corriente.example/entity/ve-pbc-001",
+  "issuer": "https://camaron-corriente.example",
   "validFrom": "2025-01-20T10:00:00Z",
   "validUntil": "2030-12-31T23:59:59Z",
   "cnf": {
-    "kid": "https://chompchomp.example/entity/bvi-001#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE"
+    "kid": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE"
   },
   "credentialSubject": {
     "id": "https://invoices.example/inv-2024-001",
@@ -27,11 +27,11 @@
           "type": "CommercialInvoice",
           "invoiceNumber": "INV-2024-001",
           "seller": {
-            "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+            "id": "https://camaron-corriente.example",
             "name": "Camarón Corriente S.A."
           },
           "buyer": {
-            "id": "https://chompchomp.example/entity/bvi-001",
+            "id": "https://chompchomp.example",
             "name": "Chompchomp Ltd"
           },
           "items": [

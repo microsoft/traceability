@@ -1,6 +1,6 @@
 {
   "type": "FeatureCollection",
-  "id": "https://anonymous-distributor.example/entity/vi-stt-001",
+  "id": "https://anonymous-distributor.example",
   "alsoKnownAs": [
     "urn:ietf:spice:glue:gln:4598765432106",
     "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34326",

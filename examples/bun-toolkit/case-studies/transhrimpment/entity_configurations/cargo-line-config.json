@@ -1,6 +1,6 @@
 {
   "type": "FeatureCollection",
-  "id": "https://cargo-line.example/entity/pr-sju-001",
+  "id": "https://cargo-line.example",
   "alsoKnownAs": [
     "urn:ietf:spice:glue:gln:4598765432105",
     "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34325",

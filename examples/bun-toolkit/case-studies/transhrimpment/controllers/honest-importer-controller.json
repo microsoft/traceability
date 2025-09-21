@@ -3,12 +3,12 @@
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://honest-importer.example/entity/us-mia-001",
+  "id": "https://honest-importer.example",
   "verificationMethod": [
     {
-      "id": "https://honest-importer.example/entity/us-mia-001#Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI",
+      "id": "https://honest-importer.example#Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI",
       "type": "JsonWebKey",
-      "controller": "https://honest-importer.example/entity/us-mia-001",
+      "controller": "https://honest-importer.example",
       "publicKeyJwk": {
         "kid": "Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI",
         "kty": "EC",
@@ -22,9 +22,9 @@
       }
     },
     {
-      "id": "https://honest-importer.example/entity/us-mia-001#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E",
+      "id": "https://honest-importer.example#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E",
       "type": "JsonWebKey",
-      "controller": "https://honest-importer.example/entity/us-mia-001",
+      "controller": "https://honest-importer.example",
       "publicKeyJwk": {
         "kid": "Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E",
         "kty": "EC",
@@ -39,10 +39,10 @@
     }
   ],
   "assertionMethod": [
-    "https://honest-importer.example/entity/us-mia-001#Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI"
+    "https://honest-importer.example#Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI"
   ],
   "authentication": [
-    "https://honest-importer.example/entity/us-mia-001#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E"
+    "https://honest-importer.example#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E"
   ],
   "alsoKnownAs": [
     "urn:ietf:spice:glue:gln:4598765432107",

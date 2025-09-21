@@ -1,6 +1,6 @@
 {
   "type": "FeatureCollection",
-  "id": "https://shady-carrier.example/entity/aw-oru-001",
+  "id": "https://shady-carrier.example",
   "contexts": [
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],

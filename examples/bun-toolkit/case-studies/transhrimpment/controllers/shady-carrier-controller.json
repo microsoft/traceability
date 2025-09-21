@@ -3,12 +3,12 @@
     "https://www.w3.org/ns/cid/v1",
     "https://geojson.org/geojson-ld/geojson-context.jsonld"
   ],
-  "id": "https://shady-carrier.example/entity/aw-oru-001",
+  "id": "https://shady-carrier.example",
   "verificationMethod": [
     {
-      "id": "https://shady-carrier.example/entity/aw-oru-001#5oD1QCp0J1MVNcptL_UPotidwjw8pScO1Ky2cQedt2Q",
+      "id": "https://shady-carrier.example#5oD1QCp0J1MVNcptL_UPotidwjw8pScO1Ky2cQedt2Q",
       "type": "JsonWebKey",
-      "controller": "https://shady-carrier.example/entity/aw-oru-001",
+      "controller": "https://shady-carrier.example",
       "publicKeyJwk": {
         "kid": "5oD1QCp0J1MVNcptL_UPotidwjw8pScO1Ky2cQedt2Q",
         "kty": "EC",
@@ -22,9 +22,9 @@
       }
     },
     {
-      "id": "https://shady-carrier.example/entity/aw-oru-001#RZp0CzLsm1iBdc6RyR6ryCFb3sNiOIdzzSf92n7fBJg",
+      "id": "https://shady-carrier.example#RZp0CzLsm1iBdc6RyR6ryCFb3sNiOIdzzSf92n7fBJg",
       "type": "JsonWebKey",
-      "controller": "https://shady-carrier.example/entity/aw-oru-001",
+      "controller": "https://shady-carrier.example",
       "publicKeyJwk": {
         "kid": "RZp0CzLsm1iBdc6RyR6ryCFb3sNiOIdzzSf92n7fBJg",
         "kty": "EC",
@@ -39,10 +39,10 @@
     }
   ],
   "assertionMethod": [
-    "https://shady-carrier.example/entity/aw-oru-001#5oD1QCp0J1MVNcptL_UPotidwjw8pScO1Ky2cQedt2Q"
+    "https://shady-carrier.example#5oD1QCp0J1MVNcptL_UPotidwjw8pScO1Ky2cQedt2Q"
   ],
   "authentication": [
-    "https://shady-carrier.example/entity/aw-oru-001#RZp0CzLsm1iBdc6RyR6ryCFb3sNiOIdzzSf92n7fBJg"
+    "https://shady-carrier.example#RZp0CzLsm1iBdc6RyR6ryCFb3sNiOIdzzSf92n7fBJg"
   ],
   "type": "FeatureCollection",
   "features": [
