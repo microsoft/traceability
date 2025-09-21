@@ -45,9 +45,6 @@ export function generateEntityReport(options: EntityReportOptions): string {
   sections.push(`### ${statusEmoji} ${entityName}`);
   sections.push('');
 
-  // Validation status
-  const statusText = validationResult.isValid ? 'Valid' : 'Invalid';
-  sections.push(`**Controller Document Status:** ${statusText}`);
   sections.push('');
 
   // Controller document section
@@ -74,8 +71,20 @@ export function generateControllerDocumentSection(controllerDocument: any): stri
   lines.push('<details>');
   lines.push('<summary>📄 View Controller Document</summary>');
   lines.push('');
-  lines.push('```json');
-  lines.push(JSON.stringify(controllerDocument, null, 2));
+  lines.push('```jsonc');
+
+  // Truncate JSON to 16 lines to keep report manageable
+  const jsonLines = JSON.stringify(controllerDocument, null, 2).split('\n');
+  let content = '';
+
+  if (jsonLines.length > 16) {
+    const truncatedLines = jsonLines.slice(0, 14);
+    content = truncatedLines.join('\n') + '\n  // ... (truncated for brevity)\n}';
+  } else {
+    content = jsonLines.join('\n');
+  }
+
+  lines.push(content);
   lines.push('```');
   lines.push('');
   lines.push('</details>');

@@ -83,8 +83,10 @@ run_command_and_report() {
     echo '```' >> "$REPORT_FILE"
     echo "$output" >> "$REPORT_FILE"
     echo '```' >> "$REPORT_FILE"
+    if [ $exit_code -ne 0 ]; then
+        echo "Exit code: $exit_code" >> "$REPORT_FILE"
+    fi
     echo "" >> "$REPORT_FILE"
-    echo "Exit code: $exit_code" >> "$REPORT_FILE"
     echo "</details>" >> "$REPORT_FILE"
 
     return $exit_code
@@ -138,28 +140,7 @@ extract_entity_geojson "Honest Importer Inc" "case-studies/transhrimpment/contro
 echo "" >> "$REPORT_FILE"
 cat >> "$REPORT_FILE" << 'EOF'
 
-## Investigation Summary
-
-### Entity Identification Results
-
-The investigation successfully identified all supply chain entities through their controller documents and geographic locations.
-
-### Key Findings
-
-- All entities validated successfully with geographic locations confirmed
-- Map previews generated showing entity distribution across the Caribbean region
-- Controller documents contain proper cryptographic verification methods
-- Legitimate and fraudulent entities geographically mapped for analysis
-
-### Next Steps
-
-The identified entities and their geographic information can now be used to:
-- Trace shipment routes and detect deviations
-- Verify entity legitimacy through location analysis
-- Detect suspicious geographic patterns in fraud schemes
-- Validate supply chain documents against known entity locations
-
-**🔍 Entity identification completed - geographic fraud detection enabled!**
+**🔍 Entity identification completed!**
 
 EOF
 
@@ -182,7 +163,9 @@ cat >> "$REPORT_FILE" << 'EOF'
 
 ## Step 2: Collect Documentation
 
-Issuing verifiable credentials based on the Transhrimpment supply chain narrative. This includes 8 legitimate documents and 1 fraudulent certificate of origin. Each credential is cryptographically signed by the appropriate entity using their private keys and verified against their controller documents.
+Issuing verifiable credentials based on the Transhrimpment supply chain narrative. 
+This includes 8 legitimate documents and 1 fraudulent certificate of origin. 
+Each credential is cryptographically signed by the appropriate entity using their private keys and verified against their controller documents.
 
 EOF
 
@@ -206,7 +189,7 @@ issue_and_verify_credential() {
 
     # Issue the credential
     local sign_result
-    sign_result=$(bun src/cli.ts sign-credential --entity-configuration "$entity_config" --credential "$credential_template" --out "$output_file" 2>&1)
+    sign_result=$(bun src/cli.ts sign-credential --entity-configuration "$entity_config" --credential "$credential_template" --out "$output_file" 2>&1 | head -16)
     local sign_exit_code=$?
 
     # Verify the credential using the corresponding controller document
@@ -228,7 +211,7 @@ issue_and_verify_credential() {
     esac
 
     if [ $sign_exit_code -eq 0 ] && [ -f "$output_file" ] && [ -n "$controller_file" ]; then
-        verify_result=$(bun src/cli.ts verify-credential --credential "$output_file" --controller "$controller_file" 2>&1)
+        verify_result=$(bun src/cli.ts verify-credential --credential "$output_file" --controller "$controller_file" 2>&1 | head -16)
         verify_exit_code=$?
     fi
 
@@ -266,23 +249,8 @@ except Exception as e:
 
 ### $status_emoji $description
 
-**Entity:** $entity_name
-**Config:** \`$entity_config\`
-**Output:** \`$output_file\`
-
 <details>
-<summary>Credential Issuance and Verification</summary>
-
-**Sign Command:**
-\`\`\`bash
-bun src/cli.ts sign-credential --entity-configuration $entity_config --credential $credential_template --out $output_file
-\`\`\`
-
-**Sign Result:**
-\`\`\`
-$sign_result
-\`\`\`
-Exit code: $sign_exit_code
+<summary>Document Verification</summary>
 
 **Verify Command:**
 \`\`\`bash
@@ -293,26 +261,12 @@ bun src/cli.ts verify-credential --credential $output_file --controller $control
 \`\`\`
 $verify_result
 \`\`\`
-Exit code: $verify_exit_code
 
 </details>
 
 EOF
 
-    # Add credential JSON content if successfully created
-    if [ -f "$output_file" ]; then
-        cat >> "$REPORT_FILE" << EOF
-<details>
-<summary>📋 Credential JSON Content (EnvelopedVerifiableCredential)</summary>
-
-\`\`\`json
-$(cat "$output_file" | jq . 2>/dev/null || cat "$output_file")
-\`\`\`
-
-</details>
-
-EOF
-    fi
+    # Skip credential JSON content - EnvelopedVerifiableCredential format is implementation detail
 
     # Add GeoJSON preview if available
     if [ -n "$geojson_preview" ]; then
@@ -354,14 +308,14 @@ PRES_EOF
 
         # Sign the presentation
         local pres_sign_result
-        pres_sign_result=$(bun src/cli.ts sign-presentation --entity-configuration "$entity_config" --presentation "$presentation_template_file" --out "$presentation_file" 2>&1)
+        pres_sign_result=$(bun src/cli.ts sign-presentation --entity-configuration "$entity_config" --presentation "$presentation_template_file" --out "$presentation_file" 2>&1 | head -16)
         local pres_sign_exit_code=$?
 
         # Verify the presentation
         local pres_verify_result=""
         local pres_verify_exit_code=1
         if [ $pres_sign_exit_code -eq 0 ] && [ -f "$presentation_file" ]; then
-            pres_verify_result=$(bun src/cli.ts verify-presentation --presentation "$presentation_file" --controller "$controller_file" 2>&1)
+            pres_verify_result=$(bun src/cli.ts verify-presentation --presentation "$presentation_file" --controller "$controller_file" 2>&1 | head -16)
             pres_verify_exit_code=$?
         fi
 
@@ -378,22 +332,8 @@ PRES_EOF
 
 #### $pres_status_emoji Presentation for $description
 
-**Presentation Template:** \`$presentation_template_file\`
-**Presentation Output:** \`$presentation_file\`
-
 <details>
-<summary>Presentation Signing and Verification</summary>
-
-**Sign Command:**
-\`\`\`bash
-bun src/cli.ts sign-presentation --entity-configuration $entity_config --presentation $presentation_template_file --out $presentation_file
-\`\`\`
-
-**Sign Result:**
-\`\`\`
-$pres_sign_result
-\`\`\`
-Exit code: $pres_sign_exit_code
+<summary>Presentation Verification</summary>
 
 **Verify Command:**
 \`\`\`bash
@@ -404,26 +344,12 @@ bun src/cli.ts verify-presentation --presentation $presentation_file --controlle
 \`\`\`
 $pres_verify_result
 \`\`\`
-Exit code: $pres_verify_exit_code
 
 </details>
 
 EOF
 
-        # Add presentation JSON content if successfully created
-        if [ -f "$presentation_file" ]; then
-            cat >> "$REPORT_FILE" << EOF
-<details>
-<summary>📋 Presentation JSON Content (EnvelopedVerifiablePresentation)</summary>
-
-\`\`\`json
-$(cat "$presentation_file" | jq . 2>/dev/null || cat "$presentation_file")
-\`\`\`
-
-</details>
-
-EOF
-        fi
+        # Skip presentation JSON content - EnvelopedVerifiablePresentation format is implementation detail
 
         # Clean up presentation template file
         rm -f "$presentation_template_file"
@@ -532,26 +458,7 @@ cat >> "$REPORT_FILE" << 'EOF'
 
 ---
 
-## Step 2 Summary - Document Collection Results
-
-### Legitimate Documents Issued (8 total)
-
-The following legitimate documents were successfully issued according to the Transhrimpment narrative:
-
-1. **Purchase Order** (Chompchomp → Camarón Corriente) - Initial 1000kg shrimp order
-2. **Commercial Invoice** (Camarón Corriente → Chompchomp) - Invoice for the order
-3. **Certificate of Origin** (Camarón Corriente → Chompchomp) - Legitimate origin certificate
-4. **Bill of Lading** (Shady Carrier → Chompchomp) - Transport document (legitimate signing, but entity is fraudulent)
-5. **Secondary Purchase Order** (Anonymous Distributor → Shady Distributor) - 500kg order from diverted goods
-6. **Secondary Commercial Invoice** (Shady Distributor → Anonymous Distributor) - Invoice for stolen goods
-7. **Secondary Bill of Lading** (Cargo Line → Anonymous Distributor) - Final delivery (legitimate carrier)
-8. **Certificate of Origin** (Legit Shrimp → Honest Importer) - Legitimate certificate that will be stolen/misused
-
-### Fraudulent Documents Issued (1 total)
-
-1. **FRAUDULENT Certificate of Origin** - Shady Distributor forging Legit Shrimp Ltd's identity
-
-**📋 Documentation collection completed - ready for fraud detection analysis!**
+**📋 Documentation collection completed!**
 
 EOF
 

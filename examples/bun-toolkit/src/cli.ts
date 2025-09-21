@@ -935,7 +935,6 @@ async function signPresentation(entityConfigFile: string, presentationFile: stri
 }
 
 async function verifyCredential(credentialFile: string, controllerFile: string) {
-  console.log(`Verifying credential ${credentialFile} with controller ${controllerFile}...`);
 
   try {
     const credentialData = await Bun.file(credentialFile).json();
@@ -1000,7 +999,6 @@ async function verifyCredential(credentialFile: string, controllerFile: string) 
 }
 
 async function verifyPresentation(presentationFile: string, controllerFile: string) {
-  console.log(`Verifying presentation ${presentationFile} with controller ${controllerFile}...`);
 
   try {
     const presentationData = await Bun.file(presentationFile).json();
