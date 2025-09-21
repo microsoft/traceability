@@ -2,6 +2,7 @@ import { test, expect, describe, beforeAll, afterAll } from "bun:test";
 import { key, credential, presentation, resolver } from "../../../src/index";
 import { createControllerBuilder } from "../../../src/controller/builder";
 import { validateControllerDocument } from "../../../src/controller/validator";
+import { ContentBasedForgeryDetector } from "../src/content-forgery-detector";
 import path from "node:path";
 
 // Test data interface matching the narrative structure
@@ -26,7 +27,6 @@ interface TestReport {
 interface EntityTestResult {
   name: string;
   controllerId: string;
-  legitimate: boolean;
   geoLocation: [number, number] | null;
   verificationMethods: number;
   testPassed: boolean;
@@ -95,31 +95,31 @@ const entityKeys = [
 
 // Timeline based on narrative dates for issuance
 const issuanceTimeline = {
-  "legit-shrimp-honest-importer-origin": new Date("2024-01-05T10:00:00Z"), // Legitimate certificate issued first
-  "chompchomp-purchase-order": new Date("2024-01-15T10:00:00Z"), // Purchase order submitted
-  "camaron-corriente-invoice": new Date("2024-01-20T10:00:00Z"), // Invoice sent
-  "camaron-corriente-origin": new Date("2024-01-22T10:00:00Z"), // Certificate of origin issued
-  "shady-carrier-lading": new Date("2024-02-01T10:00:00Z"), // Shady carrier delivers and forges docs
-  "shady-carrier-forged-lading": new Date("2024-02-01T15:00:00Z"), // Forged lading same day
-  "shady-distributor-fraudulent-origin": new Date("2024-02-05T10:00:00Z"), // Shady distributor forges certificates
-  "anonymous-distributor-secondary-purchase-order": new Date("2024-02-10T10:00:00Z"), // Secondary transaction begins
-  "shady-distributor-secondary-invoice": new Date("2024-02-12T10:00:00Z"), // Secondary invoice
-  "cargo-line-secondary-lading": new Date("2024-02-15T10:00:00Z"), // Secondary delivery
+  "legit-shrimp-honest-importer-origin": new Date("2024-01-05T08:20:00Z"), // Legitimate certificate issued first
+  "chompchomp-purchase-order": new Date("2024-01-15T09:15:00Z"), // Purchase order submitted
+  "camaron-corriente-invoice": new Date("2024-01-20T08:45:00Z"), // Invoice sent
+  "camaron-corriente-origin": new Date("2024-01-22T09:30:00Z"), // Certificate of origin issued
+  "shady-carrier-lading": new Date("2024-02-01T08:30:00Z"), // Shady carrier delivers and forges docs
+  "shady-carrier-forged-lading": new Date("2024-02-01T14:15:00Z"), // Forged lading same day
+  "shady-distributor-fraudulent-origin": new Date("2024-02-05T09:45:00Z"), // Shady distributor forges certificates
+  "anonymous-distributor-secondary-purchase-order": new Date("2024-02-10T10:20:00Z"), // Secondary transaction begins
+  "shady-distributor-secondary-invoice": new Date("2024-02-12T11:15:00Z"), // Secondary invoice
+  "cargo-line-secondary-lading": new Date("2024-02-15T07:45:00Z"), // Secondary delivery
 };
 
 // Presentation timeline based on README narrative - when credentials are presented for verification
 // These times MUST match exactly with the timeline in README.md
 const verificationTimeline = {
   "chompchomp-purchase-order": new Date("2024-01-15T10:30:00Z"), // Purchase order credentials presented to Camarón Corriente S.A. for order processing
-  "camaron-corriente-invoice": new Date("2024-01-20T10:30:00Z"), // Commercial invoice credentials presented to Chompchomp Ltd for payment verification
-  "camaron-corriente-origin": new Date("2024-01-22T10:30:00Z"), // Certificate of origin credentials presented to shipping carrier for export documentation
-  "shady-carrier-lading": new Date("2024-02-01T10:30:00Z"), // Bill of lading credentials presented to Chompchomp Ltd for delivery acceptance
-  "shady-carrier-forged-lading": new Date("2024-02-01T11:30:00Z"), // Forged bill of lading credentials presented to customs for partial loss claim
-  "shady-distributor-fraudulent-origin": new Date("2024-02-05T10:30:00Z"), // FRAUDULENT certificate of origin credentials presented by Shady Distributor Ltd claiming Legit Shrimp Ltd identity
-  "legit-shrimp-honest-importer-origin": new Date("2024-02-08T10:30:00Z"), // STOLEN legitimate certificate credentials inappropriately presented by Shady Distributor Ltd
-  "anonymous-distributor-secondary-purchase-order": new Date("2024-02-10T11:30:00Z"), // Secondary purchase order credentials presented to Shady Distributor Ltd for order processing
-  "shady-distributor-secondary-invoice": new Date("2024-02-12T10:30:00Z"), // Secondary commercial invoice credentials presented to Anonymous Distributor for payment
-  "cargo-line-secondary-lading": new Date("2024-02-15T10:30:00Z"), // Secondary bill of lading credentials presented to Anonymous Distributor for delivery
+  "camaron-corriente-invoice": new Date("2024-01-20T11:15:00Z"), // Commercial invoice credentials presented to Chompchomp Ltd for payment verification
+  "camaron-corriente-origin": new Date("2024-01-22T12:45:00Z"), // Certificate of origin credentials presented to shipping carrier for export documentation
+  "shady-carrier-lading": new Date("2024-02-01T13:20:00Z"), // Bill of lading credentials presented to Chompchomp Ltd for delivery acceptance
+  "shady-carrier-forged-lading": new Date("2024-02-01T15:45:00Z"), // Forged bill of lading credentials presented to customs for partial loss claim
+  "shady-distributor-fraudulent-origin": new Date("2024-02-05T11:25:00Z"), // FRAUDULENT certificate of origin credentials presented by Shady Distributor Ltd claiming Legit Shrimp Ltd identity
+  "legit-shrimp-honest-importer-origin": new Date("2024-02-08T14:15:00Z"), // STOLEN legitimate certificate credentials inappropriately presented by Shady Distributor Ltd
+  "anonymous-distributor-secondary-purchase-order": new Date("2024-02-10T13:35:00Z"), // Secondary purchase order credentials presented to Shady Distributor Ltd for order processing
+  "shady-distributor-secondary-invoice": new Date("2024-02-12T14:50:00Z"), // Secondary commercial invoice credentials presented to Anonymous Distributor for payment
+  "cargo-line-secondary-lading": new Date("2024-02-15T10:20:00Z"), // Secondary bill of lading credentials presented to Anonymous Distributor for delivery
 };
 
 // Entity configurations loaded from files
@@ -202,6 +202,117 @@ afterAll(async () => {
     }
   }
 
+  // Perform content-based forgery detection
+  const contentDetector = new ContentBasedForgeryDetector();
+  const contentSimilarities = contentDetector.detectContentBasedForgery(credentials);
+  console.log(`📊 Content similarities found: ${contentSimilarities.length}`);
+
+  // Create mappings for fraud detection based on content analysis
+  const credentialFraudTypes = new Map<string, string>();
+  const entityFraudTypes = new Map<string, Set<string>>();
+
+  // Process content similarities to determine fraud types
+  contentSimilarities.forEach(similarity => {
+    if (similarity.suspicionLevel > 70) {
+      const fraudType = contentDetector.getFraudTypeFromSimilarity(similarity);
+      if (fraudType) {
+        credentialFraudTypes.set(similarity.credential1, fraudType);
+        credentialFraudTypes.set(similarity.credential2, fraudType);
+        console.log(`🚨 Suspicious similarity detected: ${similarity.credential1} ↔ ${similarity.credential2} (${similarity.suspicionLevel}% suspicion) → ${fraudType}`);
+      }
+    }
+  });
+
+  // EVIDENCE-BASED FRAUD DETECTION
+  // Only flag entities based on cryptographic evidence and verification failures
+
+  console.log("🔍 EVIDENCE-BASED FRAUD DETECTION:");
+  console.log("==================================");
+
+  // EVIDENCE 1: Analyze presentation verification failures
+  console.log("📄 Evidence 1: Presentation verification failures");
+  testReport.presentations.forEach(presentation => {
+    const credKey = presentation.credentialIncluded;
+
+    if (!presentation.verificationSuccessful) {
+      console.log(`❌ Presentation failed for ${credKey}`);
+
+      try {
+        const presentationEnvelope = presentations[`${credKey}-presentation`];
+        if (presentationEnvelope?.id) {
+          const presentationJwtToken = presentationEnvelope.id.substring("data:application/vp+jwt,".length);
+          const presentationParts = presentationJwtToken.split('.');
+          const presentationHeader = JSON.parse(atob(presentationParts[0]));
+
+          // Find which entity actually signed/presented this failed presentation (the fraudster)
+          for (const [entityKey, controller] of Object.entries(controllers)) {
+            const ctrl = controller as any;
+            if (ctrl.authentication?.includes(presentationHeader.kid)) {
+              if (!entityFraudTypes.has(entityKey)) {
+                entityFraudTypes.set(entityKey, new Set());
+              }
+
+              const verificationDetails = (presentation as any).verificationDetails;
+              let evidenceBasedFraudType = "⚠️ Counterfeiting and Alteration"; // default for verification failures
+
+              if (verificationDetails?.problems?.some((p: any) => p.type === "is_signed_by_confirmation_key")) {
+                evidenceBasedFraudType = "⚠️ Document Compromise";
+                console.log(`  🚨 EVIDENCE: ${entityKey} presenting stolen credential (wrong confirmation key)`);
+              } else if (verificationDetails?.credentialProblems?.some((p: any) => p.type === "is_iss_prefix_of_kid")) {
+                evidenceBasedFraudType = "⚠️ Synthetic Identity Fraud";
+                console.log(`  🚨 EVIDENCE: ${entityKey} impersonating issuer (issuer/key mismatch)`);
+              } else {
+                console.log(`  🚨 EVIDENCE: ${entityKey} failed cryptographic verification while presenting`);
+              }
+
+              // Flag the PRESENTER (fraudster), not the original issuer (victim)
+              entityFraudTypes.get(entityKey)!.add(evidenceBasedFraudType);
+              console.log(`  → Flagging PRESENTER: ${entityKey} for ${evidenceBasedFraudType}`);
+              break;
+            }
+          }
+        }
+      } catch (error) {
+        console.warn(`Failed to process presentation verification failure: ${error}`);
+      }
+    }
+  });
+
+  // EVIDENCE 2: Content-based fraud detection (credential similarity analysis)
+  console.log("📊 Evidence 2: Content similarity analysis");
+  for (const [credKey, fraudType] of credentialFraudTypes.entries()) {
+    console.log(`  📊 EVIDENCE: Content similarity detected for ${credKey}: ${fraudType}`);
+
+    // Find who issued this credential with suspicious content
+    const credential = credentials[credKey];
+    if (credential) {
+      try {
+        const credentialJwtToken = credential.id.substring("data:application/vc+jwt,".length);
+        const credentialParts = credentialJwtToken.split('.');
+        const credentialPayload = JSON.parse(atob(credentialParts[1]));
+        const issuerId = credentialPayload.issuer || credentialPayload.iss;
+
+        // Find entity key for this issuer
+        const issuerEntityKey = Object.keys(entityConfigs).find(key =>
+          entityConfigs[key].id === issuerId
+        );
+
+        if (issuerEntityKey) {
+          if (!entityFraudTypes.has(issuerEntityKey)) {
+            entityFraudTypes.set(issuerEntityKey, new Set());
+          }
+          entityFraudTypes.get(issuerEntityKey)!.add(fraudType);
+          console.log(`  🚨 EVIDENCE: ${issuerEntityKey} issued credential with suspicious content similarity`);
+        }
+      } catch (error) {
+        console.warn(`Failed to process content fraud evidence: ${error}`);
+      }
+    }
+  }
+
+  console.log("==================================");
+  console.log(`📈 EVIDENCE SUMMARY: Found fraud evidence for ${entityFraudTypes.size} entities`);
+
   // Generate GeoJSON FeatureCollection report
   const geoJsonReport = {
     type: "FeatureCollection",
@@ -212,9 +323,14 @@ afterAll(async () => {
   for (const [entityKey, controller] of Object.entries(controllers)) {
     // Extract geometry from controller's features array (GeoJSON FeatureCollection format)
     if (controller.features && controller.features.length > 0 && controller.features[0].geometry) {
-      // TODO: Determine fraud type for controllers based on verification analysis
-      // For now, ignoring controller fraud types as requested
-      const fraudType = null;
+      // Determine fraud type for controllers based on behavioral analysis
+      let fraudType = null;
+      const entityFrauds = entityFraudTypes.get(entityKey);
+      if (entityFrauds && entityFrauds.size > 0) {
+        // Use the primary fraud type (first one found)
+        fraudType = Array.from(entityFrauds)[0];
+        console.log(`🏢 Controller ${entityKey} classified as: ${fraudType} (${entityFrauds.size} fraud patterns detected)`);
+      }
 
       geoJsonReport.features.push({
         type: "Feature",
@@ -295,12 +411,11 @@ afterAll(async () => {
           new Date(presentationIssuanceTime.getTime() + 30000) : // 30 seconds after signing
           null;
 
-        // Determine fraud status based on credential key and narrative
-        const isFraudulentPresentation = credentialKey === "shady-distributor-fraudulent-origin" ||
-                                        credentialKey === "shady-carrier-forged-lading";
-        const containsFraudulentCredential = credentialKey === "shady-distributor-fraudulent-origin" ||
-                                           credentialKey === "shady-carrier-forged-lading" ||
-                                           credentialKey === "legit-shrimp-honest-importer-origin"; // stolen credential
+        // Determine fraud status based on verification and content analysis
+        const isFraudulentPresentation = !presentation.verificationSuccessful ||
+                                        credentialFraudTypes.has(credentialKey);
+        const containsFraudulentCredential = credentialFraudTypes.has(credentialKey) ||
+                                           (intendedHolderKey && actualPresenterKey !== intendedHolderKey);
 
         // Generate description based on README timeline - must match exactly
         let description = "";
@@ -364,10 +479,10 @@ afterAll(async () => {
             else if (credentialProblems.some((p: any) => p.type === "is_iss_prefix_of_kid")) {
               presentationFraudType = "⚠️ Synthetic Identity Fraud";
             }
-            // Check for time-based attacks
+            // Check for time-based attacks (classify as counterfeiting)
             else if (problems.some((p: any) => p.type === "is_within_validity_period") ||
                      credentialProblems.some((p: any) => p.type === "is_within_validity_period")) {
-              presentationFraudType = "⚠️ Time Manipulation Attack";
+              presentationFraudType = "⚠️ Counterfeiting and Alteration";
             }
             // Generic fraud for other verification failures
             else {
@@ -387,14 +502,9 @@ afterAll(async () => {
             // This shouldn't happen with our new verification logic, but keeping as safeguard
             presentationFraudType = "⚠️ Document Compromise";
           }
-          // Detect synthetic identity fraud based on credential content
-          else if (credentialKey.includes("fraudulent") &&
-                   (credentialKey.includes("origin") || credentialKey.includes("identity"))) {
-            presentationFraudType = "⚠️ Synthetic Identity Fraud";
-          }
-          // Detect counterfeiting based on credential content
-          else if (credentialKey.includes("forged")) {
-            presentationFraudType = "⚠️ Counterfeiting and Alteration";
+          // Check content-based fraud detection results
+          else if (credentialFraudTypes.has(credentialKey)) {
+            presentationFraudType = credentialFraudTypes.get(credentialKey);
           }
         }
 
@@ -452,16 +562,13 @@ afterAll(async () => {
             }
 
             if (!credentialFraudType) {
-              // Fallback to content-based analysis if no verification problems detected
-              if (intendedHolderKey && actualPresenterKey !== intendedHolderKey) {
+              // Check for content-based fraud detection results
+              if (credentialFraudTypes.has(credentialKey)) {
+                credentialFraudType = credentialFraudTypes.get(credentialKey);
+              }
+              // Fallback analysis for holder binding issues
+              else if (intendedHolderKey && actualPresenterKey !== intendedHolderKey) {
                 credentialFraudType = "⚠️ Document Compromise";
-              }
-              else if (credentialKey.includes("fraudulent") && credentialKey.includes("origin")) {
-                credentialFraudType = "⚠️ Synthetic Identity Fraud";
-              }
-              else if (credentialKey.includes("forged") ||
-                       credentialKey.includes("fraudulent")) {
-                credentialFraudType = "⚠️ Counterfeiting and Alteration";
               }
             }
 
@@ -592,7 +699,6 @@ describe("Transhrimpment Case Study", () => {
         const entityResult: EntityTestResult = {
           name: key,
           controllerId: config?.id || "",
-          legitimate: key.includes("shady") ? false : true,
           geoLocation: null,
           verificationMethods: 0,
           testPassed: false,
@@ -968,8 +1074,16 @@ describe("Transhrimpment Case Study", () => {
             const presentationIssuanceTime = verificationTimeline[credKey as keyof typeof verificationTimeline];
             const pressSigner = presentationSigner;
 
-            // Get the authentication method ID from the controller
-            const authenticationMethodId = holderController.authentication[0]; // First authentication method
+            // Get the authentication method ID from the correct controller
+            let authenticationMethodId;
+            if (credKey === "legit-shrimp-honest-importer-origin") {
+              // For stolen credential, use Shady Distributor's authentication method
+              const shadyDistributorController = controllers["shady-distributor"];
+              authenticationMethodId = shadyDistributorController.authentication[0];
+            } else {
+              // Normal case: use the rightful holder's authentication method
+              authenticationMethodId = holderController.authentication[0];
+            }
             const signedPresentationJWT = await pressSigner.sign(presentationData, {
               kid: authenticationMethodId,
               iat: presentationIssuanceTime ? Math.floor(presentationIssuanceTime.getTime() / 1000) : undefined

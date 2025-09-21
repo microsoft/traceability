@@ -73,7 +73,7 @@
       "properties": {
         "controller_id": "https://shady-distributor.example",
         "controller_name": "shady-distributor",
-        "fraud_type": null
+        "fraud_type": "⚠️ Document Compromise"
       }
     },
     {
@@ -173,7 +173,7 @@
       },
       "properties": {
         "presentation_verified": true,
-        "verification_time": "2024-01-20T10:30:30.000Z",
+        "verification_time": "2024-01-20T11:15:30.000Z",
         "authentication_key": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
         "file_name": "camaron-corriente-invoice-template.json",
         "credential_schema": "CommercialInvoiceCredential",
@@ -199,7 +199,7 @@
         "issuer_id": "https://camaron-corriente.example",
         "issuer_name": "camaron-corriente",
         "authentication_key": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
-        "verification_time": "2024-01-20T10:30:30.000Z",
+        "verification_time": "2024-01-20T11:15:30.000Z",
         "fraud_type": null
       }
     },
@@ -213,8 +213,8 @@
         ]
       },
       "properties": {
-        "presentation_verified": false,
-        "verification_time": "2024-01-22T10:30:30.000Z",
+        "presentation_verified": true,
+        "verification_time": "2024-01-22T12:45:30.000Z",
         "authentication_key": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
         "file_name": "camaron-corriente-origin-template.json",
         "credential_schema": "CertificateOfOriginCredential",
@@ -222,7 +222,7 @@
         "presentation_is_fraudulent": false,
         "presentation_contains_fraudulent_credential": false,
         "description": "Certificate of origin credentials presented to shipping carrier for export documentation",
-        "fraud_type": "⚠️ Synthetic Identity Fraud"
+        "fraud_type": null
       }
     },
     {
@@ -230,18 +230,18 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -61.5167,
-          10.6596
+          -68.0125,
+          10.4647
         ]
       },
       "properties": {
         "file_name": "camaron-corriente-origin-template.json",
         "credential_schema": "CertificateOfOriginCredential",
-        "issuer_id": "https://legit-shrimp.example",
-        "issuer_name": "legit-shrimp",
+        "issuer_id": "https://camaron-corriente.example",
+        "issuer_name": "camaron-corriente",
         "authentication_key": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
-        "verification_time": "2024-01-22T10:30:30.000Z",
-        "fraud_type": "⚠️ Synthetic Identity Fraud"
+        "verification_time": "2024-01-22T12:45:30.000Z",
+        "fraud_type": null
       }
     },
     {
@@ -255,7 +255,7 @@
       },
       "properties": {
         "presentation_verified": true,
-        "verification_time": "2024-02-01T10:30:30.000Z",
+        "verification_time": "2024-02-01T13:20:30.000Z",
         "authentication_key": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
         "file_name": "shady-carrier-lading-template.json",
         "credential_schema": "BillOfLadingCredential",
@@ -291,7 +291,7 @@
         "issuer_id": "https://shady-carrier.example",
         "issuer_name": "shady-carrier",
         "authentication_key": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
-        "verification_time": "2024-02-01T10:30:30.000Z",
+        "verification_time": "2024-02-01T13:20:30.000Z",
         "fraud_type": null
       }
     },
@@ -305,16 +305,16 @@
         ]
       },
       "properties": {
-        "presentation_verified": false,
-        "verification_time": "2024-02-01T11:30:30.000Z",
+        "presentation_verified": true,
+        "verification_time": "2024-02-01T15:45:30.000Z",
         "authentication_key": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
         "file_name": "shady-carrier-forged-lading-template.json",
         "credential_schema": "BillOfLadingCredential",
         "holder_name": "anonymous-distributor",
-        "presentation_is_fraudulent": true,
-        "presentation_contains_fraudulent_credential": true,
+        "presentation_is_fraudulent": false,
+        "presentation_contains_fraudulent_credential": false,
         "description": "Forged bill of lading credentials presented to customs for partial loss claim",
-        "fraud_type": "⚠️ Counterfeiting and Alteration"
+        "fraud_type": null
       }
     },
     {
@@ -342,8 +342,8 @@
         "issuer_id": "https://shady-carrier.example",
         "issuer_name": "shady-carrier",
         "authentication_key": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
-        "verification_time": "2024-02-01T11:30:30.000Z",
-        "fraud_type": "⚠️ Counterfeiting and Alteration"
+        "verification_time": "2024-02-01T15:45:30.000Z",
+        "fraud_type": null
       }
     },
     {
@@ -357,7 +357,7 @@
       },
       "properties": {
         "presentation_verified": true,
-        "verification_time": "2024-02-10T11:30:30.000Z",
+        "verification_time": "2024-02-10T13:35:30.000Z",
         "authentication_key": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
         "file_name": "anonymous-distributor-secondary-purchase-order-template.json",
         "credential_schema": "PurchaseOrderCredential",
@@ -383,7 +383,7 @@
         "issuer_id": "https://anonymous-distributor.example",
         "issuer_name": "anonymous-distributor",
         "authentication_key": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
-        "verification_time": "2024-02-10T11:30:30.000Z",
+        "verification_time": "2024-02-10T13:35:30.000Z",
         "fraud_type": null
       }
     },
@@ -398,7 +398,7 @@
       },
       "properties": {
         "presentation_verified": true,
-        "verification_time": "2024-02-12T10:30:30.000Z",
+        "verification_time": "2024-02-12T14:50:30.000Z",
         "authentication_key": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
         "file_name": "shady-distributor-secondary-invoice-template.json",
         "credential_schema": "CommercialInvoiceCredential",
@@ -424,7 +424,7 @@
         "issuer_id": "https://shady-distributor.example",
         "issuer_name": "shady-distributor",
         "authentication_key": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
-        "verification_time": "2024-02-12T10:30:30.000Z",
+        "verification_time": "2024-02-12T14:50:30.000Z",
         "fraud_type": null
       }
     },
@@ -439,7 +439,7 @@
       },
       "properties": {
         "presentation_verified": true,
-        "verification_time": "2024-02-15T10:30:30.000Z",
+        "verification_time": "2024-02-15T10:20:30.000Z",
         "authentication_key": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
         "file_name": "cargo-line-secondary-lading-template.json",
         "credential_schema": "BillOfLadingCredential",
@@ -475,7 +475,7 @@
         "issuer_id": "https://cargo-line.example",
         "issuer_name": "cargo-line",
         "authentication_key": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
-        "verification_time": "2024-02-15T10:30:30.000Z",
+        "verification_time": "2024-02-15T10:20:30.000Z",
         "fraud_type": null
       }
     },
@@ -484,21 +484,21 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -80.1918,
-          25.7617
+          -64.6208,
+          18.4167
         ]
       },
       "properties": {
         "presentation_verified": false,
-        "verification_time": "2024-02-08T10:30:30.000Z",
-        "authentication_key": "https://honest-importer.example#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E",
+        "verification_time": "2024-02-08T14:15:30.000Z",
+        "authentication_key": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
         "file_name": "legit-shrimp-honest-importer-origin-template.json",
         "credential_schema": "CertificateOfOriginCredential",
-        "holder_name": "honest-importer",
-        "presentation_is_fraudulent": false,
+        "holder_name": "shady-distributor",
+        "presentation_is_fraudulent": true,
         "presentation_contains_fraudulent_credential": true,
         "description": "STOLEN legitimate certificate credentials inappropriately presented by Shady Distributor Ltd",
-        "fraud_type": "⚠️ Counterfeiting and Alteration"
+        "fraud_type": "⚠️ Document Compromise"
       }
     },
     {
@@ -515,9 +515,9 @@
         "credential_schema": "CertificateOfOriginCredential",
         "issuer_id": "https://legit-shrimp.example",
         "issuer_name": "legit-shrimp",
-        "authentication_key": "https://honest-importer.example#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E",
-        "verification_time": "2024-02-08T10:30:30.000Z",
-        "fraud_type": null
+        "authentication_key": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
+        "verification_time": "2024-02-08T14:15:30.000Z",
+        "fraud_type": "⚠️ Document Compromise"
       }
     },
     {
@@ -531,13 +531,13 @@
       },
       "properties": {
         "presentation_verified": false,
-        "verification_time": "2024-02-05T10:30:30.000Z",
+        "verification_time": "2024-02-05T11:25:30.000Z",
         "authentication_key": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
         "file_name": "shady-distributor-fraudulent-origin-template.json",
         "credential_schema": "CertificateOfOriginCredential",
         "holder_name": "shady-distributor",
         "presentation_is_fraudulent": true,
-        "presentation_contains_fraudulent_credential": true,
+        "presentation_contains_fraudulent_credential": false,
         "description": "FRAUDULENT certificate of origin credentials presented by Shady Distributor Ltd claiming Legit Shrimp Ltd identity",
         "fraud_type": "⚠️ Synthetic Identity Fraud"
       }
@@ -557,7 +557,7 @@
         "issuer_id": "https://legit-shrimp.example",
         "issuer_name": "legit-shrimp",
         "authentication_key": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
-        "verification_time": "2024-02-05T10:30:30.000Z",
+        "verification_time": "2024-02-05T11:25:30.000Z",
         "fraud_type": "⚠️ Synthetic Identity Fraud"
       }
     }
