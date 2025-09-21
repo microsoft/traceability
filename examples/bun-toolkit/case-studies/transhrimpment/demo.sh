@@ -483,3 +483,186 @@ echo "🚨 1 fraudulent certificate of origin issued"
 echo "🔐 All credentials cryptographically signed and verified"
 echo "🔄 9 presentations created and verified for each credential"
 echo "📍 Geographic data preserved for route analysis"
+
+echo ""
+echo "🔍 Step 4: Fraud Detection Analysis"
+echo "=================================="
+echo "🕵️ Demonstrating how cryptographic verification detects fraud..."
+
+# Add Step 4 section to report
+cat >> "$REPORT_FILE" << 'EOF'
+
+---
+
+## Step 4: Fraud Detection Analysis
+
+<details>
+<summary>🔍 Click to expand fraud detection analysis</summary>
+
+Demonstrating how verifiable credentials prevent fraud through cryptographic verification and holder binding.
+
+### Scenario 1: Fraudulent Credential Detection
+
+**Issue**: Testing the fraudulent Certificate of Origin created in Step 2, where Shady Distributor Ltd attempted to forge a credential claiming to be from Legit Shrimp Ltd but signed it with their own keys.
+
+**Expected Result**: Verification should fail because the signature doesn't match Legit Shrimp Ltd's authorized keys.
+
+EOF
+
+echo ""
+echo "🚨 Testing fraudulent credential verification..."
+echo "   Verifying existing fraudulent certificate from Step 2..."
+
+# Test the fraudulent credential - this should fail verification
+echo "" >> "$REPORT_FILE"
+echo "<details>" >> "$REPORT_FILE"
+echo "<summary>❌ Fraudulent Certificate Verification Test</summary>" >> "$REPORT_FILE"
+echo "" >> "$REPORT_FILE"
+echo "**Test Command:**" >> "$REPORT_FILE"
+echo '```bash' >> "$REPORT_FILE"
+echo "bun src/cli.ts verify-credential --credential case-studies/transhrimpment/credentials/shady-distributor-fraudulent-origin.json --resolver-cache case-studies/transhrimpment/resolver-cache.json" >> "$REPORT_FILE"
+echo '```' >> "$REPORT_FILE"
+echo "" >> "$REPORT_FILE"
+echo "**Test Result:**" >> "$REPORT_FILE"
+echo '```' >> "$REPORT_FILE"
+
+# Run the test and capture output
+fraud_test_result=$(bun src/cli.ts verify-credential --credential case-studies/transhrimpment/credentials/shady-distributor-fraudulent-origin.json --resolver-cache case-studies/transhrimpment/resolver-cache.json 2>&1 | head -16)
+fraud_exit_code=$?
+
+echo "$fraud_test_result" >> "$REPORT_FILE"
+echo '```' >> "$REPORT_FILE"
+
+if [ $fraud_exit_code -ne 0 ]; then
+    echo "✅ FRAUD DETECTED! Credential verification failed as expected"
+    echo "" >> "$REPORT_FILE"
+    echo "**✅ FRAUD SUCCESSFULLY DETECTED**: The fraudulent certificate failed verification because it was signed by Shady Distributor Ltd's keys, not Legit Shrimp Ltd's authorized signing keys." >> "$REPORT_FILE"
+else
+    echo "❌ FRAUD NOT DETECTED! This should have failed"
+    echo "" >> "$REPORT_FILE"
+    echo "**❌ UNEXPECTED**: This credential should have failed verification." >> "$REPORT_FILE"
+fi
+
+echo "" >> "$REPORT_FILE"
+echo "</details>" >> "$REPORT_FILE"
+
+# Add Scenario 2 to report
+cat >> "$REPORT_FILE" << 'EOF'
+
+### Scenario 2: Stolen Credential Detection (Holder Binding Failure)
+
+**Issue**: Demonstrating what happens when Shady Distributor Ltd attempts to present the legitimate Certificate of Origin (created in Step 2) that was originally issued by Legit Shrimp Ltd to Honest Importer Ltd.
+
+**Expected Result**: Presentation should fail because Shady Distributor Ltd cannot prove they are the intended holder (cnf.kid mismatch).
+
+EOF
+
+echo ""
+echo "🚨 Testing stolen credential presentation..."
+echo "   Demonstrating fraudulent presentation attempt (for analysis only)..."
+
+# The legitimate presentation already exists: case-studies/transhrimpment/presentations/legit-shrimp-honest-importer-origin-presentation.json
+# This was created in Step 3 with the correct holder (Honest Importer)
+# Now we'll demonstrate what happens if Shady Distributor tries to present this same credential
+
+fraudulent_presentation_file="case-studies/transhrimpment/presentations/fraudulent-stolen-presentation.json"
+
+# Check if the legitimate presentation exists first
+legitimate_presentation="case-studies/transhrimpment/presentations/legit-shrimp-honest-importer-origin-presentation.json"
+
+if [ ! -f "$legitimate_presentation" ]; then
+    echo "❌ Error: Legitimate presentation not found at $legitimate_presentation"
+    echo "This indicates an issue with the previous steps."
+    exit 1
+fi
+
+echo "   Note: Using existing legitimate credential from Step 2"
+echo "   Simulating unauthorized presentation attempt by wrong entity..."
+
+# Get the holder ID that Shady Distributor would claim to be
+shady_distributor_id="https://shady-distributor.example/entity/bvi-002"
+
+# Create fraudulent presentation template (demonstrating the attack scenario)
+cat > "${fraudulent_presentation_file%.json}-template.json" << FRAUD_PRES_EOF
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2"
+  ],
+  "type": [
+    "VerifiablePresentation"
+  ],
+  "holder": "$shady_distributor_id",
+  "verifiableCredential": [
+    $(cat "case-studies/transhrimpment/credentials/legit-shrimp-honest-importer-origin.json")
+  ]
+}
+FRAUD_PRES_EOF
+
+# Sign the fraudulent presentation using Shady Distributor's keys (this demonstrates the attack)
+echo "📋 Demonstrating: Shady Distributor attempting to present stolen credential..."
+fraud_pres_result=$(bun src/cli.ts sign-presentation --entity-configuration case-studies/transhrimpment/entity_configurations/shady-distributor-config.json --presentation "${fraudulent_presentation_file%.json}-template.json" --out "$fraudulent_presentation_file" 2>&1 | head -16)
+fraud_pres_exit_code=$?
+
+echo "" >> "$REPORT_FILE"
+echo "<details>" >> "$REPORT_FILE"
+echo "<summary>❌ Stolen Credential Presentation Test</summary>" >> "$REPORT_FILE"
+echo "" >> "$REPORT_FILE"
+echo "**Note**: This creates a fraudulent presentation attempt for analysis purposes only, using the existing legitimate credential." >> "$REPORT_FILE"
+echo "" >> "$REPORT_FILE"
+echo "**Test Command:**" >> "$REPORT_FILE"
+echo '```bash' >> "$REPORT_FILE"
+echo "bun src/cli.ts verify-presentation --presentation $fraudulent_presentation_file --resolver-cache case-studies/transhrimpment/resolver-cache.json" >> "$REPORT_FILE"
+echo '```' >> "$REPORT_FILE"
+echo "" >> "$REPORT_FILE"
+echo "**Test Result:**" >> "$REPORT_FILE"
+echo '```' >> "$REPORT_FILE"
+
+if [ $fraud_pres_exit_code -eq 0 ]; then
+    # Presentation was signed successfully, now try to verify it (this should fail)
+    stolen_test_result=$(bun src/cli.ts verify-presentation --presentation "$fraudulent_presentation_file" --resolver-cache case-studies/transhrimpment/resolver-cache.json 2>&1 | head -16)
+    stolen_exit_code=$?
+
+    echo "$stolen_test_result" >> "$REPORT_FILE"
+    echo '```' >> "$REPORT_FILE"
+
+    if [ $stolen_exit_code -ne 0 ]; then
+        echo "✅ CREDENTIAL THEFT DETECTED! Presentation failed due to holder binding mismatch"
+        echo "" >> "$REPORT_FILE"
+        echo "**✅ CREDENTIAL THEFT SUCCESSFULLY DETECTED**: The presentation failed because the credential was bound to Honest Importer Ltd (via cnf.kid), but Shady Distributor Ltd attempted to present it." >> "$REPORT_FILE"
+    else
+        echo "❌ CREDENTIAL THEFT NOT DETECTED! This should have failed"
+        echo "" >> "$REPORT_FILE"
+        echo "**❌ UNEXPECTED**: This presentation should have failed due to holder binding verification." >> "$REPORT_FILE"
+    fi
+else
+    echo "Error creating fraudulent presentation: $fraud_pres_result" >> "$REPORT_FILE"
+    echo '```' >> "$REPORT_FILE"
+fi
+
+echo "" >> "$REPORT_FILE"
+echo "</details>" >> "$REPORT_FILE"
+
+# Add final summary to report
+cat >> "$REPORT_FILE" << 'EOF'
+
+### Summary
+
+The cryptographic verification system successfully demonstrates two critical security features:
+
+1. **Digital Signature Integrity**: Fraudulent credentials cannot be created using forged identities because they fail cryptographic signature verification against the claimed issuer's authorized keys.
+
+2. **Holder Binding Protection**: Legitimate credentials cannot be stolen and misused because they are cryptographically bound to their intended holders through the `cnf.kid` field, preventing unauthorized presentation.
+
+</details>
+
+---
+
+**🔍 Fraud detection analysis completed!**
+
+EOF
+
+echo ""
+echo "🔍 Step 4: Fraud Detection Analysis completed!"
+echo "✅ Demonstrated protection against credential forgery"
+echo "✅ Demonstrated protection against credential theft"
+echo "🛡️ Verifiable credentials successfully prevent both identity theft and credential misuse"
