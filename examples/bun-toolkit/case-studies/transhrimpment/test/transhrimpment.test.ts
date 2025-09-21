@@ -223,6 +223,22 @@ afterAll(async () => {
     }
   });
 
+  // Helper function for content similarity analysis
+  function calculateContentSimilarity(content1: string, content2: string): number {
+    // Simple similarity calculation based on common substrings
+    // This can be enhanced with more sophisticated algorithms
+    const words1 = content1.toLowerCase().split(/\W+/).filter(w => w.length > 2);
+    const words2 = content2.toLowerCase().split(/\W+/).filter(w => w.length > 2);
+
+    const set1 = new Set(words1);
+    const set2 = new Set(words2);
+
+    const intersection = new Set([...set1].filter(x => set2.has(x)));
+    const union = new Set([...set1, ...set2]);
+
+    return intersection.size / union.size; // Jaccard similarity
+  }
+
   // EVIDENCE-BASED FRAUD DETECTION
   // Only flag entities based on cryptographic evidence and verification failures
 
@@ -310,6 +326,175 @@ afterAll(async () => {
     }
   }
 
+  // EVIDENCE 3: Content mirroring and counterfeiting detection
+  console.log("🔍 Evidence 3: Content mirroring and counterfeiting analysis");
+
+  // Look for credentials with same schema/structure but different issuers (potential counterfeiting)
+  const credentialsBySchema = new Map<string, Array<{key: string, credential: any, issuer: string}>>();
+
+  for (const [credKey, credential] of Object.entries(credentials)) {
+    try {
+      const credentialJwtToken = credential.id.substring("data:application/vc+jwt,".length);
+      const credentialParts = credentialJwtToken.split('.');
+      const credentialPayload = JSON.parse(atob(credentialParts[1]));
+      const issuerId = credentialPayload.issuer || credentialPayload.iss;
+      const credentialSubject = credentialPayload.credentialSubject;
+
+      // Group by credential type/schema
+      if (credentialSubject?.features?.[0]?.properties?.type) {
+        const schemaType = credentialSubject.features[0].properties.type;
+        if (!credentialsBySchema.has(schemaType)) {
+          credentialsBySchema.set(schemaType, []);
+        }
+        credentialsBySchema.get(schemaType)!.push({
+          key: credKey,
+          credential: credentialPayload,
+          issuer: issuerId
+        });
+      }
+    } catch (error) {
+      console.warn(`Failed to parse credential ${credKey} for content analysis: ${error}`);
+    }
+  }
+
+  // Analyze for counterfeiting patterns
+  for (const [schemaType, credentials] of credentialsBySchema.entries()) {
+    if (credentials.length > 1) {
+      console.log(`  🔍 Analyzing ${credentials.length} credentials of type: ${schemaType}`);
+
+      // Look for suspicious patterns: same content structure, different issuers
+      for (let i = 0; i < credentials.length; i++) {
+        for (let j = i + 1; j < credentials.length; j++) {
+          const cred1 = credentials[i];
+          const cred2 = credentials[j];
+
+          // Check if different issuers are claiming similar content
+          if (cred1.issuer !== cred2.issuer) {
+            const content1 = JSON.stringify(cred1.credential.credentialSubject);
+            const content2 = JSON.stringify(cred2.credential.credentialSubject);
+
+            // Simple content similarity check (can be enhanced)
+            const similarity = calculateContentSimilarity(content1, content2);
+            if (similarity > 0.7) { // 70% similarity threshold
+              console.log(`  🚨 EVIDENCE: Potential counterfeiting detected between ${cred1.key} and ${cred2.key} (${Math.round(similarity * 100)}% similar)`);
+              console.log(`    → Different issuers (${cred1.issuer} vs ${cred2.issuer}) claiming similar content`);
+
+              // Flag both issuers for counterfeiting
+              const issuer1EntityKey = Object.keys(entityConfigs).find(key => entityConfigs[key].id === cred1.issuer);
+              const issuer2EntityKey = Object.keys(entityConfigs).find(key => entityConfigs[key].id === cred2.issuer);
+
+              if (issuer1EntityKey) {
+                if (!entityFraudTypes.has(issuer1EntityKey)) {
+                  entityFraudTypes.set(issuer1EntityKey, new Set());
+                }
+                entityFraudTypes.get(issuer1EntityKey)!.add("⚠️ Counterfeiting and Alteration");
+                console.log(`    → Flagging issuer: ${issuer1EntityKey} for counterfeiting`);
+              }
+
+              if (issuer2EntityKey) {
+                if (!entityFraudTypes.has(issuer2EntityKey)) {
+                  entityFraudTypes.set(issuer2EntityKey, new Set());
+                }
+                entityFraudTypes.get(issuer2EntityKey)!.add("⚠️ Counterfeiting and Alteration");
+                console.log(`    → Flagging issuer: ${issuer2EntityKey} for counterfeiting`);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // EVIDENCE 4: Business logic fraud detection (credential content analysis)
+  console.log("📋 Evidence 4: Business logic fraud detection");
+
+  // Cross-reference quantities across supply chain documents to detect discrepancies
+  const supplyChainQuantities = new Map<string, Array<{credKey: string, quantity: number, type: string, issuer: string}>>();
+
+  // First pass: collect all quantity information
+  for (const [credKey, credential] of Object.entries(credentials)) {
+    try {
+      const credentialJwtToken = credential.id.substring("data:application/vc+jwt,".length);
+      const credentialParts = credentialJwtToken.split('.');
+      const credentialPayload = JSON.parse(atob(credentialParts[1]));
+      const credentialSubject = credentialPayload.credentialSubject;
+      const issuerId = credentialPayload.issuer || credentialPayload.iss;
+
+      if (credentialSubject?.features?.[0]?.properties) {
+        const properties = credentialSubject.features[0].properties;
+        const docType = properties.type;
+
+        // Extract quantity information
+        let quantity = 0;
+        let product = "";
+
+        if (docType === "PurchaseOrder" && properties.quantity) {
+          const qtyMatch = properties.quantity.match(/(\d+)/);
+          quantity = qtyMatch ? parseInt(qtyMatch[1]) : 0;
+          product = properties.description || "";
+        } else if (docType === "BillOfLading" && properties.cargo?.quantity) {
+          const qtyMatch = properties.cargo.quantity.match(/(\d+)/);
+          quantity = qtyMatch ? parseInt(qtyMatch[1]) : 0;
+          product = properties.cargo.description || "";
+        } else if (docType === "CommercialInvoice" && properties.items?.[0]) {
+          const qtyMatch = properties.items[0].quantity?.match(/(\d+)/);
+          quantity = qtyMatch ? parseInt(qtyMatch[1]) : 0;
+          product = properties.items[0].description || "";
+        }
+
+        if (quantity > 0) {
+          const productKey = product.toLowerCase().replace(/\s+/g, '_');
+          if (!supplyChainQuantities.has(productKey)) {
+            supplyChainQuantities.set(productKey, []);
+          }
+          supplyChainQuantities.get(productKey)!.push({
+            credKey,
+            quantity,
+            type: docType,
+            issuer: issuerId
+          });
+        }
+      }
+    } catch (error) {
+      console.warn(`Failed to extract quantity from ${credKey}: ${error}`);
+    }
+  }
+
+  // Second pass: analyze for quantity discrepancies
+  for (const [product, records] of supplyChainQuantities.entries()) {
+    if (records.length > 1) {
+      console.log(`  🔍 Analyzing ${records.length} quantity records for product: ${product}`);
+
+      // Look for unexplained quantity reductions (potential theft/diversion)
+      const sortedRecords = records.sort((a, b) => a.quantity - b.quantity);
+      for (let i = 0; i < sortedRecords.length - 1; i++) {
+        const lowerQty = sortedRecords[i];
+        const higherQty = sortedRecords[i + 1];
+
+        const discrepancy = higherQty.quantity - lowerQty.quantity;
+        const discrepancyPercent = (discrepancy / higherQty.quantity) * 100;
+
+        // Flag significant quantity discrepancies (>10% loss)
+        if (discrepancyPercent > 10) {
+          console.log(`  🚨 EVIDENCE: Quantity discrepancy detected for ${product}`);
+          console.log(`    → ${higherQty.type}: ${higherQty.quantity}kg vs ${lowerQty.type}: ${lowerQty.quantity}kg (${discrepancy}kg missing, ${discrepancyPercent.toFixed(1)}%)`);
+
+          // Flag the issuer of the document with lower quantity (likely the fraudster)
+          const suspiciousIssuer = lowerQty.issuer;
+          const issuerEntityKey = Object.keys(entityConfigs).find(key => entityConfigs[key].id === suspiciousIssuer);
+
+          if (issuerEntityKey) {
+            if (!entityFraudTypes.has(issuerEntityKey)) {
+              entityFraudTypes.set(issuerEntityKey, new Set());
+            }
+            entityFraudTypes.get(issuerEntityKey)!.add("⚠️ Counterfeiting and Alteration");
+            console.log(`    → Flagging issuer: ${issuerEntityKey} for quantity discrepancy (potential cargo diversion)`);
+          }
+        }
+      }
+    }
+  }
+
   console.log("==================================");
   console.log(`📈 EVIDENCE SUMMARY: Found fraud evidence for ${entityFraudTypes.size} entities`);
 
@@ -323,13 +508,25 @@ afterAll(async () => {
   for (const [entityKey, controller] of Object.entries(controllers)) {
     // Extract geometry from controller's features array (GeoJSON FeatureCollection format)
     if (controller.features && controller.features.length > 0 && controller.features[0].geometry) {
-      // Determine fraud type for controllers based on behavioral analysis
+      // Determine fraud type for controllers
       let fraudType = null;
       const entityFrauds = entityFraudTypes.get(entityKey);
       if (entityFrauds && entityFrauds.size > 0) {
-        // Use the primary fraud type (first one found)
-        fraudType = Array.from(entityFrauds)[0];
-        console.log(`🏢 Controller ${entityKey} classified as: ${fraudType} (${entityFrauds.size} fraud patterns detected)`);
+        // Prioritize fraud types: Synthetic Identity > Document Compromise > Counterfeiting
+        if (entityFrauds.has("⚠️ Synthetic Identity Fraud")) {
+          fraudType = "⚠️ Synthetic Identity Fraud";
+          console.log(`🏢 Controller ${entityKey} classified as: ${fraudType} (synthetic entity)`);
+        } else if (entityFrauds.has("⚠️ Document Compromise")) {
+          fraudType = "⚠️ Document Compromise";
+          console.log(`🏢 Controller ${entityKey} classified as: ${fraudType} (legitimate identity, fraudulent actions)`);
+        } else if (entityFrauds.has("⚠️ Counterfeiting and Alteration")) {
+          fraudType = "⚠️ Counterfeiting and Alteration";
+          console.log(`🏢 Controller ${entityKey} classified as: ${fraudType} (legitimate identity, fraudulent actions)`);
+        } else {
+          // Entity commits other types of fraud actions but has legitimate identity
+          fraudType = Array.from(entityFrauds)[0]; // Use the first fraud type found
+          console.log(`🏢 Controller ${entityKey} has legitimate identity but commits fraudulent actions: ${Array.from(entityFrauds).join(', ')}`);
+        }
       }
 
       geoJsonReport.features.push({

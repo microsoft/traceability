@@ -58,7 +58,7 @@
       "properties": {
         "controller_id": "https://shady-carrier.example",
         "controller_name": "shady-carrier",
-        "fraud_type": null
+        "fraud_type": "⚠️ Counterfeiting and Alteration"
       }
     },
     {
@@ -73,7 +73,7 @@
       "properties": {
         "controller_id": "https://shady-distributor.example",
         "controller_name": "shady-distributor",
-        "fraud_type": "⚠️ Document Compromise"
+        "fraud_type": "⚠️ Synthetic Identity Fraud"
       }
     },
     {
