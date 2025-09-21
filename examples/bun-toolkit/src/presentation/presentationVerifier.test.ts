@@ -1,5 +1,5 @@
 import { test, expect, describe, beforeAll } from "bun:test";
-import { key, credential, presentation, resolver } from "../../../src/index";
+import { key, credential, presentation, resolver } from "../index";
 
 interface DetailedVerificationResult {
   verified: boolean; // Logical AND of all security checks
@@ -103,7 +103,7 @@ describe("Enhanced Presentation Verifier", () => {
       }
     };
 
-    const signedCredentialJWT = await credentialSigner.sign(credentialData, { kid: issuerController._privateKey.kid });
+    const signedCredentialJWT = await credentialSigner.sign(credentialData, { kid: issuerController.assertionMethod[0] });
     testCredential = {
       "@context": "https://www.w3.org/ns/credentials/v2",
       "id": `data:application/vc+jwt,${signedCredentialJWT}`,
@@ -114,8 +114,6 @@ describe("Enhanced Presentation Verifier", () => {
   test("legitimate presentation should pass all verification checks", async () => {
     // Create legitimate presentation - use kid option to match authentication key
     const authKeyId = holderController.authentication[0];
-    // Extract just the thumbprint part (after the #)
-    const keyThumbprint = authKeyId.split('#')[1];
     const presentationSigner = await presentation.signer(holderController._privateKey);
     const presentationData = {
       "@context": ["https://www.w3.org/ns/credentials/v2"],
@@ -124,8 +122,13 @@ describe("Enhanced Presentation Verifier", () => {
       "verifiableCredential": [testCredential]
     };
 
+    const now = new Date();
+    const futureExp = new Date('2099-12-31T23:59:59Z'); // Far future
+
     const signedPresentation = await presentationSigner.sign(presentationData, {
-      kid: keyThumbprint // Use just the key thumbprint in the header
+      kid: authKeyId, // Use the full authentication method ID
+      issuanceTime: now,
+      expirationTime: futureExp
     });
 
     // Verify with detailed breakdown
@@ -153,8 +156,13 @@ describe("Enhanced Presentation Verifier", () => {
       "verifiableCredential": [testCredential] // Credential bound to different holder
     };
 
+    const now = new Date();
+    const futureExp = new Date('2099-12-31T23:59:59Z'); // Far future
+
     const fraudulentPresentation = await wrongPresentationSigner.sign(fraudulentPresentationData, {
-      kid: wrongAuthKeyId // Use wrong holder's authentication key ID
+      kid: wrongAuthKeyId, // Use wrong holder's authentication key ID
+      issuanceTime: now,
+      expirationTime: futureExp
     });
 
     // Verify with detailed breakdown
@@ -172,7 +180,7 @@ describe("Enhanced Presentation Verifier", () => {
   });
 
   test("expired presentation should fail validity period check", async () => {
-    // Create presentation with past expiration
+    // Create presentation that was valid recently but is now expired
     const authKeyId = holderController.authentication[0];
     const presentationSigner = await presentation.signer(holderController._privateKey);
     const presentationData = {
@@ -182,11 +190,13 @@ describe("Enhanced Presentation Verifier", () => {
       "verifiableCredential": [testCredential]
     };
 
-    const pastTime = new Date(Date.now() - 1000 * 60 * 60 * 24); // 1 day ago
+    // Create presentation that expired 1 minute ago (so it was recently valid)
+    const pastTime = new Date(Date.now() - 1000 * 60 * 62); // 62 minutes ago (past expiration)
+    const expiredTime = new Date(Date.now() - 1000 * 60 * 2); // 2 minutes ago (recently expired)
     const signedPresentation = await presentationSigner.sign(presentationData, {
       kid: authKeyId,
-      issuanceTime: pastTime
-      // Note: expiration is automatically set to 1 hour from issuance, so this will be expired
+      issuanceTime: pastTime,
+      expirationTime: expiredTime // Explicitly set expiration to 2 minutes ago
     });
 
     // Verify with detailed breakdown
@@ -222,16 +232,26 @@ async function verifyPresentationDetailed(
     const header = JSON.parse(atob(parts[0]));
     const payload = JSON.parse(atob(parts[1]));
 
-    // Check signature validity
+    // Check cryptographic signature validity only (skip business rule validation)
     try {
-      const presVerifier = await presentation.presentationVerifierFromResolver(resolver);
-      await presVerifier.verify(presentationJWT, {
-        verificationTime: new Date()
-      });
+      // Extract controller ID from authentication key ID
+      const authenticationKeyId = header.kid;
+      let controllerId = authenticationKeyId;
+      if (authenticationKeyId && authenticationKeyId.includes('#')) {
+        controllerId = authenticationKeyId.split('#')[0];
+      }
+
+      // Resolve the holder's controller and get the key
+      const holder = await resolver.resolveController(controllerId);
+      const presentationVerifier = await holder.authentication.resolve(authenticationKeyId);
+
+      // Verify just the cryptographic signature without time/business rule checks
+      // Pass a far future date to bypass expiration checks during crypto validation
+      const futureDate = new Date('2099-12-31T23:59:59Z');
+      await presentationVerifier.verify(presentationJWT, futureDate);
       result.is_presentation_signature_valid = true;
     } catch (error) {
-      // Signature verification failed
-      console.error('Presentation signature verification failed:', error);
+      // Cryptographic signature verification failed
       result.is_presentation_signature_valid = false;
     }
 
@@ -265,6 +285,7 @@ async function verifyPresentationDetailed(
                      result.is_signed_by_confirmation_key &&
                      result.is_credential_verified;
 
+
   } catch (error) {
     console.error('Verification error:', error);
   }
@@ -286,9 +307,16 @@ async function checkConfirmationKeyBinding(
     }
 
     for (const cred of presentationPayload.verifiableCredential) {
+      let credJWT: string | null = null;
+
       if (typeof cred === 'string' && cred.startsWith('data:application/vc+jwt,')) {
-        // Parse embedded credential JWT
-        const credJWT = cred.substring('data:application/vc+jwt,'.length);
+        credJWT = cred.substring('data:application/vc+jwt,'.length);
+      } else if (typeof cred === 'object' && cred.id &&
+                 typeof cred.id === 'string' && cred.id.startsWith('data:application/vc+jwt,')) {
+        credJWT = cred.id.substring('data:application/vc+jwt,'.length);
+      }
+
+      if (credJWT) {
         const credParts = credJWT.split('.');
         const credPayload = JSON.parse(atob(credParts[1]));
 
@@ -323,31 +351,56 @@ async function verifyCredentialDetailed(
   };
 
   try {
-    if (typeof credentialData === 'string' && credentialData.startsWith('data:application/vc+jwt,')) {
-      const credJWT = credentialData.substring('data:application/vc+jwt,'.length);
-      const parts = credJWT.split('.');
-      const payload = JSON.parse(atob(parts[1]));
+    let credJWT: string;
 
-      // Check signature validity
-      try {
-        const credVerifier = await credential.credentialVerifierFromResolver(resolver);
-        await credVerifier.verify(credJWT, new Date());
-        result.is_credential_signature_valid = true;
-      } catch (error) {
-        result.is_credential_signature_valid = false;
+    if (typeof credentialData === 'string' && credentialData.startsWith('data:application/vc+jwt,')) {
+      credJWT = credentialData.substring('data:application/vc+jwt,'.length);
+    } else if (typeof credentialData === 'object' && credentialData.id &&
+               typeof credentialData.id === 'string' && credentialData.id.startsWith('data:application/vc+jwt,')) {
+      credJWT = credentialData.id.substring('data:application/vc+jwt,'.length);
+    } else {
+      // Unsupported credential format
+      return result;
+    }
+
+    const parts = credJWT.split('.');
+    const payload = JSON.parse(atob(parts[1]));
+
+    // Check signature validity
+    try {
+      // Parse credential to get the header and extract the key
+      const credHeader = JSON.parse(atob(parts[0]));
+
+      const assertionKeyId = credHeader.kid;
+
+      // Extract controller ID from the assertion method ID
+      let issuerControllerId = assertionKeyId;
+      if (assertionKeyId && assertionKeyId.includes('#')) {
+        issuerControllerId = assertionKeyId.split('#')[0];
       }
 
-      // Check validity period
-      const now = Date.now() / 1000;
-      const issuedAt = payload.iat || 0;
-      const expiresAt = payload.exp || (issuedAt + 365 * 24 * 3600); // Default 1 year
-      const notBefore = payload.nbf || issuedAt;
+      // Resolve the issuer's controller and get the verifier
+      const issuer = await resolver.resolveController(issuerControllerId);
+      const credentialVerifier = await issuer.assertion.resolve(assertionKeyId);
 
-      result.is_within_validity_period = now >= notBefore && now <= expiresAt;
-
-      // Overall credential verification
-      result.verified = result.is_credential_signature_valid && result.is_within_validity_period;
+      // Pass far future date to bypass time validation during crypto verification
+      const futureDate = new Date('2099-12-31T23:59:59Z');
+      await credentialVerifier.verify(credJWT, futureDate);
+      result.is_credential_signature_valid = true;
+    } catch (error) {
+      result.is_credential_signature_valid = false;
     }
+
+    // Check validity period
+    const now = Date.now() / 1000;
+    const issuedAt = payload.iat || 0;
+    const expiresAt = payload.exp || (issuedAt + 365 * 24 * 3600); // Default 1 year
+    const notBefore = payload.nbf || issuedAt;
+
+    result.is_within_validity_period = now >= notBefore && now <= expiresAt;
+
+    // Overall credential verification
+    result.verified = result.is_credential_signature_valid && result.is_within_validity_period;
   } catch (error) {
     console.error('Credential verification error:', error);
   }

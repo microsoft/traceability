@@ -1,5 +1,5 @@
 import { test, expect, describe } from "bun:test";
-import { presentation } from "../src/index";
+import { presentation } from "../index";
 
 describe("Presentation Verification Timing", () => {
 

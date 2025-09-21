@@ -788,7 +788,13 @@ describe("Transhrimpment Case Study", () => {
           // Issue credential using library with timeline-aligned issuance time
           const issuanceTime = issuanceTimeline[spec.key as keyof typeof issuanceTimeline];
           const signer = await credential.signer(assertionKey);
-          const signedCredentialJWT = await signer.sign(credentialTemplate, issuanceTime);
+
+          // Get the assertion method ID from the controller
+          const assertionMethodId = issuerController.assertionMethod[0]; // First assertion method
+          const signedCredentialJWT = await signer.sign(credentialTemplate, {
+            kid: assertionMethodId,
+            issuanceTime: issuanceTime
+          });
 
           credResult.issuanceSuccessful = !!signedCredentialJWT;
 
@@ -957,8 +963,11 @@ describe("Transhrimpment Case Study", () => {
 
             const presentationIssuanceTime = verificationTimeline[credKey as keyof typeof verificationTimeline];
             const pressSigner = presentationSigner;
+
+            // Get the authentication method ID from the controller
+            const authenticationMethodId = holderController.authentication[0]; // First authentication method
             const signedPresentationJWT = await pressSigner.sign(presentationData, {
-              kid: (holderController as any)._authKey.kid,
+              kid: authenticationMethodId,
               issuanceTime: presentationIssuanceTime
             });
 
@@ -1123,7 +1132,12 @@ describe("Transhrimpment Case Study", () => {
         const shadyAuthKey = (shadyController as any)._authKey;
 
         const fraudSigner = await presentation.signer(shadyAuthKey);
-        const fraudSignedJWT = await fraudSigner.sign(fraudulentPresentation);
+
+        // Get the authentication method ID from the shady controller
+        const shadyAuthenticationMethodId = shadyController.authentication[0]; // First authentication method
+        const fraudSignedJWT = await fraudSigner.sign(fraudulentPresentation, {
+          kid: shadyAuthenticationMethodId
+        });
 
         // Try to verify (should fail due to holder binding mismatch)
         try {

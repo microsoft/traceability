@@ -59,8 +59,14 @@ const verifyPresentedCredentials = async (
 
     const  assertionKeyId = credHeader.kid;
 
+    // Extract controller ID from the assertion method ID
+    let issuerControllerId = assertionKeyId;
+    if (assertionKeyId && assertionKeyId.includes('#')) {
+      issuerControllerId = assertionKeyId.split('#')[0];
+    }
+
     // Resolve the issuer's controller document
-    const issuer = await resolver.resolveController(assertionKeyId);
+    const issuer = await resolver.resolveController(issuerControllerId);
 
     if (!assertionKeyId.startsWith(credPayload.issuer)) {
       throw new Error(`Credential issuer ${credPayload.issuer} does not match assertion key ${assertionKeyId}`);
@@ -103,10 +109,19 @@ export const presentationVerifierFromResolver = async (
         throw new Error('Presentation header must have a kid');
       }
 
-      
+      // Extract controller ID from the verification method ID
+      // The kid might be:
+      // 1. A full verification method ID like "https://holder.example#keyid"
+      // 2. A controller ID like "https://holder.example"
+      // 3. Just a key thumbprint like "keyid"
+      let controllerId = authenticationKeyId;
+      if (authenticationKeyId.includes('#')) {
+        // Extract controller ID from verification method ID
+        controllerId = authenticationKeyId.split('#')[0];
+      }
 
       // Resolve the holder's controller document
-      const holder = await resolver.resolveController(authenticationKeyId);
+      const holder = await resolver.resolveController(controllerId);
 
       // Resolve the presentation verifier using the kid
       const presentationVerifier = await holder.authentication.resolve(authenticationKeyId);

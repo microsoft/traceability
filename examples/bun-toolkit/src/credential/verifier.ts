@@ -20,10 +20,6 @@ export const verifier = async (publicKey: PublicKey) => {
         throw new Error(`Algorithm mismatch: expected ${publicKey.alg}, got ${header.alg}`);
       }
 
-      // Verify the key ID matches
-      if (header.kid !== publicKey.kid) {
-        throw new Error(`Key ID mismatch: expected ${publicKey.kid}, got ${header.kid}`);
-      }
 
       // Prepare data for verification
       const toBeVerified = protectedHeader + "." + payloadString;

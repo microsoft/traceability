@@ -7,6 +7,7 @@ export interface SigningOptions {
   nonce?: string;
   audience?: string | string[];
   issuanceTime?: Date;
+  expirationTime?: Date;
   kid: string; // Mandatory key ID for header
 }
 
@@ -41,9 +42,13 @@ export const signer = async (privateKey: PrivateKey) => {
       jwtPayload.iat = iat;
 
 
-      // Add exp (expiration) claim - default to 1 hour from issuance time
+      // Add exp (expiration) claim - use provided time or default to 1 hour from issuance time
       // Presentations are typically short-lived for security, but allow reasonable verification window
-      jwtPayload.exp = iat + 3600; // 3600 seconds = 1 hour
+      if (options?.expirationTime) {
+        jwtPayload.exp = Math.floor(options.expirationTime.getTime() / 1000);
+      } else {
+        jwtPayload.exp = iat + 3600; // 3600 seconds = 1 hour
+      }
 
       // Add nonce if provided (for replay attack prevention)
       if (options?.nonce) {
