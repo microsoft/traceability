@@ -3,3 +3,4 @@ export { createPublicKeyResolver } from "./publicKeyResolver";
 export { createPrivateKeyResolver } from "./privateKeyResolver";
 export { createSchemaResolver } from "./schemaResolver";
 export * from "./genericResolver";
+export * from "./utils";

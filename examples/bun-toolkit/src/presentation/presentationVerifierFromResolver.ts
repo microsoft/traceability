@@ -3,7 +3,7 @@ import type { EnvelopedVerifiableCredential, VerifiableCredential } from "../cre
 import type { GenericResolver } from "../resolver/genericResolver";
 import * as jws from "../encoding/jws";
 import { createJsonWebSignatureFromEnvelopedVerifiableCredential } from "../credential/credential";
-import { defaultGenericResolver } from "../resolver/genericResolver";
+import { defaultGenericResolver, extractControllerIdFromVerificationMethod } from "../resolver/genericResolver";
 import { validateJWTTimeClaims, validateNonceAndAudience, validateCredentialSchemas } from "../verification/utils";
 
 export interface VerificationOptions {
@@ -13,8 +13,24 @@ export interface VerificationOptions {
   verificationTime: Date;
 }
 
+export interface DetailedVerificationResult {
+  verified: boolean; // Logical AND of all security checks
+  is_presentation_signature_valid: boolean;
+  is_within_validity_period: boolean;
+  is_signed_by_confirmation_key: boolean;
+  is_credential_verified: boolean;
+  credentials: CredentialVerificationResult[];
+}
+
+export interface CredentialVerificationResult {
+  verified: boolean; // Logical AND of credential security checks
+  is_credential_signature_valid: boolean;
+  is_within_validity_period: boolean;
+  is_iss_prefix_of_kid: boolean;
+}
+
 export interface PresentationVerifierFromResolver {
-  verify: (jws: string, options: VerificationOptions) => Promise<VerifiablePresentation>;
+  verify: (jws: string, options: VerificationOptions) => Promise<DetailedVerificationResult>;
 }
 
 interface ParsedJWS {
@@ -39,17 +55,27 @@ const verifyPresentedCredentials = async (
   authenticationKeyId: string,
   resolver: GenericResolver,
   options: VerificationOptions
-): Promise<void> => {
+): Promise<CredentialVerificationResult[]> => {
+  const results: CredentialVerificationResult[] = [];
+
   if (!verifiedPresentation.verifiableCredential || verifiedPresentation.verifiableCredential.length === 0) {
-    return;
+    return results;
   }
 
   for (const envelopedCred of verifiedPresentation.verifiableCredential) {
+    const credResult: CredentialVerificationResult = {
+      verified: false,
+      is_credential_signature_valid: false,
+      is_within_validity_period: false,
+      is_iss_prefix_of_kid: false
+    };
+
     // Extract JWS from enveloped credential
     const credJws = createJsonWebSignatureFromEnvelopedVerifiableCredential(envelopedCred as EnvelopedVerifiableCredential);
-    
+
     if (!credJws) {
-      throw new Error('Failed to extract JWS from enveloped credential');
+      results.push(credResult);
+      continue;
     }
 
     // Parse credential to get issuer
@@ -57,43 +83,64 @@ const verifyPresentedCredentials = async (
     const credHeader = credParsed.header;
     const credPayload = credParsed.payload as VerifiableCredential;
 
-    const  assertionKeyId = credHeader.kid;
+    const assertionKeyId = credHeader.kid;
+
+    // Security check: is_iss_prefix_of_kid - ensure issuer is prefix of kid
+    credResult.is_iss_prefix_of_kid = assertionKeyId.startsWith(credPayload.issuer);
 
     // Extract controller ID from the assertion method ID
-    let issuerControllerId = assertionKeyId;
-    if (assertionKeyId && assertionKeyId.includes('#')) {
-      issuerControllerId = assertionKeyId.split('#')[0];
-    }
+    const issuerControllerId = extractControllerIdFromVerificationMethod(assertionKeyId);
 
     // Resolve the issuer's controller document
     const issuer = await resolver.resolveController(issuerControllerId);
 
-    if (!assertionKeyId.startsWith(credPayload.issuer)) {
-      throw new Error(`Credential issuer ${credPayload.issuer} does not match assertion key ${assertionKeyId}`);
-    }
-
     // Resolve the credential verifier using the kid
     const credentialVerifier = await issuer.assertion.resolve(assertionKeyId);
 
-    // Verify the credential at the same time we're verifying the presentation
-    const verifiedCredential = await credentialVerifier.verify(credJws, options.verificationTime);
-
-    // Check if credential has cnf claim (MUST be top-level)
-    if (verifiedCredential.cnf?.kid) {
-      // The presentation MUST be signed with the key specified in cnf.kid
-      const cnfKid = verifiedCredential.cnf.kid;
-
-      // The presentation's signing key must match the cnf.kid
-      if (authenticationKeyId !== cnfKid) {
-        throw new Error(`Presentation key mismatch: credential requires key ${cnfKid} but presentation was signed with ${authenticationKeyId}`);
+    // Check signature validity
+    try {
+      await credentialVerifier.verify(credJws, options.verificationTime);
+      credResult.is_credential_signature_valid = true;
+    } catch (error) {
+      // Only catch verification failures, re-throw system errors
+      if (error.message?.includes('signature') || error.message?.includes('expired') || error.message?.includes('Invalid')) {
+        credResult.is_credential_signature_valid = false;
+      } else {
+        throw error; // Re-throw unexpected system errors
       }
     }
 
-    // If validateCredentialSchemas option is true, validate credential against its schemas
-    if (options.validateCredentialSchemas) {
-      await validateCredentialSchemas(verifiedCredential, resolver);
+    // Check validity period using existing validation utilities
+    try {
+      validateJWTTimeClaims(credPayload, options.verificationTime);
+      credResult.is_within_validity_period = true;
+    } catch (error) {
+      if (error.message?.includes('expired') || error.message?.includes('not yet valid')) {
+        credResult.is_within_validity_period = false;
+      } else {
+        throw error; // Re-throw unexpected errors
+      }
     }
+
+    // Overall credential verification - AND of all checks
+    credResult.verified = credResult.is_credential_signature_valid &&
+                         credResult.is_within_validity_period &&
+                         credResult.is_iss_prefix_of_kid;
+
+    // If validateCredentialSchemas option is true, validate credential against its schemas
+    if (options.validateCredentialSchemas && credResult.verified) {
+      try {
+        await validateCredentialSchemas(credPayload, resolver);
+      } catch (error) {
+        // Schema validation failure - credential is not verified
+        credResult.verified = false;
+      }
+    }
+
+    results.push(credResult);
   }
+
+  return results;
 };
 
 export const presentationVerifierFromResolver = async (
@@ -101,44 +148,73 @@ export const presentationVerifierFromResolver = async (
 ) => {
   return {
     verify: async (jws: string, options: VerificationOptions) => {
+      const result: DetailedVerificationResult = {
+        verified: false,
+        is_presentation_signature_valid: false,
+        is_within_validity_period: false,
+        is_signed_by_confirmation_key: false,
+        is_credential_verified: false,
+        credentials: []
+      };
+
       const { header, payload } = parseJWS(jws);
       const authenticationKeyId = header.kid;
 
-      // Get the holder ID from the presentation header kid
       if (!authenticationKeyId) {
         throw new Error('Presentation header must have a kid');
       }
 
-      // Extract controller ID from the verification method ID
-      // The kid might be:
-      // 1. A full verification method ID like "https://holder.example#keyid"
-      // 2. A controller ID like "https://holder.example"
-      // 3. Just a key thumbprint like "keyid"
-      let controllerId = authenticationKeyId;
-      if (authenticationKeyId.includes('#')) {
-        // Extract controller ID from verification method ID
-        controllerId = authenticationKeyId.split('#')[0];
+      // Check presentation signature validity
+      try {
+        const controllerId = extractControllerIdFromVerificationMethod(authenticationKeyId);
+        const holder = await resolver.resolveController(controllerId);
+        const presentationVerifier = await holder.authentication.resolve(authenticationKeyId);
+
+        await presentationVerifier.verify(jws, options.verificationTime);
+        result.is_presentation_signature_valid = true;
+      } catch (error) {
+        // Only catch verification failures, re-throw system errors
+        if (error.message?.includes('signature') || error.message?.includes('expired') || error.message?.includes('Invalid')) {
+          result.is_presentation_signature_valid = false;
+        } else {
+          throw error; // Re-throw unexpected system errors
+        }
       }
 
-      // Resolve the holder's controller document
-      const holder = await resolver.resolveController(controllerId);
+      // Check time validity
+      try {
+        validateJWTTimeClaims(payload, options.verificationTime);
+        result.is_within_validity_period = true;
+      } catch (error) {
+        // Only catch time validation failures
+        if (error.message?.includes('expired') || error.message?.includes('not yet valid')) {
+          result.is_within_validity_period = false;
+        } else {
+          throw error; // Re-throw unexpected errors
+        }
+      }
 
-      // Resolve the presentation verifier using the kid
-      const presentationVerifier = await holder.authentication.resolve(authenticationKeyId);
-
-      // Verify the presentation signature
-      const verifiedPresentation = await presentationVerifier.verify(jws, options.verificationTime);
-
-      // Validate time-based JWT claims
-      validateJWTTimeClaims(payload, options.verificationTime);
-
-      // Validate nonce and audience
+      // Validate nonce and audience - let these throw if they fail
       validateNonceAndAudience(payload, options);
 
-      // Now verify each credential in the presentation
-      await verifyPresentedCredentials(verifiedPresentation, authenticationKeyId, resolver, options);
+      // Parse verified presentation for credential verification
+      const verifiedPresentation = payload as VerifiablePresentation;
 
-      return verifiedPresentation;
+      // Verify each credential in the presentation (includes is_iss_prefix_of_kid check)
+      const credentialResults = await verifyPresentedCredentials(verifiedPresentation, authenticationKeyId, resolver, options);
+      result.credentials = credentialResults;
+      result.is_credential_verified = credentialResults.every(c => c.verified);
+
+      // Check confirmation key binding
+      result.is_signed_by_confirmation_key = await checkConfirmationKeyBinding(payload, authenticationKeyId, resolver);
+
+      // Overall verification is AND of all checks
+      result.verified = result.is_presentation_signature_valid &&
+                       result.is_within_validity_period &&
+                       result.is_signed_by_confirmation_key &&
+                       result.is_credential_verified;
+
+      return result;
     }
   };
 };
