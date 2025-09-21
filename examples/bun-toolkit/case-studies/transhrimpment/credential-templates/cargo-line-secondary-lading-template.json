@@ -10,6 +10,12 @@
   "issuer": "https://cargo-line.example",
   "validFrom": "2024-02-10T10:00:00Z",
   "validUntil": "2024-12-31T23:59:59Z",
+  "credentialSchema": [
+    {
+      "id": "https://global-customs.example/schemas/bill-of-lading-credential.yaml",
+      "type": "JsonSchema"
+    }
+  ],
   "cnf": {
     "kid": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A"
   },

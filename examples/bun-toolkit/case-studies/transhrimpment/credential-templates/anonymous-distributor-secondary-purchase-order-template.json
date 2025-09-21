@@ -10,6 +10,12 @@
   "issuer": "https://anonymous-distributor.example",
   "validFrom": "2024-02-01T10:00:00Z",
   "validUntil": "2024-12-31T23:59:59Z",
+  "credentialSchema": [
+    {
+      "id": "https://global-customs.example/schemas/purchase-order-credential.yaml",
+      "type": "JsonSchema"
+    }
+  ],
   "cnf": {
     "kid": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8"
   },

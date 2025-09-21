@@ -10,6 +10,12 @@
   "issuer": "https://chompchomp.example",
   "validFrom": "2024-01-15T09:15:00Z",
   "validUntil": "2024-12-31T23:59:59Z",
+  "credentialSchema": [
+    {
+      "id": "https://global-customs.example/schemas/purchase-order-credential.yaml",
+      "type": "JsonSchema"
+    }
+  ],
   "cnf": {
     "kid": "https://camaron-corriente.example#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0"
   },

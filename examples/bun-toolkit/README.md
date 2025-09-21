@@ -10,7 +10,7 @@ bun install
 
 ### Example Demo
 
-Run the complete fraud investigation demo:
+Run the demo:
 
 ```bash
 cd case-studies/transhrimpment && bash demo.sh
