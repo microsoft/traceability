@@ -339,47 +339,61 @@ afterAll(async () => {
             description = `Credential presentation for ${credentialSchema} verification`;
         }
 
-        // Determine fraud type for presentations based on verification results
+        // Determine fraud type for presentations based on detailed verification problems
         let presentationFraudType = null;
 
-        // Check if presentation failed verification - indicates potential fraud
-        if (!presentation.verificationSuccessful) {
-          // Failed verification - need to analyze why it failed
-          const issuerId = credentialPayload.issuer || credentialPayload.iss;
-          const expectedHolderId = credentialPayload.cnf?.kid; // Who the credential was intended for
+        // Get detailed verification results if available
+        const verificationDetails = (presentation as any).verificationDetails;
 
-          // Check if this is document compromise (stolen credential)
-          // Even though presentation fails, we can still analyze the holder mismatch
-          if (intendedHolderKey && actualPresenterKey !== intendedHolderKey) {
-            // Presentation failed because credential's intended holder != actual presenter
-            // This indicates a stolen credential - document compromise
-            presentationFraudType = "⚠️ Document Compromise";
+        if (!presentation.verificationSuccessful) {
+          if (verificationDetails?.problems) {
+            // Analyze specific verification problems to categorize fraud type
+            const problems = verificationDetails.problems;
+            const credentialProblems = verificationDetails.credentialProblems || [];
+
+            // Check for stolen credential indicators
+            if (problems.some((p: any) => p.type === "is_signed_by_confirmation_key")) {
+              presentationFraudType = "⚠️ Document Compromise";
+            }
+            // Check for signature/cryptographic failures
+            else if (problems.some((p: any) => p.type === "is_presentation_signature_valid") ||
+                     credentialProblems.some((p: any) => p.type === "is_credential_signature_valid")) {
+              presentationFraudType = "⚠️ Counterfeiting and Alteration";
+            }
+            // Check for issuer impersonation
+            else if (credentialProblems.some((p: any) => p.type === "is_iss_prefix_of_kid")) {
+              presentationFraudType = "⚠️ Synthetic Identity Fraud";
+            }
+            // Check for time-based attacks
+            else if (problems.some((p: any) => p.type === "is_within_validity_period") ||
+                     credentialProblems.some((p: any) => p.type === "is_within_validity_period")) {
+              presentationFraudType = "⚠️ Time Manipulation Attack";
+            }
+            // Generic fraud for other verification failures
+            else {
+              presentationFraudType = "⚠️ Counterfeiting and Alteration";
+            }
           } else {
-            // Other verification failures indicate counterfeiting or alteration
-            presentationFraudType = "⚠️ Counterfeiting and Alteration";
+            // Fallback to legacy logic for backwards compatibility
+            if (intendedHolderKey && actualPresenterKey !== intendedHolderKey) {
+              presentationFraudType = "⚠️ Document Compromise";
+            } else {
+              presentationFraudType = "⚠️ Counterfeiting and Alteration";
+            }
           }
         } else {
-          // Presentation verified successfully - analyze credential holder mismatch
-          const issuerId = credentialPayload.issuer || credentialPayload.iss;
-          const expectedHolderId = credentialPayload.cnf?.kid; // Who the credential was intended for
-
-          // KEY INSIGHT: Document compromise (stolen credentials) detection
-          // - Both presentation AND credential verify successfully
-          // - But credential's cnf.kid (intended holder) != presentation signing key (actual presenter)
-          // - This indicates the credential was stolen and is being presented by the thief
+          // Presentation verified successfully - but still check for credential holder binding issues
           if (intendedHolderKey && actualPresenterKey !== intendedHolderKey) {
-            // Credential's intended holder doesn't match who's presenting it
-            // This is document compromise - a stolen legitimate credential
+            // This shouldn't happen with our new verification logic, but keeping as safeguard
             presentationFraudType = "⚠️ Document Compromise";
           }
-          // Detect synthetic identity fraud - fake identity claims
+          // Detect synthetic identity fraud based on credential content
           else if (credentialKey.includes("fraudulent") &&
                    (credentialKey.includes("origin") || credentialKey.includes("identity"))) {
             presentationFraudType = "⚠️ Synthetic Identity Fraud";
           }
-          // Detect counterfeiting and alteration - forged documents
-          else if (credentialKey.includes("forged") ||
-                   (credentialKey.includes("fraudulent") && !credentialKey.includes("origin"))) {
+          // Detect counterfeiting based on credential content
+          else if (credentialKey.includes("forged")) {
             presentationFraudType = "⚠️ Counterfeiting and Alteration";
           }
         }
@@ -412,53 +426,43 @@ afterAll(async () => {
         if (credentialSubject && credentialSubject.features && credentialSubject.features.length > 0) {
           const credentialFeature = credentialSubject.features[0];
           if (credentialFeature.geometry) {
-            // Determine fraud type for credentials based on verification results
+            // Determine fraud type for credentials based on detailed verification problems
             let credentialFraudType = null;
 
-            // Analyze fraud patterns based on verification results
-            if (!presentation.verificationSuccessful) {
-              // Failed presentation verification - need to analyze why
-              const issuerId = credentialPayload.issuer || credentialPayload.iss;
-              const expectedHolderId = credentialPayload.cnf?.kid; // Who should have this credential
+            if (verificationDetails?.credentialProblems) {
+              // Analyze credential-specific verification problems
+              const credentialProblems = verificationDetails.credentialProblems;
 
-              // Check if this is document compromise (stolen credential)
-              if (intendedHolderKey && actualPresenterKey !== intendedHolderKey) {
-                // Credential is legitimate but being presented by wrong holder - stolen
-                credentialFraudType = "⚠️ Document Compromise";
-              } else {
-                // Other verification failures indicate counterfeiting or alteration
+              // Check for signature fraud (forged credentials)
+              if (credentialProblems.some((p: any) => p.type === "is_credential_signature_valid")) {
                 credentialFraudType = "⚠️ Counterfeiting and Alteration";
               }
-            } else {
-              // Both presentation and credential verification passed
-              const issuerId = credentialPayload.issuer || credentialPayload.iss;
-              const expectedHolderId = credentialPayload.cnf?.kid; // Who should have this credential
-
-              // KEY INSIGHT: Document compromise (stolen credentials) detection
-              // - Credential itself verifies successfully (authentic)
-              // - But credential's cnf.kid != presentation signing key
-              // - This means a legitimate credential was stolen and is being misused
-              if (intendedHolderKey && actualPresenterKey !== intendedHolderKey) {
-                // Authentic credential being presented by wrong holder - stolen
-                credentialFraudType = "⚠️ Document Compromise";
-              }
-              // Detect synthetic identity fraud through issuer analysis
-              else if (credentialKey.includes("fraudulent") &&
-                       credentialKey.includes("origin") &&
-                       issuerId && issuerId.includes("legit-shrimp")) {
-                // Fraudulent certificate claiming legitimate entity's identity
+              // Check for issuer impersonation
+              else if (credentialProblems.some((p: any) => p.type === "is_iss_prefix_of_kid")) {
                 credentialFraudType = "⚠️ Synthetic Identity Fraud";
               }
-              // Detect counterfeiting and alteration - forged/fabricated documents
+              // Check for time manipulation
+              else if (credentialProblems.some((p: any) => p.type === "is_within_validity_period")) {
+                credentialFraudType = "⚠️ Time Manipulation Attack";
+              }
+              // If presentation failed due to confirmation key mismatch, credential might be stolen
+              else if (verificationDetails.problems?.some((p: any) => p.type === "is_signed_by_confirmation_key")) {
+                credentialFraudType = "⚠️ Document Compromise";
+              }
+            }
+
+            if (!credentialFraudType) {
+              // Fallback to content-based analysis if no verification problems detected
+              if (intendedHolderKey && actualPresenterKey !== intendedHolderKey) {
+                credentialFraudType = "⚠️ Document Compromise";
+              }
+              else if (credentialKey.includes("fraudulent") && credentialKey.includes("origin")) {
+                credentialFraudType = "⚠️ Synthetic Identity Fraud";
+              }
               else if (credentialKey.includes("forged") ||
-                       (credentialKey.includes("fraudulent") && !credentialKey.includes("origin"))) {
+                       credentialKey.includes("fraudulent")) {
                 credentialFraudType = "⚠️ Counterfeiting and Alteration";
               }
-
-              // TODO: Additional verification-based fraud detection:
-              // - Temporal analysis of credential issuance vs presentation timing
-              // - Supply chain relationship validation against known patterns
-              // - Cross-reference with legitimate business relationship database
             }
 
             geoJsonReport.features.push({
@@ -793,7 +797,7 @@ describe("Transhrimpment Case Study", () => {
           const assertionMethodId = issuerController.assertionMethod[0]; // First assertion method
           const signedCredentialJWT = await signer.sign(credentialTemplate, {
             kid: assertionMethodId,
-            issuanceTime: issuanceTime
+            iat: issuanceTime ? Math.floor(issuanceTime.getTime() / 1000) : undefined
           });
 
           credResult.issuanceSuccessful = !!signedCredentialJWT;
@@ -968,7 +972,7 @@ describe("Transhrimpment Case Study", () => {
             const authenticationMethodId = holderController.authentication[0]; // First authentication method
             const signedPresentationJWT = await pressSigner.sign(presentationData, {
               kid: authenticationMethodId,
-              issuanceTime: presentationIssuanceTime
+              iat: presentationIssuanceTime ? Math.floor(presentationIssuanceTime.getTime() / 1000) : undefined
             });
 
             presResult.signingSuccessful = !!signedPresentationJWT;
@@ -999,10 +1003,17 @@ describe("Transhrimpment Case Study", () => {
                   verificationTime: presVerificationTime
                 });
 
-                presResult.verificationSuccessful = !!presVerificationResult;
+                presResult.verificationSuccessful = presVerificationResult.verified;
                 if (presResult.verificationSuccessful) {
                   presentationsVerified++;
                 }
+
+                // Store detailed verification results for fraud analysis
+                (presResult as any).verificationDetails = {
+                  verified: presVerificationResult.verified,
+                  problems: presVerificationResult.problems,
+                  credentialProblems: presVerificationResult.credentials.flatMap(c => c.problems)
+                };
 
               } catch (presVerifyError) {
                 console.log(`Presentation verification failed for ${credKey}:`, presVerifyError);
