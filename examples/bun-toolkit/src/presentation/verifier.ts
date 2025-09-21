@@ -4,13 +4,13 @@ import type { PublicKey } from "../types";
 import { base64url } from "../encoding";
 
 export interface PresentationVerifier {
-  verify: (jws: string) => Promise<VerifiablePresentation>;
+  verify: (jws: string, verificationTime?: Date) => Promise<VerifiablePresentation>;
 }
 
 export const verifier = async (publicKey: PublicKey) => {
   const verifier = await key.verifier(publicKey);
   return {
-    verify: async (jws: string) => {
+    verify: async (jws: string, verificationTime?: Date) => {
       // Parse JWS: header.payload.signature
       const parts = jws.split('.');
       if (parts.length !== 3) {
@@ -56,7 +56,8 @@ export const verifier = async (publicKey: PublicKey) => {
       const jwtPayload = JSON.parse(new TextDecoder().decode(payloadBytes)) as any;
 
       // Validate time-based JWT claims
-      const nowInSeconds = Math.floor(Date.now() / 1000);
+      const now = verificationTime || new Date();
+      const nowInSeconds = Math.floor(now.getTime() / 1000);
 
       // Check exp (expiration) claim - presentations should always have expiration
       if (jwtPayload.exp !== undefined) {

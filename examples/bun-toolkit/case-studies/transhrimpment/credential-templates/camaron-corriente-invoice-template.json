@@ -8,8 +8,8 @@
     "CommercialInvoiceCredential"
   ],
   "issuer": "https://camaron-corriente.example",
-  "validFrom": "2025-01-20T10:00:00Z",
-  "validUntil": "2030-12-31T23:59:59Z",
+  "validFrom": "2024-01-20T10:00:00Z",
+  "validUntil": "2024-12-31T23:59:59Z",
   "cnf": {
     "kid": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE"
   },

@@ -9,6 +9,7 @@ export interface VerificationOptions {
   expectedNonce?: string;
   expectedAudience?: string | string[];
   validateCredentialSchemas?: boolean;
+  verificationTime?: Date;
 }
 
 export interface PresentationVerifierWithGenericResolver {
@@ -63,7 +64,8 @@ export const verifierWithGenericResolver = async (
       const jwtPayload = JSON.parse(new TextDecoder().decode(payloadBytes)) as any;
 
       // Validate time-based JWT claims
-      const nowInSeconds = Math.floor(Date.now() / 1000);
+      const now = options?.verificationTime || new Date();
+      const nowInSeconds = Math.floor(now.getTime() / 1000);
 
       // Check exp (expiration) claim
       if (jwtPayload.exp !== undefined) {

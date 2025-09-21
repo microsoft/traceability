@@ -42,6 +42,12 @@ interface CredentialTestResult {
   fraudType: string | null;
   testPassed: boolean;
   errors: string[];
+  jwtClaims?: {
+    iat?: number; // issued at
+    nbf?: number; // not before
+    exp?: number; // expires at
+  };
+  verificationTime?: string;
 }
 
 interface PresentationTestResult {
@@ -85,6 +91,20 @@ const entityKeys = [
   "anonymous-distributor",
   "honest-importer"
 ];
+
+// Timeline based on narrative dates for verification time
+const verificationTimeline = {
+  "legit-shrimp-honest-importer-origin": new Date("2024-01-05T12:00:00Z"), // Verify soon after issuance
+  "chompchomp-purchase-order": new Date("2024-01-15T12:00:00Z"),
+  "camaron-corriente-invoice": new Date("2024-01-20T12:00:00Z"),
+  "camaron-corriente-origin": new Date("2024-01-22T12:00:00Z"),
+  "shady-carrier-lading": new Date("2024-02-01T12:00:00Z"),
+  "shady-carrier-forged-lading": new Date("2024-02-01T18:00:00Z"),
+  "shady-distributor-fraudulent-origin": new Date("2024-02-05T12:00:00Z"),
+  "anonymous-distributor-secondary-purchase-order": new Date("2024-02-10T12:00:00Z"),
+  "shady-distributor-secondary-invoice": new Date("2024-02-12T12:00:00Z"),
+  "cargo-line-secondary-lading": new Date("2024-02-15T12:00:00Z"),
+};
 
 // Entity configurations loaded from files
 let entityConfigs: Record<string, any> = {};
@@ -371,7 +391,22 @@ describe("Transhrimpment Case Study", () => {
               "type": "EnvelopedVerifiableCredential"
             };
 
-            // Verify credential
+            // Extract JWT claims from the signed credential
+            try {
+              const parts = signedCredentialJWT.split('.');
+              if (parts.length === 3) {
+                const payload = JSON.parse(atob(parts[1]));
+                credResult.jwtClaims = {
+                  iat: payload.iat,
+                  nbf: payload.nbf,
+                  exp: payload.exp
+                };
+              }
+            } catch (error) {
+              credResult.errors.push(`JWT claims extraction failed: ${error}`);
+            }
+
+            // Verify credential at the appropriate time
             try {
               // Find issuer's assertion key for verification
               const assertionMethodId = issuerController.assertionMethod[0];
@@ -383,8 +418,14 @@ describe("Transhrimpment Case Study", () => {
                 throw new Error("Assertion method verification key not found");
               }
 
+              // Use verification time from timeline
+              const verificationTime = verificationTimeline[spec.key as keyof typeof verificationTimeline];
+              if (verificationTime) {
+                credResult.verificationTime = verificationTime.toISOString();
+              }
+
               const verifier = await credential.verifier(verificationMethod.publicKeyJwk);
-              const verificationResult = await verifier.verify(signedCredentialJWT);
+              const verificationResult = await verifier.verify(signedCredentialJWT, verificationTime);
 
               credResult.verificationSuccessful = !!verificationResult;
 
@@ -497,15 +538,23 @@ describe("Transhrimpment Case Study", () => {
                 "type": "EnvelopedVerifiablePresentation"
               };
 
-              // Verify presentation
+              // Verify presentation at appropriate time
               try {
                 const genericResolver = resolver.createGenericResolver();
                 for (const [controllerId, controllerData] of Object.entries(resolverCache)) {
                   genericResolver.addController(controllerId, controllerData);
                 }
 
+                // Use verification time slightly after credential verification
+                const baseVerificationTime = verificationTimeline[credKey as keyof typeof verificationTimeline];
+                const presVerificationTime = baseVerificationTime ?
+                  new Date(baseVerificationTime.getTime() + 60000) : // 1 minute after credential
+                  undefined;
+
                 const presVerifier = await presentation.verifierWithGenericResolver(genericResolver);
-                const presVerificationResult = await presVerifier.verify(signedPresentationJWT);
+                const presVerificationResult = await presVerifier.verify(signedPresentationJWT, {
+                  verificationTime: presVerificationTime
+                });
 
                 presResult.verificationSuccessful = !!presVerificationResult;
                 if (presResult.verificationSuccessful) {
