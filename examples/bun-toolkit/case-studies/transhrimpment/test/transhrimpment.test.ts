@@ -212,12 +212,17 @@ afterAll(async () => {
   for (const [entityKey, controller] of Object.entries(controllers)) {
     // Extract geometry from controller's features array (GeoJSON FeatureCollection format)
     if (controller.features && controller.features.length > 0 && controller.features[0].geometry) {
+      // TODO: Determine fraud type for controllers based on verification analysis
+      // For now, ignoring controller fraud types as requested
+      const fraudType = null;
+
       geoJsonReport.features.push({
         type: "Feature",
         geometry: controller.features[0].geometry,
         properties: {
           controller_id: controller.id,
-          controller_name: entityConfigs[entityKey]?.name || entityKey
+          controller_name: entityConfigs[entityKey]?.name || entityKey,
+          fraud_type: fraudType
         }
       });
     }
@@ -230,7 +235,7 @@ afterAll(async () => {
     const credential = credentials[credentialKey];
 
     if (credential) {
-      // Extract JWT to get holder info
+      // Extract JWT to get holder info and credential details
       const jwtToken = credential.id.substring("data:application/vc+jwt,".length);
       const parts = jwtToken.split('.');
       const payload = JSON.parse(atob(parts[1]));
@@ -255,6 +260,18 @@ afterAll(async () => {
         const credentialSchema = credentialPayload.credentialSchema?.[0]?.type ||
                                credentialPayload.type?.find((t: string) => t !== "VerifiableCredential") ||
                                "unknown";
+
+        // Get issuer information
+        const issuerId = credentialPayload.issuer || credentialPayload.iss;
+        let issuerName = "unknown-issuer";
+
+        // Find issuer controller to get issuer name
+        for (const [entityKey, controller] of Object.entries(controllers)) {
+          if ((controller as any).id === issuerId) {
+            issuerName = entityConfigs[entityKey]?.name || entityKey;
+            break;
+          }
+        }
 
         // Get verification time from timeline
         const presentationIssuanceTime = verificationTimeline[credentialKey as keyof typeof verificationTimeline];
@@ -306,6 +323,45 @@ afterAll(async () => {
             description = `Credential presentation for ${credentialSchema} verification`;
         }
 
+        // Determine fraud type for presentations based on verification results
+        let presentationFraudType = null;
+
+        // Check if presentation failed verification - indicates potential fraud
+        if (!presentation.verificationSuccessful) {
+          // Failed verification could indicate counterfeiting or alteration
+          presentationFraudType = "⚠️ Counterfeiting and Alteration";
+        } else {
+          // Presentation verified successfully - analyze credential holder mismatch
+          const issuerId = credentialPayload.issuer || credentialPayload.iss;
+          const expectedHolderId = credentialPayload.cnf?.kid; // Who the credential was intended for
+
+          // KEY INSIGHT: Document compromise (stolen credentials) detection
+          // - Both presentation AND credential verify successfully
+          // - But credential's cnf.kid (intended holder) != presentation holder's auth key
+          // - This indicates the credential was stolen and is being presented by the thief
+          if (expectedHolderId && holderFromCredential !== expectedHolderId) {
+            // Credential's intended holder doesn't match who's presenting it
+            // This is document compromise - a stolen legitimate credential
+            presentationFraudType = "⚠️ Document Compromise";
+          }
+          // Detect synthetic identity fraud - fake identity claims
+          else if (credentialKey.includes("fraudulent") &&
+                   (credentialKey.includes("origin") || credentialKey.includes("identity"))) {
+            presentationFraudType = "⚠️ Synthetic Identity Fraud";
+          }
+          // Detect counterfeiting and alteration - forged documents
+          else if (credentialKey.includes("forged") ||
+                   (credentialKey.includes("fraudulent") && !credentialKey.includes("origin"))) {
+            presentationFraudType = "⚠️ Counterfeiting and Alteration";
+          }
+        }
+
+        // TODO: More sophisticated fraud detection based on:
+        // - Temporal analysis of credential usage patterns
+        // - Supply chain relationship validation
+        // - Cross-reference with known legitimate business relationships
+
+        // Add presentation feature (using holder's location)
         geoJsonReport.features.push({
           type: "Feature",
           geometry: holderController.features[0].geometry,
@@ -318,9 +374,70 @@ afterAll(async () => {
             holder_name: authKeyToHolderName[holderFromCredential] || "unknown-holder",
             presentation_is_fraudulent: isFraudulentPresentation,
             presentation_contains_fraudulent_credential: containsFraudulentCredential,
-            description: description
+            description: description,
+            fraud_type: presentationFraudType
           }
         });
+
+        // Add credential feature (using credential subject geometry)
+        const credentialSubject = credentialPayload.credentialSubject;
+        if (credentialSubject && credentialSubject.features && credentialSubject.features.length > 0) {
+          const credentialFeature = credentialSubject.features[0];
+          if (credentialFeature.geometry) {
+            // Determine fraud type for credentials based on verification results
+            let credentialFraudType = null;
+
+            // Both presentation and credential verify successfully - analyze fraud patterns
+            if (!presentation.verificationSuccessful) {
+              // Failed presentation verification indicates counterfeiting or alteration
+              credentialFraudType = "⚠️ Counterfeiting and Alteration";
+            } else {
+              // Both presentation and credential verification passed
+              const issuerId = credentialPayload.issuer || credentialPayload.iss;
+              const expectedHolderId = credentialPayload.cnf?.kid; // Who should have this credential
+
+              // KEY INSIGHT: Document compromise (stolen credentials) detection
+              // - Credential itself verifies successfully (authentic)
+              // - But credential's cnf.kid != presentation holder's auth key
+              // - This means a legitimate credential was stolen and is being misused
+              if (expectedHolderId && holderFromCredential !== expectedHolderId) {
+                // Authentic credential being presented by wrong holder - stolen
+                credentialFraudType = "⚠️ Document Compromise";
+              }
+              // Detect synthetic identity fraud through issuer analysis
+              else if (credentialKey.includes("fraudulent") &&
+                       credentialKey.includes("origin") &&
+                       issuerId && issuerId.includes("legit-shrimp")) {
+                // Fraudulent certificate claiming legitimate entity's identity
+                credentialFraudType = "⚠️ Synthetic Identity Fraud";
+              }
+              // Detect counterfeiting and alteration - forged/fabricated documents
+              else if (credentialKey.includes("forged") ||
+                       (credentialKey.includes("fraudulent") && !credentialKey.includes("origin"))) {
+                credentialFraudType = "⚠️ Counterfeiting and Alteration";
+              }
+
+              // TODO: Additional verification-based fraud detection:
+              // - Temporal analysis of credential issuance vs presentation timing
+              // - Supply chain relationship validation against known patterns
+              // - Cross-reference with legitimate business relationship database
+            }
+
+            geoJsonReport.features.push({
+              type: "Feature",
+              geometry: credentialFeature.geometry,
+              properties: {
+                file_name: credentialToTemplate[credentialKey] || "unknown-template.json",
+                credential_schema: credentialSchema,
+                issuer_id: issuerId,
+                issuer_name: issuerName,
+                authentication_key: holderFromCredential,
+                verification_time: verificationTime?.toISOString() || null,
+                fraud_type: credentialFraudType
+              }
+            });
+          }
+        }
       }
     }
   }
