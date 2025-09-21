@@ -115,7 +115,7 @@ describe("Entity Report Generation", () => {
 
     // Check header
     expect(report).toContain('### ✅ Test Entity Ltd');
-    expect(report).toContain('**Controller Document Status:** ✅ Valid');
+    expect(report).toContain('**Controller Document Status:** Valid');
 
     // Check controller document section
     expect(report).toContain('📄 View Controller Document');
@@ -137,7 +137,7 @@ describe("Entity Report Generation", () => {
 
     // Check header shows invalid status
     expect(report).toContain('### ❌ Invalid Entity Ltd');
-    expect(report).toContain('**Controller Document Status:** ❌ Invalid');
+    expect(report).toContain('**Controller Document Status:** Invalid');
 
     // Should still include controller document
     expect(report).toContain('📄 View Controller Document');
@@ -159,7 +159,7 @@ describe("Entity Report Generation", () => {
 
     // Should have header but not sections
     expect(report).toContain('### ✅ Test Entity Ltd');
-    expect(report).toContain('**Controller Document Status:** ✅ Valid');
+    expect(report).toContain('**Controller Document Status:** Valid');
     expect(report).not.toContain('📄 View Controller Document');
     expect(report).not.toContain('📍 View Geographic Analysis');
   });

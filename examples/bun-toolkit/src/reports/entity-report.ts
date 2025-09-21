@@ -47,7 +47,7 @@ export function generateEntityReport(options: EntityReportOptions): string {
 
   // Validation status
   const statusText = validationResult.isValid ? 'Valid' : 'Invalid';
-  sections.push(`**Controller Document Status:** ${statusEmoji} ${statusText}`);
+  sections.push(`**Controller Document Status:** ${statusText}`);
   sections.push('');
 
   // Controller document section

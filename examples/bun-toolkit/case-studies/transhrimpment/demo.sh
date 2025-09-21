@@ -45,7 +45,7 @@ echo "📍 Validating and extracting geographic data..."
 cat >> "$REPORT_FILE" << 'EOF'
 ## Step 1: Identify Entities
 
-Identifying supply chain entities through their geographic locations and validating their controller documents:
+Identifying supply chain entities, gather their addresses, locations and aliases for comparison to supply chain documents:
 
 EOF
 
