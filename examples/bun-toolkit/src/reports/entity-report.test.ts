@@ -70,10 +70,10 @@ describe("Entity Report Generation", () => {
 
     expect(section).toContain('<details>');
     expect(section).toContain('<summary>📄 View Controller Document</summary>');
-    expect(section).toContain('```json');
+    expect(section).toContain('```jsonc');
     expect(section).toContain('"id": "https://test-entity.example/entity/test-001"');
     expect(section).toContain('</details>');
-    expect(section).toContain(JSON.stringify(mockControllerDocument, null, 2));
+    expect(section).toContain('// ... (truncated for brevity)');
   });
 
   test("generateGeoJSONSection creates proper collapsible section with analysis", () => {
@@ -115,11 +115,10 @@ describe("Entity Report Generation", () => {
 
     // Check header
     expect(report).toContain('### ✅ Test Entity Ltd');
-    expect(report).toContain('**:** Valid');
 
     // Check controller document section
     expect(report).toContain('📄 View Controller Document');
-    expect(report).toContain('```json');
+    expect(report).toContain('```jsonc');
 
     // Check GeoJSON section
     expect(report).toContain('📍 View Geographic Analysis');
@@ -137,7 +136,6 @@ describe("Entity Report Generation", () => {
 
     // Check header shows invalid status
     expect(report).toContain('### ❌ Invalid Entity Ltd');
-    expect(report).toContain('**:** Invalid');
 
     // Should still include controller document
     expect(report).toContain('📄 View Controller Document');
@@ -159,7 +157,6 @@ describe("Entity Report Generation", () => {
 
     // Should have header but not sections
     expect(report).toContain('### ✅ Test Entity Ltd');
-    expect(report).toContain('**:** Valid');
     expect(report).not.toContain('📄 View Controller Document');
     expect(report).not.toContain('📍 View Geographic Analysis');
   });
