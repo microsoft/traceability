@@ -426,16 +426,25 @@ issue_and_verify_credential \
     "case-studies/transhrimpment/credentials/shady-distributor-invoice.json" \
     "Secondary Commercial Invoice (Shady Distributor → Anonymous Distributor)"
 
-# 7. Secondary Bill of Lading: Cargo Line → Anonymous Distributor
+# 7. Forged Bill of Lading: Shady Carrier forges documentation about original shipment
+issue_and_verify_credential \
+    "Shady Carrier Ltd" \
+    "case-studies/transhrimpment/entity_configurations/shady-carrier-config.json" \
+    "case-studies/transhrimpment/credential-templates/shady-carrier-forged-lading-template.json" \
+    "case-studies/transhrimpment/schemas/bill-of-lading-credential.yaml" \
+    "case-studies/transhrimpment/credentials/shady-carrier-forged-lading.json" \
+    "Forged Bill of Lading (Shady Carrier forges original shipment documentation)"
+
+# 8. Legitimate Secondary Bill of Lading: Cargo Line → Anonymous Distributor
 issue_and_verify_credential \
     "Cargo Line Ltd" \
     "case-studies/transhrimpment/entity_configurations/cargo-line-config.json" \
-    "case-studies/transhrimpment/credential-templates/secondary-bill-lading-template.json" \
+    "case-studies/transhrimpment/credential-templates/cargo-line-legitimate-lading-template.json" \
     "case-studies/transhrimpment/schemas/bill-of-lading-credential.yaml" \
-    "case-studies/transhrimpment/credentials/cargo-line-secondary-lading.json" \
-    "Secondary Bill of Lading (Cargo Line → Anonymous Distributor)"
+    "case-studies/transhrimpment/credentials/cargo-line-legitimate-lading.json" \
+    "Legitimate Secondary Bill of Lading (Cargo Line → Anonymous Distributor)"
 
-# 8. Stolen Certificate of Origin: Legit Shrimp → Honest Importer (legitimate but will be misused)
+# 9. Stolen Certificate of Origin: Legit Shrimp → Honest Importer (legitimate but will be misused)
 issue_and_verify_credential \
     "Legit Shrimp Ltd" \
     "case-studies/transhrimpment/entity_configurations/legit-shrimp-config.json" \
@@ -449,7 +458,7 @@ echo "🚨 Issuing fraudulent credential (for investigation purposes)..."
 
 # FRAUDULENT DOCUMENTS (1 total as per README)
 
-# 9. Fraudulent Certificate of Origin: Shady Distributor forging Legit Shrimp's identity
+# 10. Fraudulent Certificate of Origin: Shady Distributor forging Legit Shrimp's identity
 issue_and_verify_credential \
     "Shady Distributor Ltd" \
     "case-studies/transhrimpment/entity_configurations/shady-distributor-config.json" \

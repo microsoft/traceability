@@ -1300,7 +1300,7 @@ bun src/cli.ts verify-presentation --presentation case-studies/transhrimpment/pr
 
 **Verify Command:**
 ```bash
-bun src/cli.ts verify-credential --credential case-studies/transhrimpment/credentials/cargo-line-secondary-lading.json --resolver-cache case-studies/transhrimpment/resolver-cache.json
+bun src/cli.ts verify-credential --credential case-studies/transhrimpment/credentials/shady-carrier-forged-lading.json --resolver-cache case-studies/transhrimpment/resolver-cache.json
 ```
 
 **Verify Result:**
@@ -1318,7 +1318,7 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
 
 **Verify Command:**
 ```bash
-bun src/cli.ts verify-presentation --presentation case-studies/transhrimpment/presentations/cargo-line-secondary-lading-presentation.json --resolver-cache case-studies/transhrimpment/resolver-cache.json
+bun src/cli.ts verify-presentation --presentation case-studies/transhrimpment/presentations/shady-carrier-forged-lading-presentation.json --resolver-cache case-studies/transhrimpment/resolver-cache.json
 ```
 
 **Verify Result:**
