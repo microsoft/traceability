@@ -45,6 +45,9 @@ echo "📍 Validating and extracting geographic data..."
 cat >> "$REPORT_FILE" << 'EOF'
 ## Step 1: Identify Entities
 
+<details>
+<summary>🔍 Click to expand entity identification details</summary>
+
 Identifying supply chain entities, gather their addresses, locations and aliases for comparison to supply chain documents:
 
 EOF
@@ -141,6 +144,8 @@ echo "" >> "$REPORT_FILE"
 cat >> "$REPORT_FILE" << 'EOF'
 
 **🔍 Entity identification completed!**
+
+</details>
 
 EOF
 
@@ -527,8 +532,10 @@ echo "**Test Result:**" >> "$REPORT_FILE"
 echo '```' >> "$REPORT_FILE"
 
 # Run the test and capture output
-fraud_test_result=$(bun src/cli.ts verify-credential --credential case-studies/transhrimpment/credentials/shady-distributor-fraudulent-origin.json --resolver-cache case-studies/transhrimpment/resolver-cache.json 2>&1 | head -16)
+fraud_test_result=$(bun src/cli.ts verify-credential --credential case-studies/transhrimpment/credentials/shady-distributor-fraudulent-origin.json --resolver-cache case-studies/transhrimpment/resolver-cache.json 2>&1)
 fraud_exit_code=$?
+# Truncate output to keep report manageable
+fraud_test_result=$(echo "$fraud_test_result" | head -16)
 
 echo "$fraud_test_result" >> "$REPORT_FILE"
 echo '```' >> "$REPORT_FILE"
@@ -619,8 +626,10 @@ echo '```' >> "$REPORT_FILE"
 
 if [ $fraud_pres_exit_code -eq 0 ]; then
     # Presentation was signed successfully, now try to verify it (this should fail)
-    stolen_test_result=$(bun src/cli.ts verify-presentation --presentation "$fraudulent_presentation_file" --resolver-cache case-studies/transhrimpment/resolver-cache.json 2>&1 | head -16)
+    stolen_test_result=$(bun src/cli.ts verify-presentation --presentation "$fraudulent_presentation_file" --resolver-cache case-studies/transhrimpment/resolver-cache.json 2>&1)
     stolen_exit_code=$?
+    # Truncate output to keep report manageable
+    stolen_test_result=$(echo "$stolen_test_result" | head -16)
 
     echo "$stolen_test_result" >> "$REPORT_FILE"
     echo '```' >> "$REPORT_FILE"
@@ -666,3 +675,6 @@ echo "🔍 Step 4: Fraud Detection Analysis completed!"
 echo "✅ Demonstrated protection against credential forgery"
 echo "✅ Demonstrated protection against credential theft"
 echo "🛡️ Verifiable credentials successfully prevent both identity theft and credential misuse"
+
+# Clean up temporary files
+rm -f "${REPORT_FILE}.step3_started"

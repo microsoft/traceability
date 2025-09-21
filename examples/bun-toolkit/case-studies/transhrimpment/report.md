@@ -10,6 +10,9 @@ This report documents a digital forensic investigation of the "Transhrimpment" s
 
 ## Step 1: Identify Entities
 
+<details>
+<summary>🔍 Click to expand entity identification details</summary>
+
 Identifying supply chain entities, gather their addresses, locations and aliases for comparison to supply chain documents:
 
 
@@ -960,6 +963,8 @@ Identifying supply chain entities, gather their addresses, locations and aliases
 
 **🔍 Entity identification completed!**
 
+</details>
+
 
 <details>
 <summary>✅ Create resolver cache from controllers</summary>
@@ -1447,7 +1452,7 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
 ❌ Credential verification failed: Error: Key ID mismatch: expected TTmxpbDxEQJKCTxehUHYHoz6qRQ00YenAsry4wJgwxE, got 4yFP_7YUQvcDt1XLqnWzQ962oehxO8QAy_Y4IMP2uDQ
 ```
 
-**❌ UNEXPECTED**: This credential should have failed verification.
+**✅ FRAUD SUCCESSFULLY DETECTED**: The fraudulent certificate failed verification because it was signed by Shady Distributor Ltd's keys, not Legit Shrimp Ltd's authorized signing keys.
 
 </details>
 
@@ -1473,7 +1478,7 @@ bun src/cli.ts verify-presentation --presentation case-studies/transhrimpment/pr
 ❌ Presentation verification failed: Error: Presentation key mismatch: credential requires key Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E but presentation was signed with ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8
 ```
 
-**❌ UNEXPECTED**: This presentation should have failed due to holder binding verification.
+**✅ CREDENTIAL THEFT SUCCESSFULLY DETECTED**: The presentation failed because the credential was bound to Honest Importer Ltd (via cnf.kid), but Shady Distributor Ltd attempted to present it.
 
 </details>
 
