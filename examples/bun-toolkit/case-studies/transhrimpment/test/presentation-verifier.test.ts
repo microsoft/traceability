@@ -224,7 +224,7 @@ async function verifyPresentationDetailed(
 
     // Check signature validity
     try {
-      const presVerifier = await presentation.verifierWithGenericResolver(resolver);
+      const presVerifier = await presentation.presentationVerifierFromResolver(resolver);
       await presVerifier.verify(presentationJWT, {
         verificationTime: new Date()
       });
@@ -330,7 +330,7 @@ async function verifyCredentialDetailed(
 
       // Check signature validity
       try {
-        const credVerifier = await credential.verifierWithGenericResolver(resolver);
+        const credVerifier = await credential.credentialVerifierFromResolver(resolver);
         await credVerifier.verify(credJWT, new Date());
         result.is_credential_signature_valid = true;
       } catch (error) {

@@ -1,7 +1,7 @@
 import * as key from "../key";
 import type { VerifiableCredential } from "./credential";
 import type { PublicKey } from "../types";
-import { base64url } from "../encoding";
+import { base64url, jws } from "../encoding";
 
 export interface CredentialVerifier {
   verify: (jws: string, verificationTime?: Date) => Promise<VerifiableCredential>;
@@ -10,22 +10,10 @@ export interface CredentialVerifier {
 export const verifier = async (publicKey: PublicKey) => {
   const verifier = await key.verifier(publicKey);
   return {
-    verify: async (jws: string, verificationTime?: Date) => {
-      // Parse JWS: header.payload.signature
-      const parts = jws.split('.');
-      if (parts.length !== 3) {
-        throw new Error('Invalid JWS format');
-      }
-
-      const [protectedHeader, payload, signature] = parts;
-
-      if (!protectedHeader || !payload || !signature) {
-        throw new Error('Invalid JWS format: missing parts');
-      }
-
-      // Decode and parse header
-      const headerBytes = base64url.decode(protectedHeader);
-      const header = JSON.parse(new TextDecoder().decode(headerBytes));
+    verify: async (jwsString: string, verificationTime?: Date) => {
+      // Parse JWS using the generic decoder
+      const parsed = jws.parseJWS(jwsString);
+      const { header, payload: jwtPayload, protectedHeader, payloadString, signature } = parsed;
 
       // Verify the algorithm matches the public key
       if (header.alg !== publicKey.alg) {
@@ -38,7 +26,7 @@ export const verifier = async (publicKey: PublicKey) => {
       }
 
       // Prepare data for verification
-      const toBeVerified = protectedHeader + "." + payload;
+      const toBeVerified = protectedHeader + "." + payloadString;
       const signatureBytes = base64url.decode(signature);
 
       // Verify the signature
@@ -50,10 +38,6 @@ export const verifier = async (publicKey: PublicKey) => {
       if (!isValid) {
         throw new Error('Invalid signature');
       }
-
-      // Decode the JWT payload
-      const payloadBytes = base64url.decode(payload);
-      const jwtPayload = JSON.parse(new TextDecoder().decode(payloadBytes)) as any;
 
       // Validate time-based JWT claims
       const now = verificationTime || new Date();

@@ -985,7 +985,7 @@ describe("Transhrimpment Case Study", () => {
                   new Date(presentationIssuanceTime.getTime() + 30000) : // 30 seconds after presentation signing
                   new Date(); // Fallback to current time if no presentation issuance time
 
-                const presVerifier = await presentation.verifierWithGenericResolver(genericResolver);
+                const presVerifier = await presentation.presentationVerifierFromResolver(genericResolver);
                 const presVerificationResult = await presVerifier.verify(signedPresentationJWT, {
                   verificationTime: presVerificationTime
                 });
@@ -1132,7 +1132,7 @@ describe("Transhrimpment Case Study", () => {
             genericResolver.addController(controllerId, controllerData);
           }
 
-          const presVerifier = await presentation.verifierWithGenericResolver(genericResolver);
+          const presVerifier = await presentation.presentationVerifierFromResolver(genericResolver);
           const result = await presVerifier.verify(fraudSignedJWT);
 
           // If we reach here, verification unexpectedly succeeded

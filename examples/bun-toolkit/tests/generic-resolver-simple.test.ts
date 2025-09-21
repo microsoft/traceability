@@ -133,7 +133,7 @@ test("credential verification with generic resolver", async () => {
   const signedCredential = await signer.sign(testCredential, { kid: issuerController.privateKey.kid });
 
   // Verify with generic resolver
-  const verifier = await credential.verifierWithGenericResolver(genericResolver);
+  const verifier = await credential.credentialVerifierFromResolver(genericResolver);
   const verifiedCredential = await verifier.verify(signedCredential);
 
   // Check core credential properties
@@ -197,7 +197,7 @@ test("presentation verification with generic resolver", async () => {
   const signedPresentation = await presentationSigner.sign(presentationData, { kid: holderController.privateKey.kid });
 
   // Verify with generic resolver
-  const presentationVerifier = await presentation.verifierWithGenericResolver(genericResolver);
+  const presentationVerifier = await presentation.presentationVerifierFromResolver(genericResolver);
   const verifiedPresentation = await presentationVerifier.verify(signedPresentation, {
     verificationTime: new Date()
   });
@@ -249,7 +249,7 @@ test("credential schema validation with generic resolver", async () => {
   const signedCredential = await signer.sign(testCredentialWithSchema, { kid: issuerController.privateKey.kid });
 
   // Verify with schema validation
-  const verifier = await credential.verifierWithGenericResolver(genericResolver);
+  const verifier = await credential.credentialVerifierFromResolver(genericResolver);
   const verifiedCredential = await verifier.verify(signedCredential, { validateSchema: true });
 
   expect(verifiedCredential.credentialSchema).toBeDefined();
