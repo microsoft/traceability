@@ -51,12 +51,10 @@
         "name": "Legit Shrimp Ltd Facility",
         "type": "Seafood Supplier",
         "role": "supplier",
-        "address": {
-          "streetAddress": "Port of Spain Harbor",
-          "addressLocality": "Port of Spain",
-          "addressRegion": "Port of Spain",
-          "addressCountry": "TT"
-        },
+        "streetAddress": "Port of Spain Harbor",
+        "addressLocality": "Port of Spain",
+        "addressRegion": "Port of Spain",
+        "addressCountry": "TT",
         "legitimacy": "legitimate-identity-stolen"
       }
     }

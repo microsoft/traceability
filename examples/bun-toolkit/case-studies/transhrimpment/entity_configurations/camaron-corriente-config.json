@@ -51,12 +51,10 @@
         "name": "Camarón Corriente S.A. Port Facility",
         "type": "Seafood Distributor",
         "role": "export-facility",
-        "address": {
-          "streetAddress": "Puerto Cabello Port",
-          "addressLocality": "Puerto Cabello",
-          "addressRegion": "Carabobo",
-          "addressCountry": "VE"
-        }
+        "streetAddress": "Puerto Cabello Port",
+        "addressLocality": "Puerto Cabello",
+        "addressRegion": "Carabobo",
+        "addressCountry": "VE"
       }
     }
   ]

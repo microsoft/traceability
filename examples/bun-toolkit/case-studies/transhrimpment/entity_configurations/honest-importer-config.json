@@ -51,12 +51,10 @@
         "name": "Honest Importer Inc Headquarters",
         "type": "Seafood Importer",
         "role": "headquarters",
-        "address": {
-          "streetAddress": "1001 Biscayne Boulevard",
-          "addressLocality": "Miami",
-          "addressRegion": "Florida",
-          "addressCountry": "US"
-        },
+        "streetAddress": "1001 Biscayne Boulevard",
+        "addressLocality": "Miami",
+        "addressRegion": "Florida",
+        "addressCountry": "US",
         "legitimacy": "legitimate"
       }
     },

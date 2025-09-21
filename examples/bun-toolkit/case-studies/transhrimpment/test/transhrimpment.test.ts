@@ -1,6 +1,7 @@
 import { test, expect, describe, beforeAll, afterAll } from "bun:test";
-import { credential, presentation, resolver } from "../../../src/index";
-import { validateControllerDocument } from "../../../src/reports/entity-report";
+import { key, credential, presentation, resolver } from "../../../src/index";
+import { createControllerBuilder } from "../../../src/controller/builder";
+import { validateControllerDocument } from "../../../src/controller/validator";
 import path from "node:path";
 
 // Test data interface matching the narrative structure
@@ -284,6 +285,94 @@ afterAll(async () => {
 });
 
 describe("Transhrimpment Case Study", () => {
+
+  describe("Setup: Controller and Cache Generation", () => {
+    test("should regenerate controllers and resolver cache from entity configurations", async () => {
+      console.log("\n🔄 Regenerating controllers and resolver cache...");
+
+      const regeneratedControllers: Record<string, any> = {};
+      const regeneratedResolverCache: Record<string, any> = {};
+
+      // Generate controller for each entity configuration
+      for (const entityKey of entityKeys) {
+        const config = entityConfigs[entityKey];
+        if (!config) {
+          throw new Error(`Configuration not found for ${entityKey}`);
+        }
+
+        console.log(`📋 Processing ${entityKey} (${config.id})`);
+
+        // Create controller builder
+        const builder = createControllerBuilder()
+          .id(config.id);
+
+        // Add alsoKnownAs if specified
+        if (config.alsoKnownAs && Array.isArray(config.alsoKnownAs)) {
+          builder.alsoKnownAs(...config.alsoKnownAs);
+        }
+
+        // Add contexts if specified
+        if (config.contexts) {
+          config.contexts.forEach((ctx: string) => builder.context(ctx));
+        }
+
+        // Add assertion keys if specified
+        if (config.assertion && Array.isArray(config.assertion)) {
+          for (const privateKeyData of config.assertion) {
+            const publicKey = await key.exportPublicKey(privateKeyData);
+            // Use entity ID + key thumbprint for key ID
+            const keyId = `${config.id}#${privateKeyData.kid}`;
+            builder.addAssertionKey(publicKey, keyId);
+          }
+        }
+
+        // Add authentication keys if specified
+        if (config.authentication && Array.isArray(config.authentication)) {
+          for (const privateKeyData of config.authentication) {
+            const publicKey = await key.exportPublicKey(privateKeyData);
+            // Use entity ID + key thumbprint for key ID
+            const keyId = `${config.id}#${privateKeyData.kid}`;
+            builder.addAuthenticationKey(publicKey, keyId);
+          }
+        }
+
+        // Add geographic features - expect proper GeoJSON FeatureCollection format
+        if (config.type === "FeatureCollection" && config.features) {
+          for (const feature of config.features) {
+            if (feature.type === "Feature") {
+              builder.addFeature(feature.geometry, feature.properties || {});
+            } else {
+              console.warn(`Skipping invalid feature - missing type "Feature": ${JSON.stringify(feature)}`);
+            }
+          }
+        }
+
+        const controllerDoc = builder.build();
+
+        // Store in our test data structures
+        regeneratedControllers[entityKey] = controllerDoc;
+        regeneratedResolverCache[config.id] = controllerDoc;
+
+        // Store keys for signing from entity configuration
+        (controllerDoc as any)._assertionKey = config.assertion[0];
+        (controllerDoc as any)._authKey = config.authentication[0];
+      }
+
+      // Update global variables
+      controllers = regeneratedControllers;
+      resolverCache = regeneratedResolverCache;
+
+      // Write regenerated resolver cache to file
+      await Bun.write(`${CASE_DIR}/resolver-cache.json`, JSON.stringify(regeneratedResolverCache, null, 2));
+
+      console.log(`✅ Generated ${Object.keys(controllers).length} controllers`);
+      console.log(`✅ Resolver cache regenerated with ${Object.keys(resolverCache).length} entries`);
+
+      // Verify all controllers were created
+      expect(Object.keys(controllers).length).toBe(entityKeys.length);
+      expect(Object.keys(resolverCache).length).toBe(entityKeys.length);
+    });
+  });
 
   describe("Step 1: Entity Identification", () => {
 

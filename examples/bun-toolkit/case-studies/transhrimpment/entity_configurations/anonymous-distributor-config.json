@@ -51,12 +51,10 @@
         "name": "Anonymous Distributor Warehouse",
         "type": "Seafood Distributor",
         "role": "final-buyer",
-        "address": {
-          "streetAddress": "Charlotte Amalie Port",
-          "addressLocality": "Charlotte Amalie",
-          "addressRegion": "St. Thomas",
-          "addressCountry": "VI"
-        },
+        "streetAddress": "Charlotte Amalie Port",
+        "addressLocality": "Charlotte Amalie",
+        "addressRegion": "St. Thomas",
+        "addressCountry": "VI",
         "legitimacy": "legitimate-victim"
       }
     }

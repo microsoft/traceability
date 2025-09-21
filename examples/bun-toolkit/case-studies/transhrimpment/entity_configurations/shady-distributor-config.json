@@ -46,12 +46,10 @@
         "name": "Shady Distributor Ltd Office",
         "type": "Seafood Distributor",
         "role": "intermediary",
-        "address": {
-          "streetAddress": "Offshore Building",
-          "addressLocality": "Road Town",
-          "addressRegion": "Tortola",
-          "addressCountry": "VG"
-        },
+        "streetAddress": "Offshore Building",
+        "addressLocality": "Road Town",
+        "addressRegion": "Tortola",
+        "addressCountry": "VG",
         "legitimacy": "fraudulent"
       }
     }

@@ -51,12 +51,10 @@
         "name": "Chompchomp Ltd Main Office",
         "type": "Seafood Importer",
         "role": "headquarters",
-        "address": {
-          "streetAddress": "Main Street",
-          "addressLocality": "Road Town",
-          "addressRegion": "Tortola",
-          "addressCountry": "VG"
-        }
+        "streetAddress": "Main Street",
+        "addressLocality": "Road Town",
+        "addressRegion": "Tortola",
+        "addressCountry": "VG"
       }
     },
     {

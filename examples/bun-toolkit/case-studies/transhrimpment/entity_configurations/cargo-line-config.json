@@ -51,12 +51,10 @@
         "name": "Cargo Line Ltd Terminal",
         "type": "Carrier",
         "role": "shipping-terminal",
-        "address": {
-          "streetAddress": "San Juan Port",
-          "addressLocality": "San Juan",
-          "addressRegion": "San Juan",
-          "addressCountry": "PR"
-        },
+        "streetAddress": "San Juan Port",
+        "addressLocality": "San Juan",
+        "addressRegion": "San Juan",
+        "addressCountry": "PR",
         "status": "fleet-repairs"
       }
     }

@@ -46,12 +46,10 @@
         "name": "Shady Carrier Ltd Operations",
         "type": "Carrier",
         "role": "substitute-carrier",
-        "address": {
-          "streetAddress": "Harbor District",
-          "addressLocality": "Oranjestad",
-          "addressRegion": "Aruba",
-          "addressCountry": "AW"
-        },
+        "streetAddress": "Harbor District",
+        "addressLocality": "Oranjestad",
+        "addressRegion": "Aruba",
+        "addressCountry": "AW",
         "legitimacy": "fraudulent"
       }
     }

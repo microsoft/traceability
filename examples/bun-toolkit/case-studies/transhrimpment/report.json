@@ -20,27 +20,13 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -64.9307,
-          18.3419
+          -68.0125,
+          10.4647
         ]
       },
       "properties": {
-        "controller_id": "https://anonymous-distributor.example",
-        "controller_name": "anonymous-distributor"
-      }
-    },
-    {
-      "type": "Feature",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -64.6208,
-          18.4167
-        ]
-      },
-      "properties": {
-        "controller_id": "https://shady-distributor.example",
-        "controller_name": "shady-distributor"
+        "controller_id": "https://camaron-corriente.example",
+        "controller_name": "camaron-corriente"
       }
     },
     {
@@ -76,13 +62,13 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -80.1918,
-          25.7617
+          -64.6208,
+          18.4167
         ]
       },
       "properties": {
-        "controller_id": "https://honest-importer.example",
-        "controller_name": "honest-importer"
+        "controller_id": "https://shady-distributor.example",
+        "controller_name": "shady-distributor"
       }
     },
     {
@@ -104,13 +90,27 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -68.0125,
-          10.4647
+          -64.9307,
+          18.3419
         ]
       },
       "properties": {
-        "controller_id": "https://camaron-corriente.example",
-        "controller_name": "camaron-corriente"
+        "controller_id": "https://anonymous-distributor.example",
+        "controller_name": "anonymous-distributor"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.1918,
+          25.7617
+        ]
+      },
+      "properties": {
+        "controller_id": "https://honest-importer.example",
+        "controller_name": "honest-importer"
       }
     },
     {
