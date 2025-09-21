@@ -1,6 +1,6 @@
 # Transhrimpment
 
-This case study examines a documented instance of seafood supply chain fraud involving the transhipment and relabeling of frozen shrimp products. The investigation demonstrates how document fraud, identity theft, and synthetic identities can compromise verifiable supply chains, particularly within cold chain logistics operations. The methodologies and findings presented are applicable to pharmaceutical distribution, food safety verification, and other critical supply chains requiring comprehensive traceability.
+This case study examines a hypothetical seafood supply chain fraud involving the transhipment and relabeling of frozen shrimp products. The investigation demonstrates how document fraud, identity theft, and synthetic identities can compromise verifiable supply chains, particularly within cold chain logistics operations. The methodologies and findings presented are applicable to pharmaceutical distribution, food safety verification, and other critical supply chains requiring comprehensive traceability.
 
 ## Case Overview
 
