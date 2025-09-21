@@ -1,0 +1,209 @@
+{
+  "caseName": "Transhrimpment Supply Chain Fraud Investigation",
+  "timestamp": "2025-09-21T15:24:36.461Z",
+  "summary": {
+    "entitiesIdentified": 8,
+    "credentialsIssued": 4,
+    "presentationsCreated": 4,
+    "fraudsDetected": 2,
+    "testsTotal": 15,
+    "testsPassed": 15,
+    "testsFailed": 0
+  },
+  "entities": [
+    {
+      "name": "chompchomp",
+      "controllerId": "https://chompchomp.example",
+      "legitimate": true,
+      "geoLocation": [
+        -64.6208,
+        18.4167
+      ],
+      "verificationMethods": 2,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "name": "camaron-corriente",
+      "controllerId": "https://camaron-corriente.example",
+      "legitimate": true,
+      "geoLocation": [
+        -68.0125,
+        10.4647
+      ],
+      "verificationMethods": 2,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "name": "legit-shrimp",
+      "controllerId": "https://legit-shrimp.example",
+      "legitimate": true,
+      "geoLocation": [
+        -61.5167,
+        10.6596
+      ],
+      "verificationMethods": 2,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "name": "shady-carrier",
+      "controllerId": "https://shady-carrier.example",
+      "legitimate": false,
+      "geoLocation": [
+        -70.027,
+        12.5186
+      ],
+      "verificationMethods": 2,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "name": "shady-distributor",
+      "controllerId": "https://shady-distributor.example",
+      "legitimate": false,
+      "geoLocation": [
+        -64.6208,
+        18.4167
+      ],
+      "verificationMethods": 2,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "name": "cargo-line",
+      "controllerId": "https://cargo-line.example",
+      "legitimate": true,
+      "geoLocation": [
+        -66.1057,
+        18.4655
+      ],
+      "verificationMethods": 2,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "name": "anonymous-distributor",
+      "controllerId": "https://anonymous-distributor.example",
+      "legitimate": true,
+      "geoLocation": [
+        -64.9307,
+        18.3419
+      ],
+      "verificationMethods": 2,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "name": "honest-importer",
+      "controllerId": "https://honest-importer.example",
+      "legitimate": true,
+      "geoLocation": [
+        -80.1918,
+        25.7617
+      ],
+      "verificationMethods": 2,
+      "testPassed": true,
+      "errors": []
+    }
+  ],
+  "credentials": [
+    {
+      "description": "Purchase Order (Chompchomp → Camarón Corriente)",
+      "schemaType": "PurchaseOrderCredential",
+      "issuanceSuccessful": true,
+      "verificationSuccessful": true,
+      "fraudType": null,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "description": "Commercial Invoice (Camarón Corriente → Chompchomp)",
+      "schemaType": "CommercialInvoiceCredential",
+      "issuanceSuccessful": true,
+      "verificationSuccessful": true,
+      "fraudType": null,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "description": "Certificate of Origin (Legit Shrimp → Honest Importer) - WILL BE STOLEN",
+      "schemaType": "CertificateOfOriginCredential",
+      "issuanceSuccessful": true,
+      "verificationSuccessful": true,
+      "fraudType": "Document Compromise",
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "description": "FRAUDULENT Certificate of Origin (Shady Distributor forging Legit Shrimp identity)",
+      "schemaType": "CertificateOfOriginCredential",
+      "issuanceSuccessful": true,
+      "verificationSuccessful": true,
+      "fraudType": "Counterfeiting and Alteration",
+      "testPassed": true,
+      "errors": []
+    }
+  ],
+  "presentations": [
+    {
+      "description": "Presentation for chompchomp-purchase-order",
+      "presentationFile": "chompchomp-purchase-order-presentation",
+      "credentialIncluded": "chompchomp-purchase-order",
+      "signingSuccessful": true,
+      "verificationSuccessful": true,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "description": "Presentation for camaron-corriente-invoice",
+      "presentationFile": "camaron-corriente-invoice-presentation",
+      "credentialIncluded": "camaron-corriente-invoice",
+      "signingSuccessful": true,
+      "verificationSuccessful": true,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "description": "Presentation for legit-shrimp-honest-importer-origin",
+      "presentationFile": "legit-shrimp-honest-importer-origin-presentation",
+      "credentialIncluded": "legit-shrimp-honest-importer-origin",
+      "signingSuccessful": true,
+      "verificationSuccessful": true,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "description": "Presentation for shady-distributor-fraudulent-origin",
+      "presentationFile": "shady-distributor-fraudulent-origin-presentation",
+      "credentialIncluded": "shady-distributor-fraudulent-origin",
+      "signingSuccessful": true,
+      "verificationSuccessful": false,
+      "testPassed": false,
+      "errors": [
+        "Presentation verification failed: Error: Public key not found for id: 4yFP_7YUQvcDt1XLqnWzQ962oehxO8QAy_Y4IMP2uDQ"
+      ]
+    }
+  ],
+  "fraudDetection": [
+    {
+      "scenario": "Fraudulent Credential Detection",
+      "description": "Shady Distributor Ltd attempts to forge Certificate of Origin claiming to be from Legit Shrimp Ltd",
+      "expectedOutcome": "Verification should fail due to signature mismatch",
+      "actualOutcome": "Verification failed as expected - signature mismatch detected",
+      "fraudDetected": true,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "scenario": "Stolen Credential Detection",
+      "description": "Shady Distributor Ltd attempts to present legitimate credential issued to Honest Importer Ltd",
+      "expectedOutcome": "Presentation should fail due to holder binding mismatch",
+      "actualOutcome": "Presentation verification failed as expected - holder binding mismatch detected",
+      "fraudDetected": true,
+      "testPassed": true,
+      "errors": []
+    }
+  ]
+}
