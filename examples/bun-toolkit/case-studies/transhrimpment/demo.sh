@@ -323,11 +323,118 @@ $geojson_preview
 EOF
     fi
 
+    # === PRESENTATION WORKFLOW ===
+    # Create and sign presentation for this credential
+    if [ $sign_exit_code -eq 0 ] && [ -f "$output_file" ] && [ -n "$controller_file" ]; then
+        # Determine presentation output file
+        local base_filename=$(basename "$output_file" .json)
+        local presentation_file="case-studies/transhrimpment/presentations/${base_filename}-presentation.json"
+        local presentation_template_file="${output_file%.json}-presentation-template.json"
+
+        # Determine holder ID from controller document
+        local holder_id=$(jq -r '.id' "$controller_file" 2>/dev/null || echo "unknown-holder")
+
+        echo "📋 Creating presentation for $description..."
+
+        # Create presentation template for this specific credential
+        cat > "$presentation_template_file" << PRES_EOF
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2"
+  ],
+  "type": [
+    "VerifiablePresentation"
+  ],
+  "holder": "$holder_id",
+  "verifiableCredential": [
+    $(cat "$output_file")
+  ]
+}
+PRES_EOF
+
+        # Sign the presentation
+        local pres_sign_result
+        pres_sign_result=$(bun src/cli.ts sign-presentation --entity-configuration "$entity_config" --presentation "$presentation_template_file" --out "$presentation_file" 2>&1)
+        local pres_sign_exit_code=$?
+
+        # Verify the presentation
+        local pres_verify_result=""
+        local pres_verify_exit_code=1
+        if [ $pres_sign_exit_code -eq 0 ] && [ -f "$presentation_file" ]; then
+            pres_verify_result=$(bun src/cli.ts verify-presentation --presentation "$presentation_file" --controller "$controller_file" 2>&1)
+            pres_verify_exit_code=$?
+        fi
+
+        # Determine presentation status
+        local pres_status_emoji="❌"
+        if [ $pres_sign_exit_code -eq 0 ] && [ $pres_verify_exit_code -eq 0 ]; then
+            pres_status_emoji="✅"
+        fi
+
+        # Add presentation results to report
+        cat >> "$REPORT_FILE" << EOF
+
+---
+
+#### $pres_status_emoji Presentation for $description
+
+**Presentation Template:** \`$presentation_template_file\`
+**Presentation Output:** \`$presentation_file\`
+
+<details>
+<summary>Presentation Signing and Verification</summary>
+
+**Sign Command:**
+\`\`\`bash
+bun src/cli.ts sign-presentation --entity-configuration $entity_config --presentation $presentation_template_file --out $presentation_file
+\`\`\`
+
+**Sign Result:**
+\`\`\`
+$pres_sign_result
+\`\`\`
+Exit code: $pres_sign_exit_code
+
+**Verify Command:**
+\`\`\`bash
+bun src/cli.ts verify-presentation --presentation $presentation_file --controller $controller_file
+\`\`\`
+
+**Verify Result:**
+\`\`\`
+$pres_verify_result
+\`\`\`
+Exit code: $pres_verify_exit_code
+
+</details>
+
+EOF
+
+        # Add presentation JSON content if successfully created
+        if [ -f "$presentation_file" ]; then
+            cat >> "$REPORT_FILE" << EOF
+<details>
+<summary>📋 Presentation JSON Content (EnvelopedVerifiablePresentation)</summary>
+
+\`\`\`json
+$(cat "$presentation_file" | jq . 2>/dev/null || cat "$presentation_file")
+\`\`\`
+
+</details>
+
+EOF
+        fi
+
+        # Clean up presentation template file
+        rm -f "$presentation_template_file"
+    fi
+
     return $sign_exit_code
 }
 
-# Create credential templates directory
+# Create credential templates and presentations directories
 mkdir -p case-studies/transhrimpment/credential-templates
+mkdir -p case-studies/transhrimpment/presentations
 
 echo ""
 echo "🏭 Issuing legitimate supply chain credentials per narrative..."
@@ -453,4 +560,5 @@ echo "📋 Step 2: Documentation collection completed!"
 echo "✅ 8 legitimate credentials issued per narrative"
 echo "🚨 1 fraudulent certificate of origin issued"
 echo "🔐 All credentials cryptographically signed and verified"
+echo "📋 9 presentations created and verified for each credential"
 echo "📍 Geographic data preserved for route analysis"

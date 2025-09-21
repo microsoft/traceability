@@ -147,6 +147,34 @@ These are legitimate credentials that are being presented by unauthorized partie
 
 **Note:** The stolen certificate is a legitimate credential issued by `Legit Shrimp Ltd` to `Honest Importer Ltd`, but `Shady Distributor Ltd` gained unauthorized access to it and attempted to present it as proof of their shrimp's origin. The presentation fails during verification because `Shady Distributor Ltd` cannot provide the private key corresponding to the `cnf.kid` field that binds the credential to `Honest Importer Ltd`.
 
+## Legitimate Presentations
+
+In a properly functioning supply chain, credentials would be presented by their legitimate holders to appropriate parties for verification. Each presentation involves a single credential being shared with a party that has a legitimate business need to verify it.
+
+### Phase 1: Initial Transaction Presentations
+
+| Credential | Holder | Presented To | Purpose | Verification Result |
+|------------|--------|--------------|---------|-------------------|
+| **Purchase Order** | `https://camaron-corriente.example/entity/ve-pbc-001` | `https://chompchomp.example/entity/bvi-001` | Confirm order details and terms | ✅ Valid - Holder binding matches |
+| **Commercial Invoice** | `https://chompchomp.example/entity/bvi-001` | `https://camaron-corriente.example/entity/ve-pbc-001` | Payment processing and customs | ✅ Valid - Holder binding matches |
+| **Certificate of Origin** | `https://chompchomp.example/entity/bvi-001` | Customs authorities | Prove country of origin for import | ✅ Valid - Holder binding matches |
+
+### Phase 2: Secondary Transaction Presentations
+
+| Credential | Holder | Presented To | Purpose | Verification Result |
+|------------|--------|--------------|---------|-------------------|
+| **Secondary Purchase Order** | `https://shady-distributor.example/entity/bvi-002` | `https://anonymous-distributor.example/entity/vi-stt-001` | Confirm order details and terms | ✅ Valid - Holder binding matches |
+| **Secondary Commercial Invoice** | `https://anonymous-distributor.example/entity/vi-stt-001` | `https://shady-distributor.example/entity/bvi-002` | Payment processing and customs | ✅ Valid - Holder binding matches |
+| **Secondary Bill of Lading** | `https://anonymous-distributor.example/entity/vi-stt-001` | Customs authorities | Prove shipment details for import | ✅ Valid - Holder binding matches |
+
+### Phase 3: Legitimate Credential Presentations (What Should Have Happened)
+
+| Credential | Holder | Presented To | Purpose | Verification Result |
+|------------|--------|--------------|---------|-------------------|
+| **Stolen Certificate of Origin** | `https://honest-importer.example/entity/tt-001` | Customs authorities | Prove country of origin for their legitimate import | ✅ Valid - Holder binding matches |
+
+**Note:** These presentations represent the legitimate flow of credentials in the supply chain. Each presentation involves the proper holder (as defined by the `cnf.kid` field) presenting their credential to an appropriate party for verification. The holder binding verification ensures that only the intended recipient of a credential can successfully present it, preventing unauthorized use even if the credential data is somehow obtained by malicious parties.
+
 ## Analysis
 
 Using the Bun Toolkit, we can analyze the supply chain documents to uncover the fraud.

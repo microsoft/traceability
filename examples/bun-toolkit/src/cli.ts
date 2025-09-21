@@ -23,9 +23,9 @@ Commands:
   generate-keys --out <file>                    Generate key pair and save to file
   generate-controller --config <file> --out <file>   Generate controller from config file
   sign-credential --entity-configuration <file> --credential <file> --out <file>   Sign credential with entity configuration
-  sign-presentation --key <file> --presentation <file> --out <file> Sign presentation with private key
+  sign-presentation --entity-configuration <file> --presentation <file> --out <file> Sign presentation with entity configuration
   verify-credential --credential <file> --controller <file>    Verify credential with controller document
-  verify-presentation --presentation <file> --resolver <file>    Verify presentation with resolver
+  verify-presentation --presentation <file> --controller <file>    Verify presentation with controller document
   extract-public-key --key <file> --out <file>           Extract public key from private key
   validate-schema --schema <file> [--example <file>]      Validate YAML schema and optional example
   validate-controller --controller <file> --schema <file> Validate controller document
@@ -897,11 +897,11 @@ async function signCredential(keyFile: string, credentialFile: string, outputFil
   }
 }
 
-async function signPresentation(keyFile: string, presentationFile: string, outputFile: string) {
-  console.log(`Signing presentation ${presentationFile} with key ${keyFile} and saving to ${outputFile}...`);
+async function signPresentation(entityConfigFile: string, presentationFile: string, outputFile: string) {
+  console.log(`Signing presentation ${presentationFile} with entity configuration ${entityConfigFile} and saving to ${outputFile}...`);
 
   try {
-    const keyData = await Bun.file(keyFile).json();
+    const keyData = await Bun.file(entityConfigFile).json();
     const unsignedPresentation = await Bun.file(presentationFile).json();
 
     // PRESENTATION SIGNING: Use AUTHENTICATION key for signing presentations
@@ -917,9 +917,16 @@ async function signPresentation(keyFile: string, presentationFile: string, outpu
       privateKey = keyData; // Fall back to direct key format
     }
     const signer = await presentation.signer(privateKey);
-    const signedPresentation = await signer.sign(unsignedPresentation);
+    const signedPresentationJWT = await signer.sign(unsignedPresentation);
 
-    await Bun.write(outputFile, JSON.stringify(signedPresentation, null, 2));
+    // Wrap JWT in EnvelopedVerifiablePresentation format with vp+jwt media type
+    const envelopedPresentation = {
+      "@context": "https://www.w3.org/ns/credentials/v2",
+      "id": `data:application/vp+jwt,${signedPresentationJWT}`,
+      "type": "EnvelopedVerifiablePresentation"
+    };
+
+    await Bun.write(outputFile, JSON.stringify(envelopedPresentation, null, 2));
     console.log(`✅ Signed presentation saved to ${outputFile}`);
   } catch (error) {
     console.error(`❌ Error signing presentation: ${error}`);
@@ -992,21 +999,33 @@ async function verifyCredential(credentialFile: string, controllerFile: string) 
   }
 }
 
-async function verifyPresentation(presentationFile: string, resolverFile: string) {
-  console.log(`Verifying presentation ${presentationFile} with resolver ${resolverFile}...`);
+async function verifyPresentation(presentationFile: string, controllerFile: string) {
+  console.log(`Verifying presentation ${presentationFile} with controller ${controllerFile}...`);
 
   try {
-    const signedPresentation = await Bun.file(presentationFile).text();
-    const resolverData = await Bun.file(resolverFile).json();
+    const presentationData = await Bun.file(presentationFile).json();
+    const controllerData = await Bun.file(controllerFile).json();
 
-    // Create a simple resolver from the resolver data
-    const simpleResolver = {
-      resolve: async (id: string) => {
-        return resolverData[id] || null;
+    // Handle EnvelopedVerifiablePresentation format
+    let signedPresentation;
+    if (presentationData.type === "EnvelopedVerifiablePresentation" && presentationData.id) {
+      // Extract JWT from data URL
+      const dataUrlPrefix = "data:application/vp+jwt,";
+      if (presentationData.id.startsWith(dataUrlPrefix)) {
+        signedPresentation = presentationData.id.substring(dataUrlPrefix.length);
+      } else {
+        throw new Error("Invalid EnvelopedVerifiablePresentation format");
       }
-    };
+    } else {
+      // Fall back to raw JWT string format
+      signedPresentation = typeof presentationData === 'string' ? presentationData : JSON.stringify(presentationData);
+    }
 
-    const verifier = await presentation.verifierWithGenericResolver(simpleResolver);
+    // Create a generic resolver and add the controller
+    const genericResolver = resolver.createGenericResolver();
+    genericResolver.addController(controllerData.id, controllerData);
+
+    const verifier = await presentation.verifierWithGenericResolver(genericResolver);
     const result = await verifier.verify(signedPresentation);
 
     console.log(`✅ Presentation verification successful`);
@@ -1341,11 +1360,11 @@ try {
       break;
 
     case 'sign-presentation':
-      if (!values.key || !values.presentation || !values.out) {
-        console.error("Please specify --key <file>, --presentation <file>, and --out <file>.");
+      if (!values['entity-configuration'] || !values.presentation || !values.out) {
+        console.error("Please specify --entity-configuration <file>, --presentation <file>, and --out <file>.");
         process.exit(1);
       }
-      await signPresentation(values.key, values.presentation, values.out);
+      await signPresentation(values['entity-configuration'], values.presentation, values.out);
       break;
 
     case 'verify-credential':
@@ -1357,11 +1376,11 @@ try {
       break;
 
     case 'verify-presentation':
-      if (!values.presentation || !values.resolver) {
-        console.error("Please specify --presentation <file> and --resolver <file>.");
+      if (!values.presentation || !values.controller) {
+        console.error("Please specify --presentation <file> and --controller <file>.");
         process.exit(1);
       }
-      await verifyPresentation(values.presentation, values.resolver);
+      await verifyPresentation(values.presentation, values.controller);
       break;
 
     case 'extract-public-key':

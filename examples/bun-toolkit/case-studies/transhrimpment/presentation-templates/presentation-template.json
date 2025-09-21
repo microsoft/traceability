@@ -1,0 +1,12 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2"
+  ],
+  "type": [
+    "VerifiablePresentation"
+  ],
+  "holder": "PLACEHOLDER_HOLDER_ID",
+  "verifiableCredential": [
+    "PLACEHOLDER_CREDENTIAL_PATH"
+  ]
+}
