@@ -32,7 +32,7 @@ echo "=================================================="
 echo "📄 Report will be generated in: $REPORT_FILE"
 
 # Ensure output directories exist
-mkdir -p case-studies/transhrimpment/{signed,controllers,keys,credentials,presentations}
+mkdir -p case-studies/transhrimpment/{controllers,credentials,presentations}
 
 echo ""
 echo "🔍 Step 1: Identify Entities"
@@ -171,14 +171,12 @@ cat >> "$REPORT_FILE" << 'EOF'
 
 ---
 
-## Step 2: Document Creation (Credential Issuance)
+## Step 2: Document Creation
 
 <details>
-<summary>📋 Click to expand document creation details</summary>
+<summary>📋 Click to expand document details</summary>
 
-Issuing verifiable credentials based on the Transhrimpment supply chain narrative.
-This includes 8 legitimate documents and 1 fraudulent certificate of origin.
-Each credential is cryptographically signed by the appropriate entity using their private keys and verified against their controller documents.
+This section covers all the documents that are issued for this supply chain.
 
 EOF
 
@@ -324,28 +322,18 @@ PRES_EOF
             pres_status_emoji="✅"
         fi
 
-        # Add presentation results to report (will be in Step 3)
-        if [ ! -f "${REPORT_FILE}.step3_started" ]; then
-            cat >> "$REPORT_FILE" << 'STEP3_EOF'
 
 </details>
 
 ---
 
-## Step 3: Document Exchange (Presentations)
+## Step 3: Document Exchange
 
 <details>
 <summary>🔄 Click to expand document exchange details</summary>
 
-Creating and verifying presentations of the issued credentials.
-Presentations demonstrate how credentials are shared and verified in real supply chain exchanges.
-This step reveals the fraud detection capabilities when forged credentials are presented.
+This section covers all the presentations that are created for this supply chain.
 
-STEP3_EOF
-            touch "${REPORT_FILE}.step3_started"
-        fi
-
-        cat >> "$REPORT_FILE" << EOF
 
 #### $pres_status_emoji Presentation for $description
 
@@ -476,8 +464,6 @@ cat >> "$REPORT_FILE" << 'EOF'
 </details>
 
 ---
-
-**📋 Documentation collection completed!**
 
 EOF
 
@@ -666,8 +652,6 @@ The cryptographic verification system successfully demonstrates two critical sec
 
 ---
 
-**🔍 Fraud detection analysis completed!**
-
 EOF
 
 echo ""
@@ -676,5 +660,3 @@ echo "✅ Demonstrated protection against credential forgery"
 echo "✅ Demonstrated protection against credential theft"
 echo "🛡️ Verifiable credentials successfully prevent both identity theft and credential misuse"
 
-# Clean up temporary files
-rm -f "${REPORT_FILE}.step3_started"

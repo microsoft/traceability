@@ -1420,8 +1420,6 @@ bun src/cli.ts verify-presentation --presentation case-studies/transhrimpment/pr
 
 ---
 
-**📋 Documentation collection completed!**
-
 
 ---
 
