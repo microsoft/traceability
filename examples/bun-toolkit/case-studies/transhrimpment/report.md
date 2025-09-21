@@ -15,7 +15,6 @@ Identifying supply chain entities, gather their addresses, locations and aliases
 
 ### ✅ Chompchomp Ltd
 
-**Controller Document Status:** Valid
 
 <details>
 <summary>📄 View Controller Document</summary>
@@ -146,7 +145,6 @@ Identifying supply chain entities, gather their addresses, locations and aliases
 
 ### ✅ Camarón Corriente S.A.
 
-**Controller Document Status:** Valid
 
 <details>
 <summary>📄 View Controller Document</summary>
@@ -261,7 +259,6 @@ Identifying supply chain entities, gather their addresses, locations and aliases
 
 ### ✅ Legit Shrimp Ltd
 
-**Controller Document Status:** Valid
 
 <details>
 <summary>📄 View Controller Document</summary>
@@ -377,7 +374,6 @@ Identifying supply chain entities, gather their addresses, locations and aliases
 
 ### ✅ Shady Carrier Ltd
 
-**Controller Document Status:** Valid
 
 <details>
 <summary>📄 View Controller Document</summary>
@@ -488,7 +484,6 @@ Identifying supply chain entities, gather their addresses, locations and aliases
 
 ### ✅ Shady Distributor Ltd
 
-**Controller Document Status:** Valid
 
 <details>
 <summary>📄 View Controller Document</summary>
@@ -599,7 +594,6 @@ Identifying supply chain entities, gather their addresses, locations and aliases
 
 ### ✅ Cargo Line Ltd
 
-**Controller Document Status:** Valid
 
 <details>
 <summary>📄 View Controller Document</summary>
@@ -715,7 +709,6 @@ Identifying supply chain entities, gather their addresses, locations and aliases
 
 ### ✅ Anonymous Distributor
 
-**Controller Document Status:** Valid
 
 <details>
 <summary>📄 View Controller Document</summary>
@@ -831,7 +824,6 @@ Identifying supply chain entities, gather their addresses, locations and aliases
 
 ### ✅ Honest Importer Inc
 
-**Controller Document Status:** Valid
 
 <details>
 <summary>📄 View Controller Document</summary>
@@ -971,10 +963,13 @@ Identifying supply chain entities, gather their addresses, locations and aliases
 
 ---
 
-## Step 2: Collect Documentation
+## Step 2: Document Creation (Credential Issuance)
 
-Issuing verifiable credentials based on the Transhrimpment supply chain narrative. 
-This includes 8 legitimate documents and 1 fraudulent certificate of origin. 
+<details>
+<summary>📋 Click to expand document creation details</summary>
+
+Issuing verifiable credentials based on the Transhrimpment supply chain narrative.
+This includes 8 legitimate documents and 1 fraudulent certificate of origin.
 Each credential is cryptographically signed by the appropriate entity using their private keys and verified against their controller documents.
 
 
@@ -1011,7 +1006,19 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
 </details>
 
 
+</details>
+
 ---
+
+## Step 3: Document Exchange (Presentations)
+
+<details>
+<summary>🔄 Click to expand document exchange details</summary>
+
+Creating and verifying presentations of the issued credentials.
+Presentations demonstrate how credentials are shared and verified in real supply chain exchanges.
+This step reveals the fraud detection capabilities when forged credentials are presented.
+
 
 #### ✅ Presentation for Purchase Order (Chompchomp → Camarón Corriente)
 
@@ -1064,8 +1071,6 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
 </details>
 
 
----
-
 #### ✅ Presentation for Commercial Invoice (Camarón Corriente → Chompchomp)
 
 <details>
@@ -1116,8 +1121,6 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
 
 </details>
 
-
----
 
 #### ✅ Presentation for Certificate of Origin (Camarón Corriente → Chompchomp)
 
@@ -1170,8 +1173,6 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
 </details>
 
 
----
-
 #### ✅ Presentation for Bill of Lading (Shady Carrier → Chompchomp)
 
 <details>
@@ -1222,8 +1223,6 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
 
 </details>
 
-
----
 
 #### ✅ Presentation for Secondary Purchase Order (Anonymous Distributor → Shady Distributor)
 
@@ -1276,8 +1275,6 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
 </details>
 
 
----
-
 #### ✅ Presentation for Secondary Commercial Invoice (Shady Distributor → Anonymous Distributor)
 
 <details>
@@ -1328,8 +1325,6 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
 
 </details>
 
-
----
 
 #### ✅ Presentation for Secondary Bill of Lading (Cargo Line → Anonymous Distributor)
 
@@ -1382,8 +1377,6 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
 </details>
 
 
----
-
 #### ✅ Presentation for Certificate of Origin (Legit Shrimp → Honest Importer) - WILL BE STOLEN
 
 <details>
@@ -1435,8 +1428,6 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
 </details>
 
 
----
-
 #### ✅ Presentation for FRAUDULENT Certificate of Origin (Shady Distributor forging Legit Shrimp identity)
 
 <details>
@@ -1454,6 +1445,8 @@ bun src/cli.ts verify-presentation --presentation case-studies/transhrimpment/pr
 
 </details>
 
+
+</details>
 
 ---
 

@@ -150,8 +150,8 @@ echo "📍 Geographic locations extracted for all entities"
 echo "🗺️ Map previews available in report"
 
 echo ""
-echo "📋 Step 2: Collect Documentation"
-echo "==============================="
+echo "📋 Step 2: Document Creation (Credential Issuance)"
+echo "=================================================="
 echo "📄 Issuing verifiable credentials from the Transhrimpment narrative..."
 echo "🔐 Using private keys from entity configurations..."
 echo "✅ Verifying each credential after issuance..."
@@ -161,10 +161,13 @@ cat >> "$REPORT_FILE" << 'EOF'
 
 ---
 
-## Step 2: Collect Documentation
+## Step 2: Document Creation (Credential Issuance)
 
-Issuing verifiable credentials based on the Transhrimpment supply chain narrative. 
-This includes 8 legitimate documents and 1 fraudulent certificate of origin. 
+<details>
+<summary>📋 Click to expand document creation details</summary>
+
+Issuing verifiable credentials based on the Transhrimpment supply chain narrative.
+This includes 8 legitimate documents and 1 fraudulent certificate of origin.
 Each credential is cryptographically signed by the appropriate entity using their private keys and verified against their controller documents.
 
 EOF
@@ -325,10 +328,28 @@ PRES_EOF
             pres_status_emoji="✅"
         fi
 
-        # Add presentation results to report
-        cat >> "$REPORT_FILE" << EOF
+        # Add presentation results to report (will be in Step 3)
+        if [ ! -f "${REPORT_FILE}.step3_started" ]; then
+            cat >> "$REPORT_FILE" << 'STEP3_EOF'
+
+</details>
 
 ---
+
+## Step 3: Document Exchange (Presentations)
+
+<details>
+<summary>🔄 Click to expand document exchange details</summary>
+
+Creating and verifying presentations of the issued credentials.
+Presentations demonstrate how credentials are shared and verified in real supply chain exchanges.
+This step reveals the fraud detection capabilities when forged credentials are presented.
+
+STEP3_EOF
+            touch "${REPORT_FILE}.step3_started"
+        fi
+
+        cat >> "$REPORT_FILE" << EOF
 
 #### $pres_status_emoji Presentation for $description
 
@@ -456,6 +477,8 @@ issue_and_verify_credential \
 # Add summary section to report
 cat >> "$REPORT_FILE" << 'EOF'
 
+</details>
+
 ---
 
 **📋 Documentation collection completed!**
@@ -463,9 +486,9 @@ cat >> "$REPORT_FILE" << 'EOF'
 EOF
 
 echo ""
-echo "📋 Step 2: Documentation collection completed!"
+echo "📋 Steps 2 & 3: Documentation collection completed!"
 echo "✅ 8 legitimate credentials issued per narrative"
 echo "🚨 1 fraudulent certificate of origin issued"
 echo "🔐 All credentials cryptographically signed and verified"
-echo "📋 9 presentations created and verified for each credential"
+echo "🔄 9 presentations created and verified for each credential"
 echo "📍 Geographic data preserved for route analysis"
