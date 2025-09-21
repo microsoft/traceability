@@ -1,7 +1,6 @@
 import { test, expect, describe, beforeAll, afterAll } from "bun:test";
 import { credential, presentation, resolver } from "../../../src/index";
-import { exportPublicKey } from "../../../src/key";
-import { createControllerBuilder } from "../../../src/controller/builder";
+import { validateControllerDocument } from "../../../src/reports/entity-report";
 import path from "node:path";
 
 // Test data interface matching the narrative structure
@@ -177,7 +176,15 @@ describe("Transhrimpment Case Study", () => {
             throw new Error(`Controller not found in resolver cache for ${key}`);
           }
 
-          // Validate controller structure
+          // Validate controller against schema
+          const schemaPath = `${CASE_DIR}/schemas/controller-document.yaml`;
+          const validationResult = await validateControllerDocument(controller, schemaPath);
+
+          if (!validationResult.isValid) {
+            throw new Error(`Controller validation failed: ${validationResult.errorMessage}`);
+          }
+
+          // Validate controller structure matches configuration
           expect(controller.id).toBe(config.id);
           expect(controller.verificationMethod).toBeDefined();
           expect(Array.isArray(controller.verificationMethod)).toBe(true);
@@ -217,9 +224,10 @@ describe("Transhrimpment Case Study", () => {
   describe("Step 2: Credential Issuance and Verification", () => {
 
     const credentialSpecs = [
+      // PRIMARY TRANSACTION: Chompchomp ↔ Camarón Corriente (1000kg shrimp)
       {
         key: "chompchomp-purchase-order",
-        description: "Purchase Order (Chompchomp → Camarón Corriente)",
+        description: "Purchase Order (Chompchomp → Camarón Corriente) - 1000kg frozen shrimp",
         issuer: "chompchomp",
         holder: "camaron-corriente",
         template: "chompchomp-purchase-order-template.json",
@@ -228,7 +236,7 @@ describe("Transhrimpment Case Study", () => {
       },
       {
         key: "camaron-corriente-invoice",
-        description: "Commercial Invoice (Camarón Corriente → Chompchomp)",
+        description: "Commercial Invoice (Camarón Corriente → Chompchomp) - Payment for shrimp",
         issuer: "camaron-corriente",
         holder: "chompchomp",
         template: "camaron-corriente-invoice-template.json",
@@ -236,18 +244,78 @@ describe("Transhrimpment Case Study", () => {
         fraudType: null
       },
       {
+        key: "camaron-corriente-origin",
+        description: "Certificate of Origin (Camarón Corriente → Chompchomp) - Venezuela origin",
+        issuer: "camaron-corriente",
+        holder: "chompchomp",
+        template: "camaron-corriente-origin-template.json",
+        schema: "CertificateOfOriginCredential",
+        fraudType: null
+      },
+
+      // PRIMARY TRANSPORTATION (Shady Carrier replaces Cargo Line due to hurricane damage)
+      {
+        key: "shady-carrier-lading",
+        description: "Bill of Lading (Shady Carrier → Chompchomp) - Transport with forged partial loss",
+        issuer: "shady-carrier",
+        holder: "chompchomp",
+        template: "shady-carrier-lading-template.json",
+        schema: "BillOfLadingCredential",
+        fraudType: "Counterfeiting and Alteration" // Forged to show partial loss
+      },
+      {
+        key: "shady-carrier-forged-lading",
+        description: "Forged Bill of Lading (Shady Carrier) - Claims partial shipment destroyed to steal goods",
+        issuer: "shady-carrier",
+        holder: "anonymous-distributor",
+        template: "shady-carrier-forged-lading-template.json",
+        schema: "BillOfLadingCredential",
+        fraudType: "Counterfeiting and Alteration"
+      },
+
+      // SECONDARY TRANSACTION: Anonymous Distributor ↔ Shady Distributor (500kg stolen shrimp)
+      {
+        key: "anonymous-distributor-secondary-purchase-order",
+        description: "Purchase Order (Anonymous Distributor → Shady Distributor) - 500kg stolen shrimp",
+        issuer: "anonymous-distributor",
+        holder: "shady-distributor",
+        template: "anonymous-distributor-secondary-purchase-order-template.json",
+        schema: "PurchaseOrderCredential",
+        fraudType: null
+      },
+      {
+        key: "shady-distributor-secondary-invoice",
+        description: "Commercial Invoice (Shady Distributor → Anonymous Distributor) - Sale of stolen goods",
+        issuer: "shady-distributor",
+        holder: "anonymous-distributor",
+        template: "shady-distributor-secondary-invoice-template.json",
+        schema: "CommercialInvoiceCredential",
+        fraudType: null
+      },
+      {
+        key: "cargo-line-secondary-lading",
+        description: "Bill of Lading (Cargo Line → Anonymous Distributor) - Secondary transaction delivery",
+        issuer: "cargo-line",
+        holder: "anonymous-distributor",
+        template: "cargo-line-secondary-lading-template.json",
+        schema: "BillOfLadingCredential",
+        fraudType: null // Cargo Line is legitimate, unaware of stolen goods
+      },
+
+      // DOCUMENT THEFT AND FORGERY
+      {
         key: "legit-shrimp-honest-importer-origin",
-        description: "Certificate of Origin (Legit Shrimp → Honest Importer) - WILL BE STOLEN",
+        description: "Certificate of Origin (Legit Shrimp → Honest Importer) - LEGITIMATE but will be stolen",
         issuer: "legit-shrimp",
         holder: "honest-importer",
         template: "legit-shrimp-honest-importer-origin-template.json",
         schema: "CertificateOfOriginCredential",
-        fraudType: "Document Compromise"
+        fraudType: "Document Compromise" // Will be stolen and misused
       },
       {
         key: "shady-distributor-fraudulent-origin",
         description: "FRAUDULENT Certificate of Origin (Shady Distributor forging Legit Shrimp identity)",
-        issuer: "shady-distributor", // Wrong issuer! Should be legit-shrimp
+        issuer: "shady-distributor", // Wrong issuer! Claims to be from Legit Shrimp
         holder: "shady-distributor",
         template: "shady-distributor-fraudulent-origin-template.json",
         schema: "CertificateOfOriginCredential",

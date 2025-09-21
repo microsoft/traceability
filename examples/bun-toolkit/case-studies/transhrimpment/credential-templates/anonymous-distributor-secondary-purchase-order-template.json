@@ -1,0 +1,44 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "PurchaseOrderCredential"
+  ],
+  "issuer": "https://anonymous-distributor.example",
+  "validFrom": "2025-02-01T10:00:00Z",
+  "validUntil": "2030-12-31T23:59:59Z",
+  "cnf": {
+    "kid": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8"
+  },
+  "credentialSubject": {
+    "id": "https://orders.example/po-secondary-2024-001",
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-64.9307, 18.3419]
+        },
+        "properties": {
+          "type": "PurchaseOrder",
+          "orderNumber": "PO-SEC-2024-001",
+          "buyer": {
+            "id": "https://anonymous-distributor.example",
+            "name": "Anonymous Distributor"
+          },
+          "seller": {
+            "id": "https://shady-distributor.example",
+            "name": "Shady Distributor Ltd"
+          },
+          "description": "500kg frozen shrimp (secondary market)",
+          "quantity": "500kg",
+          "deliveryDate": "2024-03-01"
+        }
+      }
+    ]
+  }
+}

@@ -1,13 +1,13 @@
 {
   "caseName": "Transhrimpment Supply Chain Fraud Investigation",
-  "timestamp": "2025-09-21T15:24:36.461Z",
+  "timestamp": "2025-09-21T15:38:05.787Z",
   "summary": {
     "entitiesIdentified": 8,
-    "credentialsIssued": 4,
-    "presentationsCreated": 4,
+    "credentialsIssued": 10,
+    "presentationsCreated": 10,
     "fraudsDetected": 2,
-    "testsTotal": 15,
-    "testsPassed": 15,
+    "testsTotal": 21,
+    "testsPassed": 21,
     "testsFailed": 0
   },
   "entities": [
@@ -110,7 +110,7 @@
   ],
   "credentials": [
     {
-      "description": "Purchase Order (Chompchomp → Camarón Corriente)",
+      "description": "Purchase Order (Chompchomp → Camarón Corriente) - 1000kg frozen shrimp",
       "schemaType": "PurchaseOrderCredential",
       "issuanceSuccessful": true,
       "verificationSuccessful": true,
@@ -119,7 +119,7 @@
       "errors": []
     },
     {
-      "description": "Commercial Invoice (Camarón Corriente → Chompchomp)",
+      "description": "Commercial Invoice (Camarón Corriente → Chompchomp) - Payment for shrimp",
       "schemaType": "CommercialInvoiceCredential",
       "issuanceSuccessful": true,
       "verificationSuccessful": true,
@@ -128,7 +128,61 @@
       "errors": []
     },
     {
-      "description": "Certificate of Origin (Legit Shrimp → Honest Importer) - WILL BE STOLEN",
+      "description": "Certificate of Origin (Camarón Corriente → Chompchomp) - Venezuela origin",
+      "schemaType": "CertificateOfOriginCredential",
+      "issuanceSuccessful": true,
+      "verificationSuccessful": true,
+      "fraudType": null,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "description": "Bill of Lading (Shady Carrier → Chompchomp) - Transport with forged partial loss",
+      "schemaType": "BillOfLadingCredential",
+      "issuanceSuccessful": true,
+      "verificationSuccessful": true,
+      "fraudType": "Counterfeiting and Alteration",
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "description": "Forged Bill of Lading (Shady Carrier) - Claims partial shipment destroyed to steal goods",
+      "schemaType": "BillOfLadingCredential",
+      "issuanceSuccessful": true,
+      "verificationSuccessful": true,
+      "fraudType": "Counterfeiting and Alteration",
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "description": "Purchase Order (Anonymous Distributor → Shady Distributor) - 500kg stolen shrimp",
+      "schemaType": "PurchaseOrderCredential",
+      "issuanceSuccessful": true,
+      "verificationSuccessful": true,
+      "fraudType": null,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "description": "Commercial Invoice (Shady Distributor → Anonymous Distributor) - Sale of stolen goods",
+      "schemaType": "CommercialInvoiceCredential",
+      "issuanceSuccessful": true,
+      "verificationSuccessful": true,
+      "fraudType": null,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "description": "Bill of Lading (Cargo Line → Anonymous Distributor) - Secondary transaction delivery",
+      "schemaType": "BillOfLadingCredential",
+      "issuanceSuccessful": true,
+      "verificationSuccessful": true,
+      "fraudType": null,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "description": "Certificate of Origin (Legit Shrimp → Honest Importer) - LEGITIMATE but will be stolen",
       "schemaType": "CertificateOfOriginCredential",
       "issuanceSuccessful": true,
       "verificationSuccessful": true,
@@ -160,6 +214,62 @@
       "description": "Presentation for camaron-corriente-invoice",
       "presentationFile": "camaron-corriente-invoice-presentation",
       "credentialIncluded": "camaron-corriente-invoice",
+      "signingSuccessful": true,
+      "verificationSuccessful": true,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "description": "Presentation for camaron-corriente-origin",
+      "presentationFile": "camaron-corriente-origin-presentation",
+      "credentialIncluded": "camaron-corriente-origin",
+      "signingSuccessful": true,
+      "verificationSuccessful": false,
+      "testPassed": false,
+      "errors": [
+        "Presentation verification failed: Error: Public key not found for id: yEO0pZQ6_bFYlZZkmmK6MQLrydeubOdKdtYO-cXKsAg"
+      ]
+    },
+    {
+      "description": "Presentation for shady-carrier-lading",
+      "presentationFile": "shady-carrier-lading-presentation",
+      "credentialIncluded": "shady-carrier-lading",
+      "signingSuccessful": true,
+      "verificationSuccessful": true,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "description": "Presentation for shady-carrier-forged-lading",
+      "presentationFile": "shady-carrier-forged-lading-presentation",
+      "credentialIncluded": "shady-carrier-forged-lading",
+      "signingSuccessful": true,
+      "verificationSuccessful": true,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "description": "Presentation for anonymous-distributor-secondary-purchase-order",
+      "presentationFile": "anonymous-distributor-secondary-purchase-order-presentation",
+      "credentialIncluded": "anonymous-distributor-secondary-purchase-order",
+      "signingSuccessful": true,
+      "verificationSuccessful": true,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "description": "Presentation for shady-distributor-secondary-invoice",
+      "presentationFile": "shady-distributor-secondary-invoice-presentation",
+      "credentialIncluded": "shady-distributor-secondary-invoice",
+      "signingSuccessful": true,
+      "verificationSuccessful": true,
+      "testPassed": true,
+      "errors": []
+    },
+    {
+      "description": "Presentation for cargo-line-secondary-lading",
+      "presentationFile": "cargo-line-secondary-lading-presentation",
+      "credentialIncluded": "cargo-line-secondary-lading",
       "signingSuccessful": true,
       "verificationSuccessful": true,
       "testPassed": true,
