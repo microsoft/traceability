@@ -322,6 +322,8 @@ PRES_EOF
             pres_status_emoji="✅"
         fi
 
+        # Add presentation details to report
+        cat >> "$REPORT_FILE" << EOF
 
 </details>
 
@@ -376,7 +378,7 @@ echo "🏭 Issuing legitimate supply chain credentials per narrative..."
 issue_and_verify_credential \
     "Chompchomp Ltd" \
     "case-studies/transhrimpment/entity_configurations/chompchomp-config.json" \
-    "case-studies/transhrimpment/credential-templates/purchase-order-template.json" \
+    "case-studies/transhrimpment/credential-templates/chompchomp-purchase-order-template.json" \
     "case-studies/transhrimpment/schemas/purchase-order-credential.yaml" \
     "case-studies/transhrimpment/credentials/chompchomp-purchase-order.json" \
     "Purchase Order (Chompchomp → Camarón Corriente)"
@@ -385,7 +387,7 @@ issue_and_verify_credential \
 issue_and_verify_credential \
     "Camarón Corriente S.A." \
     "case-studies/transhrimpment/entity_configurations/camaron-corriente-config.json" \
-    "case-studies/transhrimpment/credential-templates/commercial-invoice-template.json" \
+    "case-studies/transhrimpment/credential-templates/camaron-corriente-invoice-template.json" \
     "case-studies/transhrimpment/schemas/commercial-invoice-credential.yaml" \
     "case-studies/transhrimpment/credentials/camaron-corriente-invoice.json" \
     "Commercial Invoice (Camarón Corriente → Chompchomp)"
@@ -394,7 +396,7 @@ issue_and_verify_credential \
 issue_and_verify_credential \
     "Camarón Corriente S.A." \
     "case-studies/transhrimpment/entity_configurations/camaron-corriente-config.json" \
-    "case-studies/transhrimpment/credential-templates/certificate-origin-template.json" \
+    "case-studies/transhrimpment/credential-templates/camaron-corriente-origin-template.json" \
     "case-studies/transhrimpment/schemas/certificate-of-origin-credential.yaml" \
     "case-studies/transhrimpment/credentials/camaron-corriente-origin.json" \
     "Certificate of Origin (Camarón Corriente → Chompchomp)"
@@ -403,7 +405,7 @@ issue_and_verify_credential \
 issue_and_verify_credential \
     "Shady Carrier Ltd" \
     "case-studies/transhrimpment/entity_configurations/shady-carrier-config.json" \
-    "case-studies/transhrimpment/credential-templates/bill-lading-template.json" \
+    "case-studies/transhrimpment/credential-templates/shady-carrier-lading-template.json" \
     "case-studies/transhrimpment/schemas/bill-of-lading-credential.yaml" \
     "case-studies/transhrimpment/credentials/shady-carrier-lading.json" \
     "Bill of Lading (Shady Carrier → Chompchomp)"
@@ -412,7 +414,7 @@ issue_and_verify_credential \
 issue_and_verify_credential \
     "Anonymous Distributor" \
     "case-studies/transhrimpment/entity_configurations/anonymous-distributor-config.json" \
-    "case-studies/transhrimpment/credential-templates/secondary-purchase-order-template.json" \
+    "case-studies/transhrimpment/credential-templates/anonymous-distributor-purchase-order-template.json" \
     "case-studies/transhrimpment/schemas/purchase-order-credential.yaml" \
     "case-studies/transhrimpment/credentials/anonymous-distributor-purchase-order.json" \
     "Secondary Purchase Order (Anonymous Distributor → Shady Distributor)"
@@ -421,7 +423,7 @@ issue_and_verify_credential \
 issue_and_verify_credential \
     "Shady Distributor Ltd" \
     "case-studies/transhrimpment/entity_configurations/shady-distributor-config.json" \
-    "case-studies/transhrimpment/credential-templates/secondary-commercial-invoice-template.json" \
+    "case-studies/transhrimpment/credential-templates/shady-distributor-invoice-template.json" \
     "case-studies/transhrimpment/schemas/commercial-invoice-credential.yaml" \
     "case-studies/transhrimpment/credentials/shady-distributor-invoice.json" \
     "Secondary Commercial Invoice (Shady Distributor → Anonymous Distributor)"
@@ -435,20 +437,12 @@ issue_and_verify_credential \
     "case-studies/transhrimpment/credentials/shady-carrier-forged-lading.json" \
     "Forged Bill of Lading (Shady Carrier forges original shipment documentation)"
 
-# 8. Legitimate Secondary Bill of Lading: Cargo Line → Anonymous Distributor
-issue_and_verify_credential \
-    "Cargo Line Ltd" \
-    "case-studies/transhrimpment/entity_configurations/cargo-line-config.json" \
-    "case-studies/transhrimpment/credential-templates/cargo-line-legitimate-lading-template.json" \
-    "case-studies/transhrimpment/schemas/bill-of-lading-credential.yaml" \
-    "case-studies/transhrimpment/credentials/cargo-line-legitimate-lading.json" \
-    "Legitimate Secondary Bill of Lading (Cargo Line → Anonymous Distributor)"
 
 # 9. Stolen Certificate of Origin: Legit Shrimp → Honest Importer (legitimate but will be misused)
 issue_and_verify_credential \
     "Legit Shrimp Ltd" \
     "case-studies/transhrimpment/entity_configurations/legit-shrimp-config.json" \
-    "case-studies/transhrimpment/credential-templates/stolen-certificate-template.json" \
+    "case-studies/transhrimpment/credential-templates/legit-shrimp-honest-importer-origin-template.json" \
     "case-studies/transhrimpment/schemas/certificate-of-origin-credential.yaml" \
     "case-studies/transhrimpment/credentials/legit-shrimp-honest-importer-origin.json" \
     "Certificate of Origin (Legit Shrimp → Honest Importer) - WILL BE STOLEN"
@@ -462,7 +456,7 @@ echo "🚨 Issuing fraudulent credential (for investigation purposes)..."
 issue_and_verify_credential \
     "Shady Distributor Ltd" \
     "case-studies/transhrimpment/entity_configurations/shady-distributor-config.json" \
-    "case-studies/transhrimpment/credential-templates/fraudulent-origin-template.json" \
+    "case-studies/transhrimpment/credential-templates/shady-distributor-fraudulent-origin-template.json" \
     "case-studies/transhrimpment/schemas/certificate-of-origin-credential.yaml" \
     "case-studies/transhrimpment/credentials/shady-distributor-fraudulent-origin.json" \
     "FRAUDULENT Certificate of Origin (Shady Distributor forging Legit Shrimp identity)"

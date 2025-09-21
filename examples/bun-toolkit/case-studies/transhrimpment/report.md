@@ -1008,14 +1008,12 @@ Creating resolver cache from controllers in case-studies/transhrimpment/controll
 
 ---
 
-## Step 2: Document Creation (Credential Issuance)
+## Step 2: Document Creation
 
 <details>
-<summary>📋 Click to expand document creation details</summary>
+<summary>📋 Click to expand document details</summary>
 
-Issuing verifiable credentials based on the Transhrimpment supply chain narrative.
-This includes 8 legitimate documents and 1 fraudulent certificate of origin.
-Each credential is cryptographically signed by the appropriate entity using their private keys and verified against their controller documents.
+This section covers all the documents that are issued for this supply chain.
 
 
 ### ✅ Purchase Order (Chompchomp → Camarón Corriente)
@@ -1055,14 +1053,12 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
 
 ---
 
-## Step 3: Document Exchange (Presentations)
+## Step 3: Document Exchange
 
 <details>
 <summary>🔄 Click to expand document exchange details</summary>
 
-Creating and verifying presentations of the issued credentials.
-Presentations demonstrate how credentials are shared and verified in real supply chain exchanges.
-This step reveals the fraud detection capabilities when forged credentials are presented.
+This section covers all the presentations that are created for this supply chain.
 
 
 #### ✅ Presentation for Purchase Order (Chompchomp → Camarón Corriente)
@@ -1116,6 +1112,18 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
 </details>
 
 
+</details>
+
+---
+
+## Step 3: Document Exchange
+
+<details>
+<summary>🔄 Click to expand document exchange details</summary>
+
+This section covers all the presentations that are created for this supply chain.
+
+
 #### ✅ Presentation for Commercial Invoice (Camarón Corriente → Chompchomp)
 
 <details>
@@ -1150,6 +1158,18 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
 ```
 
 </details>
+
+
+</details>
+
+---
+
+## Step 3: Document Exchange
+
+<details>
+<summary>🔄 Click to expand document exchange details</summary>
+
+This section covers all the presentations that are created for this supply chain.
 
 
 #### ✅ Presentation for Certificate of Origin (Camarón Corriente → Chompchomp)
@@ -1203,6 +1223,18 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
 </details>
 
 
+</details>
+
+---
+
+## Step 3: Document Exchange
+
+<details>
+<summary>🔄 Click to expand document exchange details</summary>
+
+This section covers all the presentations that are created for this supply chain.
+
+
 #### ✅ Presentation for Bill of Lading (Shady Carrier → Chompchomp)
 
 <details>
@@ -1237,6 +1269,18 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
 ```
 
 </details>
+
+
+</details>
+
+---
+
+## Step 3: Document Exchange
+
+<details>
+<summary>🔄 Click to expand document exchange details</summary>
+
+This section covers all the presentations that are created for this supply chain.
 
 
 #### ✅ Presentation for Secondary Purchase Order (Anonymous Distributor → Shady Distributor)
@@ -1275,6 +1319,18 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
 </details>
 
 
+</details>
+
+---
+
+## Step 3: Document Exchange
+
+<details>
+<summary>🔄 Click to expand document exchange details</summary>
+
+This section covers all the presentations that are created for this supply chain.
+
+
 #### ✅ Presentation for Secondary Commercial Invoice (Shady Distributor → Anonymous Distributor)
 
 <details>
@@ -1293,7 +1349,7 @@ bun src/cli.ts verify-presentation --presentation case-studies/transhrimpment/pr
 </details>
 
 
-### ✅ Secondary Bill of Lading (Cargo Line → Anonymous Distributor)
+### ✅ Forged Bill of Lading (Shady Carrier forges original shipment documentation)
 
 <details>
 <summary>Document Verification</summary>
@@ -1305,13 +1361,40 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
 
 **Verify Result:**
 ```
-❌ Credential verification failed: Error: Key ID mismatch: expected 5oD1QCp0J1MVNcptL_UPotidwjw8pScO1Ky2cQedt2Q, got 6MubhjOhD3qJYFu9avKeOpH0lr1CnwYEtDkBBGlEctE
+✅ Credential verification successful
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "BillOfLadingCredential"
+  ],
+  "issuer": "https://shady-carrier.example/entity/aw-oru-001",
+  "cnf": {
+    "kid": "-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A"
+  },
+  "credentialSubject": {
+    "id": "https://shipments.example/bol-2024-001",
 ```
 
 </details>
 
 
-#### ✅ Presentation for Secondary Bill of Lading (Cargo Line → Anonymous Distributor)
+</details>
+
+---
+
+## Step 3: Document Exchange
+
+<details>
+<summary>🔄 Click to expand document exchange details</summary>
+
+This section covers all the presentations that are created for this supply chain.
+
+
+#### ✅ Presentation for Forged Bill of Lading (Shady Carrier forges original shipment documentation)
 
 <details>
 <summary>Presentation Verification</summary>
@@ -1323,7 +1406,7 @@ bun src/cli.ts verify-presentation --presentation case-studies/transhrimpment/pr
 
 **Verify Result:**
 ```
-❌ Presentation verification failed: Error: Public key not found for id: Is1nmYZZvkaJfQY-rwDp43RW9TbglgOBdkY44P_ialI
+❌ Presentation verification failed: Error: Public key not found for id: RZp0CzLsm1iBdc6RyR6ryCFb3sNiOIdzzSf92n7fBJg
 ```
 
 </details>
@@ -1362,6 +1445,18 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
 </details>
 
 
+</details>
+
+---
+
+## Step 3: Document Exchange
+
+<details>
+<summary>🔄 Click to expand document exchange details</summary>
+
+This section covers all the presentations that are created for this supply chain.
+
+
 #### ✅ Presentation for Certificate of Origin (Legit Shrimp → Honest Importer) - WILL BE STOLEN
 
 <details>
@@ -1396,6 +1491,18 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
 ```
 
 </details>
+
+
+</details>
+
+---
+
+## Step 3: Document Exchange
+
+<details>
+<summary>🔄 Click to expand document exchange details</summary>
+
+This section covers all the presentations that are created for this supply chain.
 
 
 #### ✅ Presentation for FRAUDULENT Certificate of Origin (Shady Distributor forging Legit Shrimp identity)
@@ -1491,6 +1598,4 @@ The cryptographic verification system successfully demonstrates two critical sec
 </details>
 
 ---
-
-**🔍 Fraud detection analysis completed!**
 
