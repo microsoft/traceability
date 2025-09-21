@@ -33,3 +33,16 @@ A seafood distributor in `Charlotte Amalie, St. Thomas, U.S. Virgin Islands` pla
 
 The importer's customs broker files all the paper work for the imported shrimp as hs code 0306.17, originating from `Trinidad and Tobago`.
 Lab tests on the shrimp reveal chemical contamination, and an investigation is launched.
+
+## Supply Chain Fraud Types Demonstrated
+
+This scenario illustrates three critical types of fraud that plague global supply chains:
+
+### Document Compromise
+In our seafood supply chain, `Shady Distributor Ltd` gains access to a legitimate Certificate of Origin originally issued by `Legit Shrimp Ltd` to `Honest Importer Ltd`. This represents document compromise - the theft or unauthorized access to authentic supply chain documents. In traditional supply chains, this could involve stealing physical certificates, intercepting digital communications, or exploiting data breaches to obtain legitimate trade documents. The compromised documents are then presented as proof of legitimate sourcing, even though the thief was not the rightful credential holder.
+
+### Counterfeiting and Alteration
+`Shady Carrier Ltd` demonstrates sophisticated document counterfeiting by forging Bill of Lading documentation to make it appear that part of the frozen shrimp shipment was destroyed during transit. This allows them to divert goods while maintaining the appearance of legitimate transport. Similarly, `Shady Distributor Ltd` creates entirely fabricated Certificates of Origin claiming the shrimp originated from `Legit Shrimp Ltd` in Trinidad and Tobago, when in reality it came from Venezuela. These counterfeit documents enable the fraudulent goods to pass through customs and regulatory checks, bypassing the traceability systems designed to ensure food safety and prevent illegal trade.
+
+### Synthetic Identity Fraud
+The scenario demonstrates how criminal organizations create synthetic supply chain identities to facilitate their operations. `Shady Carrier Ltd` invents `Shady Distributor Ltd` as a front company to fence the stolen goods, operating both entities under the same criminal organization. This synthetic identity combines legitimate business registration details (Road Town, Tortola, BVI) with fabricated operational history and stolen credentials from `Legit Shrimp Ltd` to create the appearance of a legitimate seafood distributor. By creating this synthetic supply chain identity, the criminals can operate within the legitimate trade system while maintaining plausible deniability and making it more difficult for authorities to trace the fraudulent activities back to the original theft.
