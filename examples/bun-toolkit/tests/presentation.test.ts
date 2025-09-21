@@ -47,7 +47,7 @@ test("create and verify presentation with enveloped route credential", async () 
   
   // Create credential signer and sign the credential
   const credentialSigner = await credential.signer(issuerPrivateKey);
-  const signedCredential = await credentialSigner.sign(sampleRouteCredential);
+  const signedCredential = await credentialSigner.sign(sampleRouteCredential, { kid: issuerPrivateKey.kid });
   
   // Create enveloped verifiable credential
   const envelopedCredential = credential.createEnvelopedVerifiableCredential(signedCredential);
@@ -68,7 +68,7 @@ test("create and verify presentation with enveloped route credential", async () 
   
   // Create presentation signer and sign the presentation
   const presentationSigner = await presentation.signer(holderPrivateKey);
-  const signedPresentation = await presentationSigner.sign(presentationData);
+  const signedPresentation = await presentationSigner.sign(presentationData, { kid: holderPrivateKey.kid });
   
   // Create presentation verifier and verify the presentation
   const presentationVerifier = await presentation.verifier(holderPublicKey);
@@ -103,7 +103,7 @@ test("verify presentation with wrong holder key fails", async () => {
   
   // Create and sign credential
   const credentialSigner = await credential.signer(issuerPrivateKey);
-  const signedCredential = await credentialSigner.sign(sampleRouteCredential);
+  const signedCredential = await credentialSigner.sign(sampleRouteCredential, { kid: issuerPrivateKey.kid });
   const envelopedCredential = credential.createEnvelopedVerifiableCredential(signedCredential);
   
   // Create presentation
@@ -116,7 +116,7 @@ test("verify presentation with wrong holder key fails", async () => {
   
   // Sign with holder key
   const presentationSigner = await presentation.signer(holderPrivateKey);
-  const signedPresentation = await presentationSigner.sign(presentationData);
+  const signedPresentation = await presentationSigner.sign(presentationData, { kid: holderPrivateKey.kid });
   
   // Try to verify with wrong holder key
   const wrongVerifier = await presentation.verifier(wrongHolderPublicKey);
@@ -143,7 +143,7 @@ test("verify presentation with algorithm mismatch fails", async () => {
   
   // Sign with ES256
   const presentationSigner = await presentation.signer(holderPrivateKey);
-  const signedPresentation = await presentationSigner.sign(presentationData);
+  const signedPresentation = await presentationSigner.sign(presentationData, { kid: holderPrivateKey.kid });
   
   // Try to verify with ES384
   const wrongVerifier = await presentation.verifier(es384PublicKey);
@@ -167,7 +167,7 @@ test("verify presentation with key ID mismatch fails", async () => {
   };
   
   const presentationSigner = await presentation.signer(holderPrivateKey);
-  const signedPresentation = await presentationSigner.sign(presentationData);
+  const signedPresentation = await presentationSigner.sign(presentationData, { kid: holderPrivateKey.kid });
   
   const wrongVerifier = await presentation.verifier(fakePublicKey);
   
@@ -234,8 +234,8 @@ test("create and verify presentation with multiple enveloped credentials", async
   
   // Sign both credentials
   const credentialSigner = await credential.signer(issuerPrivateKey);
-  const signedCredential1 = await credentialSigner.sign(routeCredential1);
-  const signedCredential2 = await credentialSigner.sign(routeCredential2);
+  const signedCredential1 = await credentialSigner.sign(routeCredential1, { kid: issuerPrivateKey.kid });
+  const signedCredential2 = await credentialSigner.sign(routeCredential2, { kid: issuerPrivateKey.kid });
   
   // Create enveloped credentials
   const envelopedCredential1 = credential.createEnvelopedVerifiableCredential(signedCredential1);
@@ -251,7 +251,7 @@ test("create and verify presentation with multiple enveloped credentials", async
   
   // Sign and verify presentation
   const presentationSigner = await presentation.signer(holderPrivateKey);
-  const signedPresentation = await presentationSigner.sign(presentationData);
+  const signedPresentation = await presentationSigner.sign(presentationData, { kid: holderPrivateKey.kid });
   
   const presentationVerifier = await presentation.verifier(holderPublicKey);
   const verifiedPresentation = await presentationVerifier.verify(signedPresentation);
@@ -270,7 +270,7 @@ test("create and verify presentation with ES384 algorithm", async () => {
   
   // Create and sign credential
   const credentialSigner = await credential.signer(issuerPrivateKey);
-  const signedCredential = await credentialSigner.sign(sampleRouteCredential);
+  const signedCredential = await credentialSigner.sign(sampleRouteCredential, { kid: issuerPrivateKey.kid });
   const envelopedCredential = credential.createEnvelopedVerifiableCredential(signedCredential);
   
   // Create presentation
@@ -283,7 +283,7 @@ test("create and verify presentation with ES384 algorithm", async () => {
   
   // Sign and verify
   const presentationSigner = await presentation.signer(holderPrivateKey);
-  const signedPresentation = await presentationSigner.sign(presentationData);
+  const signedPresentation = await presentationSigner.sign(presentationData, { kid: holderPrivateKey.kid });
   
   const presentationVerifier = await presentation.verifier(holderPublicKey);
   const verifiedPresentation = await presentationVerifier.verify(signedPresentation);
@@ -355,7 +355,7 @@ test("verify presentation with complex route credential", async () => {
   
   // Create and sign credential
   const credentialSigner = await credential.signer(issuerPrivateKey);
-  const signedCredential = await credentialSigner.sign(complexRouteCredential);
+  const signedCredential = await credentialSigner.sign(complexRouteCredential, { kid: issuerPrivateKey.kid });
   const envelopedCredential = credential.createEnvelopedVerifiableCredential(signedCredential);
   
   // Create presentation
@@ -374,7 +374,7 @@ test("verify presentation with complex route credential", async () => {
   
   // Sign and verify presentation
   const presentationSigner = await presentation.signer(holderPrivateKey);
-  const signedPresentation = await presentationSigner.sign(presentationData);
+  const signedPresentation = await presentationSigner.sign(presentationData, { kid: holderPrivateKey.kid });
   
   const presentationVerifier = await presentation.verifier(holderPublicKey);
   const verifiedPresentation = await presentationVerifier.verify(signedPresentation);
@@ -405,7 +405,7 @@ test("extract JWS from enveloped credential", async () => {
   
   // Create and sign credential
   const credentialSigner = await credential.signer(issuerPrivateKey);
-  const signedCredential = await credentialSigner.sign(sampleRouteCredential);
+  const signedCredential = await credentialSigner.sign(sampleRouteCredential, { kid: issuerPrivateKey.kid });
   
   // Create enveloped credential
   const envelopedCredential = credential.createEnvelopedVerifiableCredential(signedCredential);

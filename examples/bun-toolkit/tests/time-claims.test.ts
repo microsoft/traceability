@@ -18,7 +18,7 @@ test("credential includes iat claim", async () => {
   };
 
   const signer = await credential.signer(privateKey);
-  const signedCredential = await signer.sign(testCredential);
+  const signedCredential = await signer.sign(testCredential, { kid: privateKey.kid });
 
   const verifier = await credential.verifier(publicKey);
   const verifiedCredential = await verifier.verify(signedCredential);
@@ -51,7 +51,7 @@ test("credential with validFrom converts to nbf", async () => {
   };
 
   const signer = await credential.signer(privateKey);
-  const signedCredential = await signer.sign(testCredential);
+  const signedCredential = await signer.sign(testCredential, { kid: privateKey.kid });
 
   const verifier = await credential.verifier(publicKey);
   const verifiedCredential = await verifier.verify(signedCredential);
@@ -81,7 +81,7 @@ test("credential with validUntil converts to exp", async () => {
   };
 
   const signer = await credential.signer(privateKey);
-  const signedCredential = await signer.sign(testCredential);
+  const signedCredential = await signer.sign(testCredential, { kid: privateKey.kid });
 
   const verifier = await credential.verifier(publicKey);
   const verifiedCredential = await verifier.verify(signedCredential);
@@ -111,7 +111,7 @@ test("credential not yet valid (nbf in future) fails verification", async () => 
   };
 
   const signer = await credential.signer(privateKey);
-  const signedCredential = await signer.sign(testCredential);
+  const signedCredential = await signer.sign(testCredential, { kid: privateKey.kid });
 
   const verifier = await credential.verifier(publicKey);
 
@@ -138,7 +138,7 @@ test("expired credential (exp in past) fails verification", async () => {
   };
 
   const signer = await credential.signer(privateKey);
-  const signedCredential = await signer.sign(testCredential);
+  const signedCredential = await signer.sign(testCredential, { kid: privateKey.kid });
 
   const verifier = await credential.verifier(publicKey);
 
@@ -157,7 +157,7 @@ test("presentation includes iat and exp claims", async () => {
   };
 
   const signer = await presentation.signer(privateKey);
-  const signedPresentation = await signer.sign(testPresentation);
+  const signedPresentation = await signer.sign(testPresentation, { kid: privateKey.kid });
 
   const verifier = await presentation.verifier(publicKey);
   const verifiedPresentation = await verifier.verify(signedPresentation);
@@ -187,6 +187,7 @@ test("expired presentation fails verification", async () => {
   // Create a presentation that was issued 2 hours ago (should be expired since exp is 1 hour)
   const twoHoursAgo = new Date(Date.now() - 7200000);
   const signedPresentation = await signer.sign(testPresentation, {
+    kid: privateKey.kid,
     issuanceTime: twoHoursAgo
   });
 
@@ -211,6 +212,7 @@ test("presentation issued in future fails verification", async () => {
   // Create a presentation that appears to be issued in the future (beyond 60 second clock skew)
   const futureTime = new Date(Date.now() + 120000); // 120 seconds in the future
   const signedPresentation = await signer.sign(testPresentation, {
+    kid: privateKey.kid,
     issuanceTime: futureTime
   });
 
@@ -243,7 +245,7 @@ test("JWT claims are preserved after verification", async () => {
   };
 
   const signer = await credential.signer(privateKey);
-  const signedCredential = await signer.sign(testCredential);
+  const signedCredential = await signer.sign(testCredential, { kid: privateKey.kid });
 
   const verifier = await credential.verifier(publicKey);
   const verifiedCredential = await verifier.verify(signedCredential);

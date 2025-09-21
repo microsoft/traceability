@@ -139,7 +139,7 @@ test("verify credential with issuer's assertion key through resolver", async () 
 
   // Sign credential with issuer's private key
   const credentialSigner = await credential.signer(issuerController.privateKey);
-  const signedCredential = await credentialSigner.sign(sampleCredential);
+  const signedCredential = await credentialSigner.sign(sampleCredential, { kid: issuerController.privateKey.kid });
 
   // Get the verification method ID from the controller
   const verificationMethodId = issuerController.controller.verificationMethod[0]!.id;
@@ -181,7 +181,7 @@ test("verify presentation with holder's authentication key through resolver", as
 
   // Sign presentation with holder's private key
   const presentationSigner = await presentation.signer(holderController.privateKey);
-  const signedPresentation = await presentationSigner.sign(samplePresentation);
+  const signedPresentation = await presentationSigner.sign(samplePresentation, { kid: holderController.privateKey.kid });
 
   // Get the verification method ID from the controller
   const verificationMethodId = holderController.controller.verificationMethod[0]!.id;
@@ -229,7 +229,7 @@ test("verify credential with wrong assertion key fails", async () => {
 
   // Sign credential with first issuer's private key
   const credentialSigner = await credential.signer(issuerController1.privateKey);
-  const signedCredential = await credentialSigner.sign(sampleCredential);
+  const signedCredential = await credentialSigner.sign(sampleCredential, { kid: issuerController1.privateKey.kid });
 
   // Try to verify with second issuer's assertion key
   const issuer2Resolvers = await controllerResolver.resolve("https://issuer2.example/geo/xyz789");
@@ -268,7 +268,7 @@ test("verify presentation with wrong authentication key fails", async () => {
 
   // Sign presentation with first holder's private key
   const presentationSigner = await presentation.signer(holderController1.privateKey);
-  const signedPresentation = await presentationSigner.sign(samplePresentation);
+  const signedPresentation = await presentationSigner.sign(samplePresentation, { kid: holderController1.privateKey.kid });
 
   // Try to verify with second holder's authentication key
   const holder2Resolvers = await controllerResolver.resolve("https://holder2.example/geo/def456");
@@ -302,7 +302,7 @@ test("verify credential with non-existent assertion key fails", async () => {
 
   // Sign credential with issuer's private key
   const credentialSigner = await credential.signer(issuerController.privateKey);
-  const signedCredential = await credentialSigner.sign(sampleCredential);
+  const signedCredential = await credentialSigner.sign(sampleCredential, { kid: issuerController.privateKey.kid });
 
   // Try to resolve non-existent assertion key
   await expect(assertionKeyResolver.resolve("https://issuer.example/geo/9q8yyk#non-existent-key")).rejects.toThrow(
@@ -331,7 +331,7 @@ test("verify presentation with non-existent authentication key fails", async () 
 
   // Sign presentation with holder's private key
   const presentationSigner = await presentation.signer(holderController.privateKey);
-  const signedPresentation = await presentationSigner.sign(samplePresentation);
+  const signedPresentation = await presentationSigner.sign(samplePresentation, { kid: holderController.privateKey.kid });
 
   // Try to resolve non-existent authentication key
   await expect(authenticationKeyResolver.resolve("https://holder.example/geo/abc123#non-existent-key")).rejects.toThrow(
@@ -360,7 +360,7 @@ test("verify credential with ES384 algorithm through resolver", async () => {
 
   // Sign credential with issuer's private key
   const credentialSigner = await credential.signer(issuerController.privateKey);
-  const signedCredential = await credentialSigner.sign(sampleCredential);
+  const signedCredential = await credentialSigner.sign(sampleCredential, { kid: issuerController.privateKey.kid });
 
   // Get the verification method ID from the controller
   const verificationMethodId = issuerController.controller.verificationMethod[0]!.id;
@@ -402,7 +402,7 @@ test("verify presentation with ES384 algorithm through resolver", async () => {
 
   // Sign presentation with holder's private key
   const presentationSigner = await presentation.signer(holderController.privateKey);
-  const signedPresentation = await presentationSigner.sign(samplePresentation);
+  const signedPresentation = await presentationSigner.sign(samplePresentation, { kid: holderController.privateKey.kid });
 
   // Get the verification method ID from the controller
   const verificationMethodId = holderController.controller.verificationMethod[0]!.id;
@@ -451,7 +451,7 @@ test("end-to-end: issuer creates credential, holder creates presentation, both v
 
   // Step 1: Issuer creates and signs credential
   const credentialSigner = await credential.signer(issuerController.privateKey);
-  const signedCredential = await credentialSigner.sign(sampleCredential);
+  const signedCredential = await credentialSigner.sign(sampleCredential, { kid: issuerController.privateKey.kid });
 
   // Step 2: Verify credential using issuer's assertion key through resolver
   const issuerResolvers = await controllerResolver.resolve("https://issuer.example/geo/9q8yyk");
@@ -480,7 +480,7 @@ test("end-to-end: issuer creates credential, holder creates presentation, both v
 
   // Step 5: Holder signs presentation
   const presentationSigner = await presentation.signer(holderController.privateKey);
-  const signedPresentation = await presentationSigner.sign(presentationData);
+  const signedPresentation = await presentationSigner.sign(presentationData, { kid: holderController.privateKey.kid });
 
   // Step 6: Verify presentation using holder's authentication key through resolver
   const holderResolvers = await controllerResolver.resolve("https://holder.example/geo/abc123");
@@ -532,7 +532,7 @@ test("verify credential with algorithm mismatch through resolver fails", async (
 
   // Sign credential with ES256 issuer key
   const credentialSigner = await credential.signer(issuerController.privateKey);
-  const signedCredential = await credentialSigner.sign(sampleCredential);
+  const signedCredential = await credentialSigner.sign(sampleCredential, { kid: issuerController.privateKey.kid });
 
   // Try to verify with ES384 holder's authentication key (wrong algorithm)
   const holderResolvers = await controllerResolver.resolve("https://holder.example/geo/abc123");
@@ -571,7 +571,7 @@ test("verify presentation with algorithm mismatch through resolver fails", async
 
   // Sign presentation with ES256 holder key
   const presentationSigner = await presentation.signer(holderController.privateKey);
-  const signedPresentation = await presentationSigner.sign(samplePresentation);
+  const signedPresentation = await presentationSigner.sign(samplePresentation, { kid: holderController.privateKey.kid });
 
   // Try to verify with ES384 issuer's assertion key (wrong algorithm)
   const issuerResolvers = await controllerResolver.resolve("https://issuer.example/geo/9q8yyk");
@@ -640,7 +640,7 @@ test("credential with holder as subject and cnf claim", async () => {
 
   // Sign credential with issuer's private key
   const credentialSigner = await credential.signer(issuerController.privateKey);
-  const signedCredential = await credentialSigner.sign(credentialWithCnf);
+  const signedCredential = await credentialSigner.sign(credentialWithCnf, { kid: issuerController.privateKey.kid });
 
   // Verify credential using issuer's assertion key through resolver
   const issuerResolvers = await controllerResolver.resolve("https://issuer.example/geo/9q8yyk");
@@ -667,7 +667,7 @@ test("credential with holder as subject and cnf claim", async () => {
 
   // Sign presentation with holder's private key
   const presentationSigner = await presentation.signer(holderController.privateKey);
-  const signedPresentation = await presentationSigner.sign(presentationData);
+  const signedPresentation = await presentationSigner.sign(presentationData, { kid: holderController.privateKey.kid });
 
   // Verify presentation using holder's authentication key through resolver
   const holderResolvers = await controllerResolver.resolve("https://holder.example/geo/abc123");

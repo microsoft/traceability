@@ -70,7 +70,7 @@ test("credential signed with full verification method ID as kid", async () => {
 
   // Sign credential with full kid
   const credentialSigner = await credential.signer(fullKidPrivateKey);
-  const signedCredential = await credentialSigner.sign(testCredential);
+  const signedCredential = await credentialSigner.sign(testCredential, { kid: fullKidPrivateKey.kid });
 
   // Verify with resolver that indexes by full ID
   const keyResolver = await resolver.createPublicKeyResolver(
@@ -106,7 +106,7 @@ test("presentation signed with raw kid only", async () => {
 
   // Sign presentation with raw kid
   const presentationSigner = await presentation.signer(holderPrivateKey);
-  const signedPresentation = await presentationSigner.sign(testPresentation);
+  const signedPresentation = await presentationSigner.sign(testPresentation, { kid: holderPrivateKey.kid });
 
   // Create resolver that indexes by raw kid
   const keyResolver = await resolver.createPublicKeyResolver(
@@ -192,7 +192,7 @@ test("cnf claim with full verification method ID", async () => {
 
   // Sign credential
   const credentialSigner = await credential.signer(issuerPrivateKey);
-  const signedCredential = await credentialSigner.sign(credentialWithCnf);
+  const signedCredential = await credentialSigner.sign(credentialWithCnf, { kid: issuerPrivateKey.kid });
 
   // Verify credential
   const issuerResolver = await resolver.createPublicKeyResolver(
@@ -231,7 +231,7 @@ test("cnf claim with raw kid only", async () => {
 
   // Sign credential
   const credentialSigner = await credential.signer(issuerPrivateKey);
-  const signedCredential = await credentialSigner.sign(credentialWithCnf);
+  const signedCredential = await credentialSigner.sign(credentialWithCnf, { kid: issuerPrivateKey.kid });
 
   // Verify credential
   const issuerResolver = await resolver.createPublicKeyResolver(

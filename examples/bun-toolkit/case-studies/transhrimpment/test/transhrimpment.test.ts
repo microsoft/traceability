@@ -235,28 +235,44 @@ afterAll(async () => {
     const credential = credentials[credentialKey];
 
     if (credential) {
-      // Extract JWT to get holder info and credential details
-      const jwtToken = credential.id.substring("data:application/vc+jwt,".length);
-      const parts = jwtToken.split('.');
-      const payload = JSON.parse(atob(parts[1]));
-      const holderFromCredential = payload.cnf?.kid;
+      // Extract credential JWT to get intended holder
+      const credentialJwtToken = credential.id.substring("data:application/vc+jwt,".length);
+      const credentialParts = credentialJwtToken.split('.');
+      const credentialPayload = JSON.parse(atob(credentialParts[1]));
+      const intendedHolderKey = credentialPayload.cnf?.kid; // Who should present this credential
 
-      // Find holder controller based on cnf.kid
-      let holderEntityKey = "";
-      let holderController = null;
+      // Extract presentation JWT to get actual presenter
+      const presentationEnvelope = presentations[`${credentialKey}-presentation`];
+      let actualPresenterKey = intendedHolderKey; // Default fallback
+
+      if (presentationEnvelope?.id) {
+        try {
+          const presentationJwtToken = presentationEnvelope.id.substring("data:application/vp+jwt,".length);
+          const presentationParts = presentationJwtToken.split('.');
+          const presentationHeader = JSON.parse(atob(presentationParts[0]));
+          if (presentationHeader.kid) {
+            actualPresenterKey = presentationHeader.kid; // Who actually signed the presentation
+          }
+        } catch (error) {
+          console.warn(`Failed to parse presentation JWT for ${credentialKey}:`, error);
+        }
+      }
+
+      // Find controller for the actual presenter (for location/geometry)
+      let presenterEntityKey = "";
+      let presenterController = null;
 
       for (const [key, controller] of Object.entries(controllers)) {
         const ctrl = controller as any;
-        if (ctrl.authentication?.includes(holderFromCredential)) {
-          holderEntityKey = key;
-          holderController = ctrl;
+        if (ctrl.authentication?.includes(actualPresenterKey)) {
+          presenterEntityKey = key;
+          presenterController = ctrl;
           break;
         }
       }
 
-      if (holderController && holderController.features && holderController.features.length > 0) {
-        // Get credential schema from the credential
-        const credentialPayload = JSON.parse(atob(parts[1]));
+      if (presenterController && presenterController.features && presenterController.features.length > 0) {
+        // Get credential schema from the credential (already parsed above)
         const credentialSchema = credentialPayload.credentialSchema?.[0]?.type ||
                                credentialPayload.type?.find((t: string) => t !== "VerifiableCredential") ||
                                "unknown";
@@ -328,8 +344,20 @@ afterAll(async () => {
 
         // Check if presentation failed verification - indicates potential fraud
         if (!presentation.verificationSuccessful) {
-          // Failed verification could indicate counterfeiting or alteration
-          presentationFraudType = "⚠️ Counterfeiting and Alteration";
+          // Failed verification - need to analyze why it failed
+          const issuerId = credentialPayload.issuer || credentialPayload.iss;
+          const expectedHolderId = credentialPayload.cnf?.kid; // Who the credential was intended for
+
+          // Check if this is document compromise (stolen credential)
+          // Even though presentation fails, we can still analyze the holder mismatch
+          if (intendedHolderKey && actualPresenterKey !== intendedHolderKey) {
+            // Presentation failed because credential's intended holder != actual presenter
+            // This indicates a stolen credential - document compromise
+            presentationFraudType = "⚠️ Document Compromise";
+          } else {
+            // Other verification failures indicate counterfeiting or alteration
+            presentationFraudType = "⚠️ Counterfeiting and Alteration";
+          }
         } else {
           // Presentation verified successfully - analyze credential holder mismatch
           const issuerId = credentialPayload.issuer || credentialPayload.iss;
@@ -337,9 +365,9 @@ afterAll(async () => {
 
           // KEY INSIGHT: Document compromise (stolen credentials) detection
           // - Both presentation AND credential verify successfully
-          // - But credential's cnf.kid (intended holder) != presentation holder's auth key
+          // - But credential's cnf.kid (intended holder) != presentation signing key (actual presenter)
           // - This indicates the credential was stolen and is being presented by the thief
-          if (expectedHolderId && holderFromCredential !== expectedHolderId) {
+          if (intendedHolderKey && actualPresenterKey !== intendedHolderKey) {
             // Credential's intended holder doesn't match who's presenting it
             // This is document compromise - a stolen legitimate credential
             presentationFraudType = "⚠️ Document Compromise";
@@ -361,17 +389,17 @@ afterAll(async () => {
         // - Supply chain relationship validation
         // - Cross-reference with known legitimate business relationships
 
-        // Add presentation feature (using holder's location)
+        // Add presentation feature (using presenter's location)
         geoJsonReport.features.push({
           type: "Feature",
-          geometry: holderController.features[0].geometry,
+          geometry: presenterController.features[0].geometry,
           properties: {
             presentation_verified: presentation.verificationSuccessful,
             verification_time: verificationTime?.toISOString() || null,
-            authentication_key: holderFromCredential,
+            authentication_key: actualPresenterKey,
             file_name: credentialToTemplate[credentialKey] || "unknown-template.json",
             credential_schema: credentialSchema,
-            holder_name: authKeyToHolderName[holderFromCredential] || "unknown-holder",
+            holder_name: authKeyToHolderName[actualPresenterKey] || "unknown-holder",
             presentation_is_fraudulent: isFraudulentPresentation,
             presentation_contains_fraudulent_credential: containsFraudulentCredential,
             description: description,
@@ -387,10 +415,20 @@ afterAll(async () => {
             // Determine fraud type for credentials based on verification results
             let credentialFraudType = null;
 
-            // Both presentation and credential verify successfully - analyze fraud patterns
+            // Analyze fraud patterns based on verification results
             if (!presentation.verificationSuccessful) {
-              // Failed presentation verification indicates counterfeiting or alteration
-              credentialFraudType = "⚠️ Counterfeiting and Alteration";
+              // Failed presentation verification - need to analyze why
+              const issuerId = credentialPayload.issuer || credentialPayload.iss;
+              const expectedHolderId = credentialPayload.cnf?.kid; // Who should have this credential
+
+              // Check if this is document compromise (stolen credential)
+              if (intendedHolderKey && actualPresenterKey !== intendedHolderKey) {
+                // Credential is legitimate but being presented by wrong holder - stolen
+                credentialFraudType = "⚠️ Document Compromise";
+              } else {
+                // Other verification failures indicate counterfeiting or alteration
+                credentialFraudType = "⚠️ Counterfeiting and Alteration";
+              }
             } else {
               // Both presentation and credential verification passed
               const issuerId = credentialPayload.issuer || credentialPayload.iss;
@@ -398,9 +436,9 @@ afterAll(async () => {
 
               // KEY INSIGHT: Document compromise (stolen credentials) detection
               // - Credential itself verifies successfully (authentic)
-              // - But credential's cnf.kid != presentation holder's auth key
+              // - But credential's cnf.kid != presentation signing key
               // - This means a legitimate credential was stolen and is being misused
-              if (expectedHolderId && holderFromCredential !== expectedHolderId) {
+              if (intendedHolderKey && actualPresenterKey !== intendedHolderKey) {
                 // Authentic credential being presented by wrong holder - stolen
                 credentialFraudType = "⚠️ Document Compromise";
               }
@@ -431,7 +469,7 @@ afterAll(async () => {
                 credential_schema: credentialSchema,
                 issuer_id: issuerId,
                 issuer_name: issuerName,
-                authentication_key: holderFromCredential,
+                authentication_key: actualPresenterKey,
                 verification_time: verificationTime?.toISOString() || null,
                 fraud_type: credentialFraudType
               }
@@ -886,18 +924,41 @@ describe("Transhrimpment Case Study", () => {
             presResult.holder = entityConfigs[holderKey].name;
 
             // Create presentation
-            const presentationData = {
-              "@context": ["https://www.w3.org/ns/credentials/v2"],
-              "type": ["VerifiablePresentation"],
-              "holder": entityConfigs[holderKey].id,
-              "verifiableCredential": [envelopedCred]
-            };
+            let presentationData;
+            let presentationSigner;
 
-            // Sign presentation with holder's auth key at timeline specified time
-            const holderAuthKey = (holderController as any)._authKey;
+            // Special case: For stolen credential, Shady Distributor presents it instead of the rightful holder
+            if (credKey === "legit-shrimp-honest-importer-origin") {
+              // This represents the fraudulent scenario where Shady Distributor presents the stolen credential
+              presentationData = {
+                "@context": ["https://www.w3.org/ns/credentials/v2"],
+                "type": ["VerifiablePresentation"],
+                "holder": "https://shady-distributor.example", // Fraudulent presenter
+                "verifiableCredential": [envelopedCred]
+              };
+
+              // Sign with Shady Distributor's key (not the rightful holder's key)
+              const shadyDistributorController = controllers["shady-distributor"];
+              const shadyAuthKey = (shadyDistributorController as any)._authKey;
+              presentationSigner = await presentation.signer(shadyAuthKey);
+            } else {
+              // Normal case: legitimate holder presents their own credential
+              presentationData = {
+                "@context": ["https://www.w3.org/ns/credentials/v2"],
+                "type": ["VerifiablePresentation"],
+                "holder": entityConfigs[holderKey].id,
+                "verifiableCredential": [envelopedCred]
+              };
+
+              // Sign presentation with holder's auth key at timeline specified time
+              const holderAuthKey = (holderController as any)._authKey;
+              presentationSigner = await presentation.signer(holderAuthKey);
+            }
+
             const presentationIssuanceTime = verificationTimeline[credKey as keyof typeof verificationTimeline];
-            const pressSigner = await presentation.signer(holderAuthKey);
+            const pressSigner = presentationSigner;
             const signedPresentationJWT = await pressSigner.sign(presentationData, {
+              kid: (holderController as any)._authKey.kid,
               issuanceTime: presentationIssuanceTime
             });
 
@@ -935,6 +996,7 @@ describe("Transhrimpment Case Study", () => {
                 }
 
               } catch (presVerifyError) {
+                console.log(`Presentation verification failed for ${credKey}:`, presVerifyError);
                 presResult.errors.push(`Presentation verification failed: ${presVerifyError}`);
               }
             }

@@ -27,7 +27,7 @@ test("JWS Cross-Compatibility: Our signer, jose verifier", async () => {
 
   // Sign using our implementation
   const ourSigner = await credential.signer(privateKey);
-  const ourJWS = await ourSigner.sign(testCredential);
+  const ourJWS = await ourSigner.sign(testCredential, { kid: ourPrivateKey.kid });
 
   // Parse the JWS to extract components
   const [protectedHeader, payload, signature] = ourJWS.split('.');
@@ -143,7 +143,7 @@ test("JWS Cross-Compatibility: Round-trip compatibility", async () => {
 
   // Step 1: Our sign -> Jose verify
   const ourSigner = await credential.signer(ourPrivateKey);
-  const ourJWS = await ourSigner.sign(testCredential);
+  const ourJWS = await ourSigner.sign(testCredential, { kid: ourPrivateKey.kid });
 
   const joseResult1 = await jose.jwtVerify(ourJWS, josePublicKey, {
     algorithms: ["ES256"]
@@ -173,7 +173,7 @@ test("JWS Signature Format Compatibility", async () => {
 
   // Sign using our implementation
   const ourSigner = await key.signer(privateKey);
-  const ourSignature = await ourSigner.sign(testData);
+  const ourSignature = await ourSigner.sign(testData, { kid: ourPrivateKey.kid });
 
   // Import same key into jose
   const josePrivateKey = await jose.importJWK({
@@ -252,7 +252,7 @@ test("JWT Time Claims Compatibility", async () => {
 
   // Sign with our implementation (should convert validFrom/validUntil to nbf/exp)
   const ourSigner = await credential.signer(privateKey);
-  const ourJWS = await ourSigner.sign(credentialWithTimes);
+  const ourJWS = await ourSigner.sign(credentialWithTimes, { kid: ourPrivateKey.kid });
 
   // Verify with jose
   const josePublicKey = await jose.importJWK({

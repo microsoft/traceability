@@ -37,6 +37,7 @@ describe("Presentation Verification Timing", () => {
     // Sign presentation with historical issuance time
     const presSigner = await presentation.signer(holderKey);
     const signedPresentationJWT = await presSigner.sign(testPresentation, {
+      kid: holderKey.kid,
       issuanceTime: historicalIssuanceTime
     });
 
@@ -87,7 +88,7 @@ describe("Presentation Verification Timing", () => {
 
     // Sign with current time (no issuanceTime override)
     const presSigner = await presentation.signer(holderKey);
-    const signedPresentationJWT = await presSigner.sign(testPresentation);
+    const signedPresentationJWT = await presSigner.sign(testPresentation, { kid: holderKey.kid });
 
     const afterSign = new Date();
 

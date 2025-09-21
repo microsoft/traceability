@@ -130,7 +130,7 @@ test("credential verification with generic resolver", async () => {
 
   // Sign credential using controller's private key
   const signer = await credential.signer(issuerController.privateKey);
-  const signedCredential = await signer.sign(testCredential);
+  const signedCredential = await signer.sign(testCredential, { kid: issuerController.privateKey.kid });
 
   // Verify with generic resolver
   const verifier = await credential.verifierWithGenericResolver(genericResolver);
@@ -179,7 +179,7 @@ test("presentation verification with generic resolver", async () => {
   };
 
   const credentialSigner = await credential.signer(issuerController.privateKey);
-  const signedCredential = await credentialSigner.sign(testCredential);
+  const signedCredential = await credentialSigner.sign(testCredential, { kid: issuerController.privateKey.kid });
 
   // Create enveloped credential
   const envelopedCredential = credential.createEnvelopedVerifiableCredential(signedCredential);
@@ -194,7 +194,7 @@ test("presentation verification with generic resolver", async () => {
 
   // Sign presentation
   const presentationSigner = await presentation.signer(holderController.privateKey);
-  const signedPresentation = await presentationSigner.sign(presentationData);
+  const signedPresentation = await presentationSigner.sign(presentationData, { kid: holderController.privateKey.kid });
 
   // Verify with generic resolver
   const presentationVerifier = await presentation.verifierWithGenericResolver(genericResolver);
@@ -246,7 +246,7 @@ test("credential schema validation with generic resolver", async () => {
 
   // Sign credential
   const signer = await credential.signer(issuerController.privateKey);
-  const signedCredential = await signer.sign(testCredentialWithSchema);
+  const signedCredential = await signer.sign(testCredentialWithSchema, { kid: issuerController.privateKey.kid });
 
   // Verify with schema validation
   const verifier = await credential.verifierWithGenericResolver(genericResolver);

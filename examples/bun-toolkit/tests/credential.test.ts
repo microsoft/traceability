@@ -42,7 +42,7 @@ test("sign and verify credential", async () => {
   const verifier = await credential.verifier(publicKey);
   
   // Sign the credential
-  const signedCredential = await signer.sign(sampleCredential);
+  const signedCredential = await signer.sign(sampleCredential, { kid: privateKey.kid });
   
   // Verify the credential
   const verifiedCredential = await verifier.verify(signedCredential);
@@ -73,8 +73,8 @@ test("verify with wrong public key fails", async () => {
   // Sign with first key, verify with second key
   const signer = await credential.signer(privateKey1);
   const verifier = await credential.verifier(publicKey2);
-  
-  const signedCredential = await signer.sign(sampleCredential);
+
+  const signedCredential = await signer.sign(sampleCredential, { kid: privateKey1.kid });
   
   // This should throw an error (either key ID mismatch or invalid signature)
   await expect(verifier.verify(signedCredential)).rejects.toThrow();
@@ -92,8 +92,8 @@ test("verify with algorithm mismatch fails", async () => {
   // Sign with ES256, verify with ES384 (different algorithm)
   const signer = await credential.signer(privateKey);
   const verifier = await credential.verifier(es384PublicKey);
-  
-  const signedCredential = await signer.sign(sampleCredential);
+
+  const signedCredential = await signer.sign(sampleCredential, { kid: privateKey.kid });
   
   // This should throw an error
   await expect(verifier.verify(signedCredential)).rejects.toThrow("Algorithm mismatch");
@@ -109,8 +109,8 @@ test("verify with key ID mismatch fails", async () => {
   
   const signer = await credential.signer(privateKey);
   const verifier = await credential.verifier(fakePublicKey);
-  
-  const signedCredential = await signer.sign(sampleCredential);
+
+  const signedCredential = await signer.sign(sampleCredential, { kid: privateKey.kid });
   
   // This should throw an error
   await expect(verifier.verify(signedCredential)).rejects.toThrow("Key ID mismatch");
@@ -135,8 +135,8 @@ test("sign and verify with ES384 algorithm", async () => {
   
   const signer = await credential.signer(privateKey);
   const verifier = await credential.verifier(publicKey);
-  
-  const signedCredential = await signer.sign(sampleCredential);
+
+  const signedCredential = await signer.sign(sampleCredential, { kid: privateKey.kid });
   const verifiedCredential = await verifier.verify(signedCredential);
 
   // Check core credential properties
@@ -191,8 +191,8 @@ test("sign and verify credential with different subject data", async () => {
       }
     }
   };
-  
-  const signedCredential = await signer.sign(customCredential);
+
+  const signedCredential = await signer.sign(customCredential, { kid: privateKey.kid });
   const verifiedCredential = await verifier.verify(signedCredential);
 
   // Check core credential properties
@@ -225,8 +225,8 @@ test("verify credential with valid date range succeeds", async () => {
     validFrom: pastDate,
     validUntil: futureDate
   };
-  
-  const signedCredential = await signer.sign(validCredential);
+
+  const signedCredential = await signer.sign(validCredential, { kid: privateKey.kid });
   const verifiedCredential = await verifier.verify(signedCredential);
 
   // Check core credential properties
@@ -259,8 +259,8 @@ test("verify expired credential fails", async () => {
     validFrom: pastDate,
     validUntil: expiredDate
   };
-  
-  const signedCredential = await signer.sign(expiredCredential);
+
+  const signedCredential = await signer.sign(expiredCredential, { kid: privateKey.kid });
   
   await expect(verifier.verify(signedCredential)).rejects.toThrow("Credential has expired");
 });
@@ -282,8 +282,8 @@ test("verify not yet valid credential fails", async () => {
     validFrom: futureValidFrom,
     validUntil: futureValidUntil
   };
-  
-  const signedCredential = await signer.sign(futureCredential);
+
+  const signedCredential = await signer.sign(futureCredential, { kid: privateKey.kid });
   
   await expect(verifier.verify(signedCredential)).rejects.toThrow("Credential is not yet valid");
 });
@@ -303,8 +303,8 @@ test("verify credential with only validFrom succeeds when current time is after 
     ...sampleCredential,
     validFrom: pastDate
   };
-  
-  const signedCredential = await signer.sign(credentialWithValidFrom);
+
+  const signedCredential = await signer.sign(credentialWithValidFrom, { kid: privateKey.kid });
   const verifiedCredential = await verifier.verify(signedCredential);
 
   // Check core credential properties
@@ -333,8 +333,8 @@ test("verify credential with only validUntil succeeds when current time is befor
     ...sampleCredential,
     validUntil: futureDate
   };
-  
-  const signedCredential = await signer.sign(credentialWithValidUntil);
+
+  const signedCredential = await signer.sign(credentialWithValidUntil, { kid: privateKey.kid });
   const verifiedCredential = await verifier.verify(signedCredential);
 
   // Check core credential properties
@@ -361,7 +361,7 @@ test("credential with invalid validFrom fails verification", async () => {
     validFrom: "invalid-date-format"
   };
 
-  const signedCredential = await signer.sign(invalidCredential);
+  const signedCredential = await signer.sign(invalidCredential, { kid: privateKey.kid });
 
   // Should fail verification because NaN became null in JSON serialization
   await expect(verifier.verify(signedCredential)).rejects.toThrow("Invalid nbf claim: must be a number");
@@ -380,7 +380,7 @@ test("credential with invalid validUntil fails verification", async () => {
     validUntil: "invalid-date-format"
   };
 
-  const signedCredential = await signer.sign(invalidCredential);
+  const signedCredential = await signer.sign(invalidCredential, { kid: privateKey.kid });
 
   // Should fail verification because NaN became null in JSON serialization
   await expect(verifier.verify(signedCredential)).rejects.toThrow("Invalid exp claim: must be a number");
@@ -423,7 +423,7 @@ test("sign and verify credential with credentialSchema", async () => {
     }
   };
 
-  const signedCredential = await signer.sign(credentialWithSchema);
+  const signedCredential = await signer.sign(credentialWithSchema, { kid: privateKey.kid });
   const verifiedCredential = await verifier.verify(signedCredential);
 
   // Check core credential properties
@@ -476,7 +476,7 @@ test("sign and verify credential with single credentialSchema", async () => {
     }
   };
 
-  const signedCredential = await signer.sign(credentialWithSingleSchema);
+  const signedCredential = await signer.sign(credentialWithSingleSchema, { kid: privateKey.kid });
   const verifiedCredential = await verifier.verify(signedCredential);
 
   // Check core credential properties
@@ -507,7 +507,7 @@ test("sign and verify credential without credentialSchema (optional property)", 
   const verifier = await credential.verifier(publicKey);
 
   // Use the existing sampleCredential which doesn't have credentialSchema
-  const signedCredential = await signer.sign(sampleCredential);
+  const signedCredential = await signer.sign(sampleCredential, { kid: privateKey.kid });
   const verifiedCredential = await verifier.verify(signedCredential);
 
   // Check core credential properties

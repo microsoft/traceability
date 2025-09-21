@@ -3,16 +3,22 @@ import type { VerifiableCredential } from "./credential";
 import type { PrivateKey } from "../types";
 import { base64url } from "../encoding";
 
+export interface SigningOptions {
+  kid: string; // Mandatory key ID for header
+  issuanceTime?: Date; // Optional issuance time
+}
+
 export interface CredentialSigner {
-  sign: (credential: VerifiableCredential, issuanceTime?: Date) => Promise<string>;
+  sign: (credential: VerifiableCredential, options: SigningOptions) => Promise<string>;
 }
 
 export const signer = async (privateKey: PrivateKey) => {
   const signer = await key.signer(privateKey);
-  const header = { typ: "vc+jwt", alg: privateKey.alg, kid: privateKey.kid };
-  const protectedHeader = base64url.encode(new TextEncoder().encode(JSON.stringify(header)));
   return {
-    sign: async (credential: VerifiableCredential, issuanceTime?: Date) => {
+    sign: async (credential: VerifiableCredential, options: SigningOptions) => {
+      // Create header with mandatory kid
+      const header = { typ: "vc+jwt", alg: privateKey.alg, kid: options.kid };
+      const protectedHeader = base64url.encode(new TextEncoder().encode(JSON.stringify(header)));
       // Create JWT payload with credential data
       const jwtPayload: any = { ...credential };
 
@@ -26,7 +32,7 @@ export const signer = async (privateKey: PrivateKey) => {
       }
 
       // Add iat (issued at) claim - use provided time or current time
-      const issueTime = issuanceTime || new Date();
+      const issueTime = options.issuanceTime || new Date();
       const iat = Math.floor(issueTime.getTime() / 1000);
       jwtPayload.iat = iat;
 

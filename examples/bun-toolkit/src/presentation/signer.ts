@@ -7,18 +7,20 @@ export interface SigningOptions {
   nonce?: string;
   audience?: string | string[];
   issuanceTime?: Date;
+  kid: string; // Mandatory key ID for header
 }
 
 export interface PresentationSigner {
-  sign: (presentation: VerifiablePresentation, options?: SigningOptions) => Promise<string>;
+  sign: (presentation: VerifiablePresentation, options: SigningOptions) => Promise<string>;
 }
 
 export const signer = async (privateKey: PrivateKey) => {
   const signer = await key.signer(privateKey);
-  const header = { typ: "vp+jwt", alg: privateKey.alg, kid: privateKey.kid };
-  const protectedHeader = base64url.encode(new TextEncoder().encode(JSON.stringify(header)));
   return {
-    sign: async (presentation: VerifiablePresentation, options?: SigningOptions) => {
+    sign: async (presentation: VerifiablePresentation, options: SigningOptions) => {
+      // Create header with mandatory kid
+      const header = { typ: "vp+jwt", alg: privateKey.alg, kid: options.kid };
+      const protectedHeader = base64url.encode(new TextEncoder().encode(JSON.stringify(header)));
       // Create JWT payload with presentation and optional claims
       const jwtPayload: any = { ...presentation };
 
