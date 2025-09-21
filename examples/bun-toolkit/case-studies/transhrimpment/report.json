@@ -128,7 +128,10 @@
         "authentication_key": "https://camaron-corriente.example#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0",
         "file_name": "chompchomp-purchase-order-template.json",
         "credential_schema": "PurchaseOrderCredential",
-        "holder_name": "camaron-corriente"
+        "holder_name": "camaron-corriente",
+        "presentation_is_fraudulent": false,
+        "presentation_contains_fraudulent_credential": false,
+        "description": "Purchase order credentials presented to Camarón Corriente S.A. for order processing"
       }
     },
     {
@@ -146,7 +149,10 @@
         "authentication_key": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
         "file_name": "camaron-corriente-invoice-template.json",
         "credential_schema": "CommercialInvoiceCredential",
-        "holder_name": "chompchomp"
+        "holder_name": "chompchomp",
+        "presentation_is_fraudulent": false,
+        "presentation_contains_fraudulent_credential": false,
+        "description": "Commercial invoice credentials presented to Chompchomp Ltd for payment verification"
       }
     },
     {
@@ -164,7 +170,10 @@
         "authentication_key": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
         "file_name": "camaron-corriente-origin-template.json",
         "credential_schema": "CertificateOfOriginCredential",
-        "holder_name": "chompchomp"
+        "holder_name": "chompchomp",
+        "presentation_is_fraudulent": false,
+        "presentation_contains_fraudulent_credential": false,
+        "description": "Certificate of origin credentials presented to shipping carrier for export documentation"
       }
     },
     {
@@ -182,7 +191,10 @@
         "authentication_key": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
         "file_name": "shady-carrier-lading-template.json",
         "credential_schema": "BillOfLadingCredential",
-        "holder_name": "chompchomp"
+        "holder_name": "chompchomp",
+        "presentation_is_fraudulent": false,
+        "presentation_contains_fraudulent_credential": false,
+        "description": "Bill of lading credentials presented to Chompchomp Ltd for delivery acceptance"
       }
     },
     {
@@ -200,7 +212,10 @@
         "authentication_key": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
         "file_name": "shady-carrier-forged-lading-template.json",
         "credential_schema": "BillOfLadingCredential",
-        "holder_name": "anonymous-distributor"
+        "holder_name": "anonymous-distributor",
+        "presentation_is_fraudulent": true,
+        "presentation_contains_fraudulent_credential": true,
+        "description": "Forged bill of lading credentials presented to customs for partial loss claim"
       }
     },
     {
@@ -218,7 +233,10 @@
         "authentication_key": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
         "file_name": "anonymous-distributor-secondary-purchase-order-template.json",
         "credential_schema": "PurchaseOrderCredential",
-        "holder_name": "shady-distributor"
+        "holder_name": "shady-distributor",
+        "presentation_is_fraudulent": false,
+        "presentation_contains_fraudulent_credential": false,
+        "description": "Secondary purchase order credentials presented to Shady Distributor Ltd for order processing"
       }
     },
     {
@@ -236,7 +254,10 @@
         "authentication_key": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
         "file_name": "shady-distributor-secondary-invoice-template.json",
         "credential_schema": "CommercialInvoiceCredential",
-        "holder_name": "anonymous-distributor"
+        "holder_name": "anonymous-distributor",
+        "presentation_is_fraudulent": false,
+        "presentation_contains_fraudulent_credential": false,
+        "description": "Secondary commercial invoice credentials presented to Anonymous Distributor for payment"
       }
     },
     {
@@ -254,7 +275,10 @@
         "authentication_key": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
         "file_name": "cargo-line-secondary-lading-template.json",
         "credential_schema": "BillOfLadingCredential",
-        "holder_name": "anonymous-distributor"
+        "holder_name": "anonymous-distributor",
+        "presentation_is_fraudulent": false,
+        "presentation_contains_fraudulent_credential": false,
+        "description": "Secondary bill of lading credentials presented to Anonymous Distributor for delivery"
       }
     },
     {
@@ -272,7 +296,10 @@
         "authentication_key": "https://honest-importer.example#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E",
         "file_name": "legit-shrimp-honest-importer-origin-template.json",
         "credential_schema": "CertificateOfOriginCredential",
-        "holder_name": "honest-importer"
+        "holder_name": "honest-importer",
+        "presentation_is_fraudulent": false,
+        "presentation_contains_fraudulent_credential": true,
+        "description": "STOLEN legitimate certificate credentials inappropriately presented by Shady Distributor Ltd"
       }
     },
     {
@@ -290,7 +317,10 @@
         "authentication_key": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
         "file_name": "shady-distributor-fraudulent-origin-template.json",
         "credential_schema": "CertificateOfOriginCredential",
-        "holder_name": "shady-distributor"
+        "holder_name": "shady-distributor",
+        "presentation_is_fraudulent": true,
+        "presentation_contains_fraudulent_credential": true,
+        "description": "FRAUDULENT certificate of origin credentials presented by Shady Distributor Ltd claiming Legit Shrimp Ltd identity"
       }
     }
   ]

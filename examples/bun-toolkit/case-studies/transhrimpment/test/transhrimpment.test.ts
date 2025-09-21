@@ -108,15 +108,15 @@ const issuanceTimeline = {
 };
 
 // Presentation timeline based on README narrative - when credentials are presented for verification
-// Presentations have 1-hour expiration, so these times must be within 1 hour of issuance
+// These times MUST match exactly with the timeline in README.md
 const verificationTimeline = {
-  "legit-shrimp-honest-importer-origin": new Date("2024-02-08T10:30:00Z"), // STOLEN legitimate certificate credentials inappropriately presented by Shady Distributor Ltd
   "chompchomp-purchase-order": new Date("2024-01-15T10:30:00Z"), // Purchase order credentials presented to Camarón Corriente S.A. for order processing
   "camaron-corriente-invoice": new Date("2024-01-20T10:30:00Z"), // Commercial invoice credentials presented to Chompchomp Ltd for payment verification
   "camaron-corriente-origin": new Date("2024-01-22T10:30:00Z"), // Certificate of origin credentials presented to shipping carrier for export documentation
   "shady-carrier-lading": new Date("2024-02-01T10:30:00Z"), // Bill of lading credentials presented to Chompchomp Ltd for delivery acceptance
   "shady-carrier-forged-lading": new Date("2024-02-01T11:30:00Z"), // Forged bill of lading credentials presented to customs for partial loss claim
   "shady-distributor-fraudulent-origin": new Date("2024-02-05T10:30:00Z"), // FRAUDULENT certificate of origin credentials presented by Shady Distributor Ltd claiming Legit Shrimp Ltd identity
+  "legit-shrimp-honest-importer-origin": new Date("2024-02-08T10:30:00Z"), // STOLEN legitimate certificate credentials inappropriately presented by Shady Distributor Ltd
   "anonymous-distributor-secondary-purchase-order": new Date("2024-02-10T11:30:00Z"), // Secondary purchase order credentials presented to Shady Distributor Ltd for order processing
   "shady-distributor-secondary-invoice": new Date("2024-02-12T10:30:00Z"), // Secondary commercial invoice credentials presented to Anonymous Distributor for payment
   "cargo-line-secondary-lading": new Date("2024-02-15T10:30:00Z"), // Secondary bill of lading credentials presented to Anonymous Distributor for delivery
@@ -262,6 +262,50 @@ afterAll(async () => {
           new Date(presentationIssuanceTime.getTime() + 30000) : // 30 seconds after signing
           null;
 
+        // Determine fraud status based on credential key and narrative
+        const isFraudulentPresentation = credentialKey === "shady-distributor-fraudulent-origin" ||
+                                        credentialKey === "shady-carrier-forged-lading";
+        const containsFraudulentCredential = credentialKey === "shady-distributor-fraudulent-origin" ||
+                                           credentialKey === "shady-carrier-forged-lading" ||
+                                           credentialKey === "legit-shrimp-honest-importer-origin"; // stolen credential
+
+        // Generate description based on README timeline - must match exactly
+        let description = "";
+        switch (credentialKey) {
+          case "chompchomp-purchase-order":
+            description = "Purchase order credentials presented to Camarón Corriente S.A. for order processing";
+            break;
+          case "camaron-corriente-invoice":
+            description = "Commercial invoice credentials presented to Chompchomp Ltd for payment verification";
+            break;
+          case "camaron-corriente-origin":
+            description = "Certificate of origin credentials presented to shipping carrier for export documentation";
+            break;
+          case "shady-carrier-lading":
+            description = "Bill of lading credentials presented to Chompchomp Ltd for delivery acceptance";
+            break;
+          case "shady-carrier-forged-lading":
+            description = "Forged bill of lading credentials presented to customs for partial loss claim";
+            break;
+          case "shady-distributor-fraudulent-origin":
+            description = "FRAUDULENT certificate of origin credentials presented by Shady Distributor Ltd claiming Legit Shrimp Ltd identity";
+            break;
+          case "legit-shrimp-honest-importer-origin":
+            description = "STOLEN legitimate certificate credentials inappropriately presented by Shady Distributor Ltd";
+            break;
+          case "anonymous-distributor-secondary-purchase-order":
+            description = "Secondary purchase order credentials presented to Shady Distributor Ltd for order processing";
+            break;
+          case "shady-distributor-secondary-invoice":
+            description = "Secondary commercial invoice credentials presented to Anonymous Distributor for payment";
+            break;
+          case "cargo-line-secondary-lading":
+            description = "Secondary bill of lading credentials presented to Anonymous Distributor for delivery";
+            break;
+          default:
+            description = `Credential presentation for ${credentialSchema} verification`;
+        }
+
         geoJsonReport.features.push({
           type: "Feature",
           geometry: holderController.features[0].geometry,
@@ -271,7 +315,10 @@ afterAll(async () => {
             authentication_key: holderFromCredential,
             file_name: credentialToTemplate[credentialKey] || "unknown-template.json",
             credential_schema: credentialSchema,
-            holder_name: authKeyToHolderName[holderFromCredential] || "unknown-holder"
+            holder_name: authKeyToHolderName[holderFromCredential] || "unknown-holder",
+            presentation_is_fraudulent: isFraudulentPresentation,
+            presentation_contains_fraudulent_credential: containsFraudulentCredential,
+            description: description
           }
         });
       }
