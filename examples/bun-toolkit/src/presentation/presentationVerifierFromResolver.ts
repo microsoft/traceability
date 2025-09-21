@@ -3,7 +3,8 @@ import type { EnvelopedVerifiableCredential, VerifiableCredential } from "../cre
 import type { GenericResolver } from "../resolver/genericResolver";
 import * as jws from "../encoding/jws";
 import { createJsonWebSignatureFromEnvelopedVerifiableCredential } from "../credential/credential";
-import { defaultGenericResolver, extractControllerIdFromVerificationMethod } from "../resolver/genericResolver";
+import { defaultGenericResolver } from "../resolver/genericResolver";
+import { extractControllerIdFromVerificationMethod } from "../resolver/utils";
 import { validateJWTTimeClaims, validateNonceAndAudience, validateCredentialSchemas } from "../verification/utils";
 
 export interface VerificationOptions {
@@ -143,6 +144,41 @@ const verifyPresentedCredentials = async (
   return results;
 };
 
+/**
+ * Check if presentation is signed by the key specified in credential's cnf.kid
+ */
+const checkConfirmationKeyBinding = async (
+  presentationPayload: any,
+  presentationSigningKey: string
+): Promise<boolean> => {
+  try {
+    if (!presentationPayload.verifiableCredential || !Array.isArray(presentationPayload.verifiableCredential)) {
+      return true; // No credentials to check
+    }
+
+    for (const cred of presentationPayload.verifiableCredential) {
+      const credJWT = createJsonWebSignatureFromEnvelopedVerifiableCredential(cred as EnvelopedVerifiableCredential);
+
+      if (credJWT) {
+        const credParsed = jws.parseJWS(credJWT);
+        const credPayload = credParsed.payload;
+
+        // Check if credential has holder binding
+        if (credPayload.cnf && credPayload.cnf.kid) {
+          // Compare credential's intended holder with presentation's signing key
+          if (credPayload.cnf.kid !== presentationSigningKey) {
+            return false; // Key mismatch - stolen credential detected
+          }
+        }
+      }
+    }
+
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
+
 export const presentationVerifierFromResolver = async (
   resolver: GenericResolver = defaultGenericResolver
 ) => {
@@ -206,7 +242,7 @@ export const presentationVerifierFromResolver = async (
       result.is_credential_verified = credentialResults.every(c => c.verified);
 
       // Check confirmation key binding
-      result.is_signed_by_confirmation_key = await checkConfirmationKeyBinding(payload, authenticationKeyId, resolver);
+      result.is_signed_by_confirmation_key = await checkConfirmationKeyBinding(payload, authenticationKeyId);
 
       // Overall verification is AND of all checks
       result.verified = result.is_presentation_signature_valid &&

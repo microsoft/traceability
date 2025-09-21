@@ -213,7 +213,7 @@
         ]
       },
       "properties": {
-        "presentation_verified": false,
+        "presentation_verified": true,
         "verification_time": "2024-01-22T10:30:30.000Z",
         "authentication_key": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
         "file_name": "camaron-corriente-origin-template.json",
@@ -222,7 +222,7 @@
         "presentation_is_fraudulent": false,
         "presentation_contains_fraudulent_credential": false,
         "description": "Certificate of origin credentials presented to shipping carrier for export documentation",
-        "fraud_type": "⚠️ Counterfeiting and Alteration"
+        "fraud_type": null
       }
     },
     {
@@ -241,7 +241,7 @@
         "issuer_name": "legit-shrimp",
         "authentication_key": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
         "verification_time": "2024-01-22T10:30:30.000Z",
-        "fraud_type": "⚠️ Counterfeiting and Alteration"
+        "fraud_type": null
       }
     },
     {
@@ -489,7 +489,7 @@
         ]
       },
       "properties": {
-        "presentation_verified": false,
+        "presentation_verified": true,
         "verification_time": "2024-02-08T10:30:30.000Z",
         "authentication_key": "https://honest-importer.example#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E",
         "file_name": "legit-shrimp-honest-importer-origin-template.json",
@@ -498,7 +498,7 @@
         "presentation_is_fraudulent": false,
         "presentation_contains_fraudulent_credential": true,
         "description": "STOLEN legitimate certificate credentials inappropriately presented by Shady Distributor Ltd",
-        "fraud_type": "⚠️ Counterfeiting and Alteration"
+        "fraud_type": null
       }
     },
     {
@@ -517,7 +517,7 @@
         "issuer_name": "legit-shrimp",
         "authentication_key": "https://honest-importer.example#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E",
         "verification_time": "2024-02-08T10:30:30.000Z",
-        "fraud_type": "⚠️ Counterfeiting and Alteration"
+        "fraud_type": null
       }
     },
     {
@@ -530,7 +530,7 @@
         ]
       },
       "properties": {
-        "presentation_verified": false,
+        "presentation_verified": true,
         "verification_time": "2024-02-05T10:30:30.000Z",
         "authentication_key": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
         "file_name": "shady-distributor-fraudulent-origin-template.json",
@@ -539,7 +539,7 @@
         "presentation_is_fraudulent": true,
         "presentation_contains_fraudulent_credential": true,
         "description": "FRAUDULENT certificate of origin credentials presented by Shady Distributor Ltd claiming Legit Shrimp Ltd identity",
-        "fraud_type": "⚠️ Counterfeiting and Alteration"
+        "fraud_type": "⚠️ Synthetic Identity Fraud"
       }
     },
     {
@@ -558,7 +558,7 @@
         "issuer_name": "legit-shrimp",
         "authentication_key": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
         "verification_time": "2024-02-05T10:30:30.000Z",
-        "fraud_type": "⚠️ Counterfeiting and Alteration"
+        "fraud_type": "⚠️ Synthetic Identity Fraud"
       }
     }
   ]
