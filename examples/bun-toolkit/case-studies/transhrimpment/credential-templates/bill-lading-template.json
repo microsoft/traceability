@@ -11,7 +11,7 @@
   "validFrom": "2025-01-25T10:00:00Z",
   "validUntil": "2030-12-31T23:59:59Z",
   "cnf": {
-    "kid": "n7GWD9LbqAZQy1Wt5XdYiy81GofxhJgFnIu8iduEMmE"
+    "kid": "wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE"
   },
   "credentialSubject": {
     "id": "https://shipments.example/bol-2024-001",

@@ -6,32 +6,32 @@
   "id": "https://chompchomp.example/entity/bvi-001",
   "verificationMethod": [
     {
-      "id": "https://chompchomp.example/entity/bvi-001#nx62J6beWOO6mIavpWEQCg_GoOi8zfAECZ8p-zHxEvI",
+      "id": "https://chompchomp.example/entity/bvi-001#O80NKS6ISt5XMx8BKM5xZwAPXCCtuj4_yzwjx4_EUuE",
       "type": "JsonWebKey",
       "controller": "https://chompchomp.example/entity/bvi-001",
       "publicKeyJwk": {
-        "kid": "nx62J6beWOO6mIavpWEQCg_GoOi8zfAECZ8p-zHxEvI",
+        "kid": "O80NKS6ISt5XMx8BKM5xZwAPXCCtuj4_yzwjx4_EUuE",
         "kty": "EC",
         "crv": "P-256",
         "alg": "ES256",
-        "x": "vb8xKTNFwYM4t1fjAfTPQBsbWPjkfUH60Q0mo9z4LQE",
-        "y": "FBgWNv3E6G-RaCyXdSkl__I2Lk8x2hwqQH50LJ3ODY4",
+        "x": "4-jBwSbhz-AFHUckj0KqcTKWJ_aEgBMC8a1GyJZCYi4",
+        "y": "p_YzZ6cLff_ILnXPJBsfwKpUgF60MkQ8pSXPg74byIg",
         "key_ops": [
           "verify"
         ]
       }
     },
     {
-      "id": "https://chompchomp.example/entity/bvi-001#5kl6Gvq9Jvvvy5UJzVVeIWKf6UWwmOylEUTn1VAX6wE",
+      "id": "https://chompchomp.example/entity/bvi-001#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
       "type": "JsonWebKey",
       "controller": "https://chompchomp.example/entity/bvi-001",
       "publicKeyJwk": {
-        "kid": "5kl6Gvq9Jvvvy5UJzVVeIWKf6UWwmOylEUTn1VAX6wE",
+        "kid": "wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
         "kty": "EC",
         "crv": "P-256",
         "alg": "ES256",
-        "x": "6hRvSeHlwjSC-0LKnVoo3jmiK8C4tdLCA-rD0qymYKQ",
-        "y": "bBP5TVaRr_pQArvHw5T8lT-So6wLaCGZ0vxHIaf0TzY",
+        "x": "U99_2fdepm1aO8QTVEeciW1xQw__r5m8B1uGXiuSUuA",
+        "y": "z7v4asCDa-nkHifpK9IhfNVbMKUeGV0QAsqcUuoR4bY",
         "key_ops": [
           "verify"
         ]
@@ -39,10 +39,10 @@
     }
   ],
   "assertionMethod": [
-    "https://chompchomp.example/entity/bvi-001#nx62J6beWOO6mIavpWEQCg_GoOi8zfAECZ8p-zHxEvI"
+    "https://chompchomp.example/entity/bvi-001#O80NKS6ISt5XMx8BKM5xZwAPXCCtuj4_yzwjx4_EUuE"
   ],
   "authentication": [
-    "https://chompchomp.example/entity/bvi-001#5kl6Gvq9Jvvvy5UJzVVeIWKf6UWwmOylEUTn1VAX6wE"
+    "https://chompchomp.example/entity/bvi-001#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE"
   ],
   "alsoKnownAs": [
     "urn:ietf:spice:glue:gln:4598765432101",

@@ -21,6 +21,17 @@ export const signer = async (privateKey: PrivateKey) => {
       // Create JWT payload with presentation and optional claims
       const jwtPayload: any = { ...presentation };
 
+      // Add standard JWT claims
+      // Add iss (issuer) claim - equal to presentation holder
+      if (presentation.holder) {
+        jwtPayload.iss = presentation.holder;
+      }
+
+      // Add sub (subject) claim - equal to presentation holder as well for presentations
+      if (presentation.holder) {
+        jwtPayload.sub = presentation.holder;
+      }
+
       // Add iat (issued at) claim - current time in seconds
       const now = Math.floor(Date.now() / 1000);
       jwtPayload.iat = now;

@@ -16,6 +16,15 @@ export const signer = async (privateKey: PrivateKey) => {
       // Create JWT payload with credential data
       const jwtPayload: any = { ...credential };
 
+      // Add standard JWT claims
+      // Add iss (issuer) claim - equal to credential issuer
+      jwtPayload.iss = credential.issuer;
+
+      // Add sub (subject) claim - equal to credentialSubject.id if present
+      if (credential.credentialSubject?.id) {
+        jwtPayload.sub = credential.credentialSubject.id;
+      }
+
       // Add iat (issued at) claim - current time in seconds
       const now = Math.floor(Date.now() / 1000);
       jwtPayload.iat = now;

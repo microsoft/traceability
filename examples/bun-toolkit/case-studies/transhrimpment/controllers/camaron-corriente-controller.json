@@ -6,32 +6,32 @@
   "id": "https://camaron-corriente.example/entity/ve-pbc-001",
   "verificationMethod": [
     {
-      "id": "https://camaron-corriente.example/entity/ve-pbc-001#wCgZYzU2U073ubVOEp7wcNHxwEIGuiEoY42b2tuKwfY",
+      "id": "https://camaron-corriente.example/entity/ve-pbc-001#yEO0pZQ6_bFYlZZkmmK6MQLrydeubOdKdtYO-cXKsAg",
       "type": "JsonWebKey",
       "controller": "https://camaron-corriente.example/entity/ve-pbc-001",
       "publicKeyJwk": {
-        "kid": "wCgZYzU2U073ubVOEp7wcNHxwEIGuiEoY42b2tuKwfY",
+        "kid": "yEO0pZQ6_bFYlZZkmmK6MQLrydeubOdKdtYO-cXKsAg",
         "kty": "EC",
         "crv": "P-256",
         "alg": "ES256",
-        "x": "od157huUldxEgWY06BgwPXoRP-3mBvVGrg2aM09-eY0",
-        "y": "9-NhMiNgOh2-lgsOGvzUKZXxAj-9Xw_QtpvvOt2LhSk",
+        "x": "6EynIUgbLq0CKvNEZIjnKc56dC2CCbegsdbfDUuvYcY",
+        "y": "xLlq9FtgNggxYw_prjbipdy4By7wTbAc2IOiYgTOzFk",
         "key_ops": [
           "verify"
         ]
       }
     },
     {
-      "id": "https://camaron-corriente.example/entity/ve-pbc-001#G5OJWJPRMVV4EQBPnv5Y2zHhV8lb13hzccIeLNFR9nU",
+      "id": "https://camaron-corriente.example/entity/ve-pbc-001#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0",
       "type": "JsonWebKey",
       "controller": "https://camaron-corriente.example/entity/ve-pbc-001",
       "publicKeyJwk": {
-        "kid": "G5OJWJPRMVV4EQBPnv5Y2zHhV8lb13hzccIeLNFR9nU",
+        "kid": "RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0",
         "kty": "EC",
         "crv": "P-256",
         "alg": "ES256",
-        "x": "z5Hry9ABSN60szLVg9ScUJb3W-Q6sdoGOUN5sl9lXI8",
-        "y": "lChjGkAl5o1Iu7WI2YcbyC71qZtluj6ecILxqQeKUVo",
+        "x": "QWcGVBtUXXis8Og7UrQLY8rkGltxd3KOjv6Jr3eKRSs",
+        "y": "KP-J4igQr3D3iXInj9qrwJiERdH9OIdEzqqDGnM2kC0",
         "key_ops": [
           "verify"
         ]
@@ -39,10 +39,10 @@
     }
   ],
   "assertionMethod": [
-    "https://camaron-corriente.example/entity/ve-pbc-001#wCgZYzU2U073ubVOEp7wcNHxwEIGuiEoY42b2tuKwfY"
+    "https://camaron-corriente.example/entity/ve-pbc-001#yEO0pZQ6_bFYlZZkmmK6MQLrydeubOdKdtYO-cXKsAg"
   ],
   "authentication": [
-    "https://camaron-corriente.example/entity/ve-pbc-001#G5OJWJPRMVV4EQBPnv5Y2zHhV8lb13hzccIeLNFR9nU"
+    "https://camaron-corriente.example/entity/ve-pbc-001#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0"
   ],
   "alsoKnownAs": [
     "urn:ietf:spice:glue:gln:4598765432102",

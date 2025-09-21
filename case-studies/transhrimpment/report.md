@@ -38,26 +38,78 @@ Identifying supply chain entities, gather their addresses, locations and aliases
 
 
 
-## Investigation Summary
+**🔍 Entity identification completed!**
 
-### Entity Identification Results
 
-The investigation successfully identified all supply chain entities through their controller documents and geographic locations.
+<details>
+<summary>❌ Create resolver cache from controllers</summary>
 
-### Key Findings
+```bash
+$ bun src/cli.ts create-resolver-cache --controllers case-studies/transhrimpment/controllers --out case-studies/transhrimpment/resolver-cache.json
+```
 
-- All entities validated successfully with geographic locations confirmed
-- Map previews generated showing entity distribution across the Caribbean region
-- Controller documents contain proper cryptographic verification methods
-- Legitimate and fraudulent entities geographically mapped for analysis
+```
+error: Module not found "src/cli.ts"
+```
+Exit code: 1
 
-### Next Steps
+</details>
 
-The identified entities and their geographic information can now be used to:
-- Trace shipment routes and detect deviations
-- Verify entity legitimacy through location analysis
-- Detect suspicious geographic patterns in fraud schemes
-- Validate supply chain documents against known entity locations
+---
 
-**🔍 Entity identification completed - geographic fraud detection enabled!**
+## Step 2: Document Creation (Credential Issuance)
+
+<details>
+<summary>📋 Click to expand document creation details</summary>
+
+Issuing verifiable credentials based on the Transhrimpment supply chain narrative.
+This includes 8 legitimate documents and 1 fraudulent certificate of origin.
+Each credential is cryptographically signed by the appropriate entity using their private keys and verified against their controller documents.
+
+
+</details>
+
+---
+
+**📋 Documentation collection completed!**
+
+
+---
+
+## Step 4: Fraud Detection Analysis
+
+<details>
+<summary>🔍 Click to expand fraud detection analysis</summary>
+
+Demonstrating how verifiable credentials prevent fraud through cryptographic verification and holder binding.
+
+### Scenario 1: Fraudulent Credential Detection
+
+**Issue**: Testing the fraudulent Certificate of Origin created in Step 2, where Shady Distributor Ltd attempted to forge a credential claiming to be from Legit Shrimp Ltd but signed it with their own keys.
+
+**Expected Result**: Verification should fail because the signature doesn't match Legit Shrimp Ltd's authorized keys.
+
+
+<details>
+<summary>❌ Fraudulent Certificate Verification Test</summary>
+
+**Test Command:**
+```bash
+bun src/cli.ts verify-credential --credential case-studies/transhrimpment/credentials/shady-distributor-fraudulent-origin.json --resolver-cache case-studies/transhrimpment/resolver-cache.json
+```
+
+**Test Result:**
+```
+error: Module not found "src/cli.ts"
+```
+
+**❌ UNEXPECTED**: This credential should have failed verification.
+
+</details>
+
+### Scenario 2: Stolen Credential Detection (Holder Binding Failure)
+
+**Issue**: Demonstrating what happens when Shady Distributor Ltd attempts to present the legitimate Certificate of Origin (created in Step 2) that was originally issued by Legit Shrimp Ltd to Honest Importer Ltd.
+
+**Expected Result**: Presentation should fail because Shady Distributor Ltd cannot prove they are the intended holder (cnf.kid mismatch).
 

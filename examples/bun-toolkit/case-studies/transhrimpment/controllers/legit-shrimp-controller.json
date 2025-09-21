@@ -6,32 +6,32 @@
   "id": "https://legit-shrimp.example/entity/tt-pos-001",
   "verificationMethod": [
     {
-      "id": "https://legit-shrimp.example/entity/tt-pos-001#LrQ5E8KeOiQ62VVIc_iDcCU1xMwcIOzk1DciPI8DdpU",
+      "id": "https://legit-shrimp.example/entity/tt-pos-001#TTmxpbDxEQJKCTxehUHYHoz6qRQ00YenAsry4wJgwxE",
       "type": "JsonWebKey",
       "controller": "https://legit-shrimp.example/entity/tt-pos-001",
       "publicKeyJwk": {
-        "kid": "LrQ5E8KeOiQ62VVIc_iDcCU1xMwcIOzk1DciPI8DdpU",
+        "kid": "TTmxpbDxEQJKCTxehUHYHoz6qRQ00YenAsry4wJgwxE",
         "kty": "EC",
         "crv": "P-256",
         "alg": "ES256",
-        "x": "xUZYceKR-OI4MtundtRaGWgMI1jJomJHbfuLgA4LOTQ",
-        "y": "N8Fy9f3kMZbobXnzb-c6AOKrj543m1bsyaxksFI-tvc",
+        "x": "zg4EKxDs-3__x3w1cdX6wyIX_bZzKNHPSWVP8UBjFUk",
+        "y": "iam5J54U8HY1EKVWK9qJUFDuIZ-e3T-IM1DY634b-xM",
         "key_ops": [
           "verify"
         ]
       }
     },
     {
-      "id": "https://legit-shrimp.example/entity/tt-pos-001#nr94L4yhi4eGBtPD8QUeYXgi78sbEihzUJ4rvqr8Tls",
+      "id": "https://legit-shrimp.example/entity/tt-pos-001#F4FzDU1QWvUzDpWAuwlpvO-A4TuixJ-92PXLUwwqKPo",
       "type": "JsonWebKey",
       "controller": "https://legit-shrimp.example/entity/tt-pos-001",
       "publicKeyJwk": {
-        "kid": "nr94L4yhi4eGBtPD8QUeYXgi78sbEihzUJ4rvqr8Tls",
+        "kid": "F4FzDU1QWvUzDpWAuwlpvO-A4TuixJ-92PXLUwwqKPo",
         "kty": "EC",
         "crv": "P-256",
         "alg": "ES256",
-        "x": "7Dufa0VGHTZ0nw2q7peGgT8OfOsz8E8PCiwJ6oZRQgM",
-        "y": "3Z6wxNXfxASzeARkpJIeMZLXyt1ThccwG1t0ob8BvgY",
+        "x": "K9k1WfK7WQsRI8xjvLI_ux805Zzt3wxXEqHFSXxhVh0",
+        "y": "0V9-VKIPfQ-YWhyMRCtuYVCeetnV-wZUL_aSmKBJ0os",
         "key_ops": [
           "verify"
         ]
@@ -39,10 +39,10 @@
     }
   ],
   "assertionMethod": [
-    "https://legit-shrimp.example/entity/tt-pos-001#LrQ5E8KeOiQ62VVIc_iDcCU1xMwcIOzk1DciPI8DdpU"
+    "https://legit-shrimp.example/entity/tt-pos-001#TTmxpbDxEQJKCTxehUHYHoz6qRQ00YenAsry4wJgwxE"
   ],
   "authentication": [
-    "https://legit-shrimp.example/entity/tt-pos-001#nr94L4yhi4eGBtPD8QUeYXgi78sbEihzUJ4rvqr8Tls"
+    "https://legit-shrimp.example/entity/tt-pos-001#F4FzDU1QWvUzDpWAuwlpvO-A4TuixJ-92PXLUwwqKPo"
   ],
   "alsoKnownAs": [
     "urn:ietf:spice:glue:gln:4598765432103",

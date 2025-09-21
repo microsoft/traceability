@@ -11,7 +11,7 @@
   "validFrom": "2025-01-15T10:00:00Z",
   "validUntil": "2030-12-31T23:59:59Z",
   "cnf": {
-    "kid": "nx62J6beWOO6mIavpWEQCg_GoOi8zfAECZ8p-zHxEvI"
+    "kid": "ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8"
   },
   "credentialSubject": {
     "id": "https://orders.example/po-2024-001",

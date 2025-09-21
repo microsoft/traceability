@@ -6,32 +6,32 @@
   "id": "https://cargo-line.example/entity/pr-sju-001",
   "verificationMethod": [
     {
-      "id": "https://cargo-line.example/entity/pr-sju-001#CYpN-W1EXc6cLPov7axBHMfDv3a_PZoj0LmDjFuP20M",
+      "id": "https://cargo-line.example/entity/pr-sju-001#6MubhjOhD3qJYFu9avKeOpH0lr1CnwYEtDkBBGlEctE",
       "type": "JsonWebKey",
       "controller": "https://cargo-line.example/entity/pr-sju-001",
       "publicKeyJwk": {
-        "kid": "CYpN-W1EXc6cLPov7axBHMfDv3a_PZoj0LmDjFuP20M",
+        "kid": "6MubhjOhD3qJYFu9avKeOpH0lr1CnwYEtDkBBGlEctE",
         "kty": "EC",
         "crv": "P-256",
         "alg": "ES256",
-        "x": "CyAeJJM3QVXqkVYdLn1E41p8WlJY9KVXcSe4w9bu810",
-        "y": "-ozUpC6b5F8kv_AFylZz2iAjwxzJjD463y73Ghd3OHU",
+        "x": "gJIxvhqr49KImHqePrsLaLE0EImNM9pYk01uco9jpvs",
+        "y": "fokgG6M8TZintarhRdaLXJtJeOsmHeqQ92nhgA8hIvA",
         "key_ops": [
           "verify"
         ]
       }
     },
     {
-      "id": "https://cargo-line.example/entity/pr-sju-001#40DqwP_7Q5vg1FIWbH-OfbSvP6S6gmIxhXlhFRusLSw",
+      "id": "https://cargo-line.example/entity/pr-sju-001#Is1nmYZZvkaJfQY-rwDp43RW9TbglgOBdkY44P_ialI",
       "type": "JsonWebKey",
       "controller": "https://cargo-line.example/entity/pr-sju-001",
       "publicKeyJwk": {
-        "kid": "40DqwP_7Q5vg1FIWbH-OfbSvP6S6gmIxhXlhFRusLSw",
+        "kid": "Is1nmYZZvkaJfQY-rwDp43RW9TbglgOBdkY44P_ialI",
         "kty": "EC",
         "crv": "P-256",
         "alg": "ES256",
-        "x": "RlhbAC1nBWvI1-OUyedXQgIqbmZH1B-Vc6M0y34S1K0",
-        "y": "5NDUXAzfPJSFqDSmWzajXkNKuTMsnY6x9cS1vMuZkOM",
+        "x": "fpRRu83DeV6z1w6RGigWZfyb-DBXI1iP6GgfLOskP8w",
+        "y": "cAu8mpxCmUCSiEptpVYXJA8tg6G7yrj4B8q6gfTe7A8",
         "key_ops": [
           "verify"
         ]
@@ -39,10 +39,10 @@
     }
   ],
   "assertionMethod": [
-    "https://cargo-line.example/entity/pr-sju-001#CYpN-W1EXc6cLPov7axBHMfDv3a_PZoj0LmDjFuP20M"
+    "https://cargo-line.example/entity/pr-sju-001#6MubhjOhD3qJYFu9avKeOpH0lr1CnwYEtDkBBGlEctE"
   ],
   "authentication": [
-    "https://cargo-line.example/entity/pr-sju-001#40DqwP_7Q5vg1FIWbH-OfbSvP6S6gmIxhXlhFRusLSw"
+    "https://cargo-line.example/entity/pr-sju-001#Is1nmYZZvkaJfQY-rwDp43RW9TbglgOBdkY44P_ialI"
   ],
   "alsoKnownAs": [
     "urn:ietf:spice:glue:gln:4598765432105",
