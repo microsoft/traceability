@@ -1,14 +1,14 @@
 {
   "caseName": "Transhrimpment Supply Chain Fraud Investigation",
-  "timestamp": "2025-09-21T15:55:04.249Z",
+  "timestamp": "2025-09-21T16:22:09.381Z",
   "summary": {
     "entitiesIdentified": 8,
-    "credentialsIssued": 4,
+    "credentialsIssued": 10,
     "presentationsCreated": 10,
     "fraudsDetected": 2,
     "testsTotal": 21,
-    "testsPassed": 14,
-    "testsFailed": 7
+    "testsPassed": 20,
+    "testsFailed": 1
   },
   "entities": [
     {
@@ -113,69 +113,61 @@
       "description": "Purchase Order (Chompchomp → Camarón Corriente) - 1000kg frozen shrimp",
       "schemaType": "PurchaseOrderCredential",
       "issuanceSuccessful": true,
-      "verificationSuccessful": false,
+      "verificationSuccessful": true,
       "fraudType": null,
-      "testPassed": false,
-      "errors": [
-        "Verification failed: Error: Invalid iat claim: credential issued in the future"
-      ],
+      "testPassed": true,
+      "errors": [],
       "jwtClaims": {
-        "iat": 1758470104,
+        "iat": 1705312800,
         "nbf": 1705312800,
         "exp": 1735689599
       },
-      "verificationTime": "2024-01-15T12:00:00.000Z"
+      "verificationTime": "2024-01-15T10:30:00.000Z"
     },
     {
       "description": "Commercial Invoice (Camarón Corriente → Chompchomp) - Payment for shrimp",
       "schemaType": "CommercialInvoiceCredential",
       "issuanceSuccessful": true,
-      "verificationSuccessful": false,
+      "verificationSuccessful": true,
       "fraudType": null,
-      "testPassed": false,
-      "errors": [
-        "Verification failed: Error: Invalid iat claim: credential issued in the future"
-      ],
+      "testPassed": true,
+      "errors": [],
       "jwtClaims": {
-        "iat": 1758470104,
+        "iat": 1705744800,
         "nbf": 1705744800,
         "exp": 1735689599
       },
-      "verificationTime": "2024-01-20T12:00:00.000Z"
+      "verificationTime": "2024-01-20T10:30:00.000Z"
     },
     {
       "description": "Certificate of Origin (Camarón Corriente → Chompchomp) - Venezuela origin",
       "schemaType": "CertificateOfOriginCredential",
       "issuanceSuccessful": true,
-      "verificationSuccessful": false,
+      "verificationSuccessful": true,
       "fraudType": null,
-      "testPassed": false,
-      "errors": [
-        "Verification failed: Error: Invalid iat claim: credential issued in the future"
-      ],
+      "testPassed": true,
+      "errors": [],
       "jwtClaims": {
-        "iat": 1758470104,
+        "iat": 1705917600,
         "nbf": 1704880800,
         "exp": 1735689599
       },
-      "verificationTime": "2024-01-22T12:00:00.000Z"
+      "verificationTime": "2024-01-22T10:30:00.000Z"
     },
     {
       "description": "Bill of Lading (Shady Carrier → Chompchomp) - Transport with forged partial loss",
       "schemaType": "BillOfLadingCredential",
       "issuanceSuccessful": true,
-      "verificationSuccessful": false,
+      "verificationSuccessful": true,
       "fraudType": "Counterfeiting and Alteration",
       "testPassed": true,
-      "errors": [
-        "Verification failed: Error: Invalid iat claim: credential issued in the future"
-      ],
+      "errors": [],
       "jwtClaims": {
-        "iat": 1758470104,
+        "iat": 1706781600,
         "nbf": 1706176800,
         "exp": 1735689599
       },
-      "verificationTime": "2024-02-01T12:00:00.000Z"
+      "verificationTime": "2024-02-01T10:30:00.000Z"
     },
     {
       "description": "Forged Bill of Lading (Shady Carrier) - Claims partial shipment destroyed to steal goods",
@@ -188,96 +180,86 @@
         "Verification failed: Error: Invalid iat claim: credential issued in the future"
       ],
       "jwtClaims": {
-        "iat": 1758470104,
+        "iat": 1706799600,
         "nbf": 1706176800,
         "exp": 1735689599
       },
-      "verificationTime": "2024-02-01T18:00:00.000Z"
+      "verificationTime": "2024-02-01T11:30:00.000Z"
     },
     {
       "description": "Purchase Order (Anonymous Distributor → Shady Distributor) - 500kg stolen shrimp",
       "schemaType": "PurchaseOrderCredential",
       "issuanceSuccessful": true,
-      "verificationSuccessful": false,
+      "verificationSuccessful": true,
       "fraudType": null,
-      "testPassed": false,
-      "errors": [
-        "Verification failed: Error: Invalid iat claim: credential issued in the future"
-      ],
+      "testPassed": true,
+      "errors": [],
       "jwtClaims": {
-        "iat": 1758470104,
+        "iat": 1707559200,
         "nbf": 1706781600,
         "exp": 1735689599
       },
-      "verificationTime": "2024-02-10T12:00:00.000Z"
+      "verificationTime": "2024-02-10T11:30:00.000Z"
     },
     {
       "description": "Commercial Invoice (Shady Distributor → Anonymous Distributor) - Sale of stolen goods",
       "schemaType": "CommercialInvoiceCredential",
       "issuanceSuccessful": true,
-      "verificationSuccessful": false,
+      "verificationSuccessful": true,
       "fraudType": null,
-      "testPassed": false,
-      "errors": [
-        "Verification failed: Error: Invalid iat claim: credential issued in the future"
-      ],
+      "testPassed": true,
+      "errors": [],
       "jwtClaims": {
-        "iat": 1758470104,
+        "iat": 1707732000,
         "nbf": 1707127200,
         "exp": 1735689599
       },
-      "verificationTime": "2024-02-12T12:00:00.000Z"
+      "verificationTime": "2024-02-12T10:30:00.000Z"
     },
     {
       "description": "Bill of Lading (Cargo Line → Anonymous Distributor) - Secondary transaction delivery",
       "schemaType": "BillOfLadingCredential",
       "issuanceSuccessful": true,
-      "verificationSuccessful": false,
+      "verificationSuccessful": true,
       "fraudType": null,
-      "testPassed": false,
-      "errors": [
-        "Verification failed: Error: Invalid iat claim: credential issued in the future"
-      ],
+      "testPassed": true,
+      "errors": [],
       "jwtClaims": {
-        "iat": 1758470104,
+        "iat": 1707991200,
         "nbf": 1707559200,
         "exp": 1735689599
       },
-      "verificationTime": "2024-02-15T12:00:00.000Z"
+      "verificationTime": "2024-02-15T10:30:00.000Z"
     },
     {
       "description": "Certificate of Origin (Legit Shrimp → Honest Importer) - LEGITIMATE but will be stolen",
       "schemaType": "CertificateOfOriginCredential",
       "issuanceSuccessful": true,
-      "verificationSuccessful": false,
+      "verificationSuccessful": true,
       "fraudType": "Document Compromise",
       "testPassed": true,
-      "errors": [
-        "Verification failed: Error: Credential is not yet valid. Not before: 2024-01-10T10:00:00.000Z"
-      ],
+      "errors": [],
       "jwtClaims": {
-        "iat": 1758470104,
+        "iat": 1704448800,
         "nbf": 1704880800,
         "exp": 1735689599
       },
-      "verificationTime": "2024-01-05T12:00:00.000Z"
+      "verificationTime": "2024-02-08T10:30:00.000Z"
     },
     {
       "description": "FRAUDULENT Certificate of Origin (Shady Distributor forging Legit Shrimp identity)",
       "schemaType": "CertificateOfOriginCredential",
       "issuanceSuccessful": true,
-      "verificationSuccessful": false,
+      "verificationSuccessful": true,
       "fraudType": "Counterfeiting and Alteration",
       "testPassed": true,
-      "errors": [
-        "Verification failed: Error: Invalid iat claim: credential issued in the future"
-      ],
+      "errors": [],
       "jwtClaims": {
-        "iat": 1758470104,
+        "iat": 1707127200,
         "nbf": 1704880800,
         "exp": 1735689599
       },
-      "verificationTime": "2024-02-05T12:00:00.000Z"
+      "verificationTime": "2024-02-05T10:30:00.000Z"
     }
   ],
   "presentations": [
@@ -289,7 +271,7 @@
       "verificationSuccessful": false,
       "testPassed": false,
       "errors": [
-        "Presentation verification failed: Error: Invalid iat claim: presentation issued in the future"
+        "Presentation verification failed: Error: Presentation has expired. Expired at: 2024-01-15T11:30:00.000Z"
       ]
     },
     {
@@ -300,7 +282,7 @@
       "verificationSuccessful": false,
       "testPassed": false,
       "errors": [
-        "Presentation verification failed: Error: Invalid iat claim: presentation issued in the future"
+        "Presentation verification failed: Error: Presentation has expired. Expired at: 2024-01-20T11:30:00.000Z"
       ]
     },
     {
@@ -311,7 +293,7 @@
       "verificationSuccessful": false,
       "testPassed": false,
       "errors": [
-        "Presentation verification failed: Error: Invalid iat claim: presentation issued in the future"
+        "Presentation verification failed: Error: Presentation has expired. Expired at: 2024-01-22T11:30:00.000Z"
       ]
     },
     {
@@ -322,7 +304,7 @@
       "verificationSuccessful": false,
       "testPassed": false,
       "errors": [
-        "Presentation verification failed: Error: Invalid iat claim: presentation issued in the future"
+        "Presentation verification failed: Error: Presentation has expired. Expired at: 2024-02-01T11:30:00.000Z"
       ]
     },
     {
@@ -333,7 +315,7 @@
       "verificationSuccessful": false,
       "testPassed": false,
       "errors": [
-        "Presentation verification failed: Error: Invalid iat claim: presentation issued in the future"
+        "Presentation verification failed: Error: Presentation has expired. Expired at: 2024-02-01T12:30:00.000Z"
       ]
     },
     {
@@ -344,7 +326,7 @@
       "verificationSuccessful": false,
       "testPassed": false,
       "errors": [
-        "Presentation verification failed: Error: Invalid iat claim: presentation issued in the future"
+        "Presentation verification failed: Error: Presentation has expired. Expired at: 2024-02-10T12:30:00.000Z"
       ]
     },
     {
@@ -355,7 +337,7 @@
       "verificationSuccessful": false,
       "testPassed": false,
       "errors": [
-        "Presentation verification failed: Error: Invalid iat claim: presentation issued in the future"
+        "Presentation verification failed: Error: Presentation has expired. Expired at: 2024-02-12T11:30:00.000Z"
       ]
     },
     {
@@ -366,7 +348,7 @@
       "verificationSuccessful": false,
       "testPassed": false,
       "errors": [
-        "Presentation verification failed: Error: Invalid iat claim: presentation issued in the future"
+        "Presentation verification failed: Error: Presentation has expired. Expired at: 2024-02-15T11:30:00.000Z"
       ]
     },
     {
@@ -377,7 +359,7 @@
       "verificationSuccessful": false,
       "testPassed": false,
       "errors": [
-        "Presentation verification failed: Error: Invalid iat claim: presentation issued in the future"
+        "Presentation verification failed: Error: Presentation has expired. Expired at: 2024-02-08T11:30:00.000Z"
       ]
     },
     {
@@ -388,7 +370,7 @@
       "verificationSuccessful": false,
       "testPassed": false,
       "errors": [
-        "Presentation verification failed: Error: Invalid iat claim: presentation issued in the future"
+        "Presentation verification failed: Error: Presentation has expired. Expired at: 2024-02-05T11:30:00.000Z"
       ]
     }
   ],

@@ -92,18 +92,33 @@ const entityKeys = [
   "honest-importer"
 ];
 
-// Timeline based on narrative dates for verification time
+// Timeline based on narrative dates for issuance
+const issuanceTimeline = {
+  "legit-shrimp-honest-importer-origin": new Date("2024-01-05T10:00:00Z"), // Legitimate certificate issued first
+  "chompchomp-purchase-order": new Date("2024-01-15T10:00:00Z"), // Purchase order submitted
+  "camaron-corriente-invoice": new Date("2024-01-20T10:00:00Z"), // Invoice sent
+  "camaron-corriente-origin": new Date("2024-01-22T10:00:00Z"), // Certificate of origin issued
+  "shady-carrier-lading": new Date("2024-02-01T10:00:00Z"), // Shady carrier delivers and forges docs
+  "shady-carrier-forged-lading": new Date("2024-02-01T15:00:00Z"), // Forged lading same day
+  "shady-distributor-fraudulent-origin": new Date("2024-02-05T10:00:00Z"), // Shady distributor forges certificates
+  "anonymous-distributor-secondary-purchase-order": new Date("2024-02-10T10:00:00Z"), // Secondary transaction begins
+  "shady-distributor-secondary-invoice": new Date("2024-02-12T10:00:00Z"), // Secondary invoice
+  "cargo-line-secondary-lading": new Date("2024-02-15T10:00:00Z"), // Secondary delivery
+};
+
+// Presentation timeline based on README narrative - when credentials are presented for verification
+// Presentations have 1-hour expiration, so these times must be within 1 hour of issuance
 const verificationTimeline = {
-  "legit-shrimp-honest-importer-origin": new Date("2024-01-05T12:00:00Z"), // Verify soon after issuance
-  "chompchomp-purchase-order": new Date("2024-01-15T12:00:00Z"),
-  "camaron-corriente-invoice": new Date("2024-01-20T12:00:00Z"),
-  "camaron-corriente-origin": new Date("2024-01-22T12:00:00Z"),
-  "shady-carrier-lading": new Date("2024-02-01T12:00:00Z"),
-  "shady-carrier-forged-lading": new Date("2024-02-01T18:00:00Z"),
-  "shady-distributor-fraudulent-origin": new Date("2024-02-05T12:00:00Z"),
-  "anonymous-distributor-secondary-purchase-order": new Date("2024-02-10T12:00:00Z"),
-  "shady-distributor-secondary-invoice": new Date("2024-02-12T12:00:00Z"),
-  "cargo-line-secondary-lading": new Date("2024-02-15T12:00:00Z"),
+  "legit-shrimp-honest-importer-origin": new Date("2024-02-08T10:30:00Z"), // STOLEN legitimate certificate credentials inappropriately presented by Shady Distributor Ltd
+  "chompchomp-purchase-order": new Date("2024-01-15T10:30:00Z"), // Purchase order credentials presented to Camarón Corriente S.A. for order processing
+  "camaron-corriente-invoice": new Date("2024-01-20T10:30:00Z"), // Commercial invoice credentials presented to Chompchomp Ltd for payment verification
+  "camaron-corriente-origin": new Date("2024-01-22T10:30:00Z"), // Certificate of origin credentials presented to shipping carrier for export documentation
+  "shady-carrier-lading": new Date("2024-02-01T10:30:00Z"), // Bill of lading credentials presented to Chompchomp Ltd for delivery acceptance
+  "shady-carrier-forged-lading": new Date("2024-02-01T11:30:00Z"), // Forged bill of lading credentials presented to customs for partial loss claim
+  "shady-distributor-fraudulent-origin": new Date("2024-02-05T10:30:00Z"), // FRAUDULENT certificate of origin credentials presented by Shady Distributor Ltd claiming Legit Shrimp Ltd identity
+  "anonymous-distributor-secondary-purchase-order": new Date("2024-02-10T11:30:00Z"), // Secondary purchase order credentials presented to Shady Distributor Ltd for order processing
+  "shady-distributor-secondary-invoice": new Date("2024-02-12T10:30:00Z"), // Secondary commercial invoice credentials presented to Anonymous Distributor for payment
+  "cargo-line-secondary-lading": new Date("2024-02-15T10:30:00Z"), // Secondary bill of lading credentials presented to Anonymous Distributor for delivery
 };
 
 // Entity configurations loaded from files
@@ -377,9 +392,10 @@ describe("Transhrimpment Case Study", () => {
             throw new Error(`Template not found: ${templatePath}`);
           }
 
-          // Issue credential using library (template already has cnf.kid)
+          // Issue credential using library with timeline-aligned issuance time
+          const issuanceTime = issuanceTimeline[spec.key as keyof typeof issuanceTimeline];
           const signer = await credential.signer(assertionKey);
-          const signedCredentialJWT = await signer.sign(credentialTemplate);
+          const signedCredentialJWT = await signer.sign(credentialTemplate, issuanceTime);
 
           credResult.issuanceSuccessful = !!signedCredentialJWT;
 
@@ -522,10 +538,13 @@ describe("Transhrimpment Case Study", () => {
               "verifiableCredential": [envelopedCred]
             };
 
-            // Sign presentation with holder's auth key
+            // Sign presentation with holder's auth key at timeline specified time
             const holderAuthKey = (holderController as any)._authKey;
+            const presentationIssuanceTime = verificationTimeline[credKey as keyof typeof verificationTimeline];
             const pressSigner = await presentation.signer(holderAuthKey);
-            const signedPresentationJWT = await pressSigner.sign(presentationData);
+            const signedPresentationJWT = await pressSigner.sign(presentationData, {
+              issuanceTime: presentationIssuanceTime
+            });
 
             presResult.signingSuccessful = !!signedPresentationJWT;
             presentationsCreated++;
@@ -538,17 +557,16 @@ describe("Transhrimpment Case Study", () => {
                 "type": "EnvelopedVerifiablePresentation"
               };
 
-              // Verify presentation at appropriate time
+              // Verify presentation within its validity period (presentation has 1-hour expiration)
               try {
                 const genericResolver = resolver.createGenericResolver();
                 for (const [controllerId, controllerData] of Object.entries(resolverCache)) {
                   genericResolver.addController(controllerId, controllerData);
                 }
 
-                // Use verification time slightly after credential verification
-                const baseVerificationTime = verificationTimeline[credKey as keyof typeof verificationTimeline];
-                const presVerificationTime = baseVerificationTime ?
-                  new Date(baseVerificationTime.getTime() + 60000) : // 1 minute after credential
+                // Verify presentation 30 seconds after it was signed, well within the 1-hour validity period
+                const presVerificationTime = presentationIssuanceTime ?
+                  new Date(presentationIssuanceTime.getTime() + 30000) : // 30 seconds after presentation signing
                   undefined;
 
                 const presVerifier = await presentation.verifierWithGenericResolver(genericResolver);

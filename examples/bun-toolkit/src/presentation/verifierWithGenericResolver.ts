@@ -67,6 +67,8 @@ export const verifierWithGenericResolver = async (
       const now = options?.verificationTime || new Date();
       const nowInSeconds = Math.floor(now.getTime() / 1000);
 
+
+
       // Check exp (expiration) claim
       if (jwtPayload.exp !== undefined) {
         if (typeof jwtPayload.exp !== 'number') {
@@ -150,8 +152,8 @@ export const verifierWithGenericResolver = async (
           // Resolve the credential verifier using the kid
           const credentialVerifier = await assertionKeyResolver.resolve(credHeader.kid);
 
-          // Verify the credential
-          const verifiedCredential = await credentialVerifier.verify(credJws);
+          // Verify the credential at the same time we're verifying the presentation
+          const verifiedCredential = await credentialVerifier.verify(credJws, options?.verificationTime);
 
           // Check if credential has cnf claim (MUST be top-level)
           if (verifiedCredential.cnf?.kid) {

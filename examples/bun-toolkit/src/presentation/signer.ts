@@ -6,6 +6,7 @@ import { base64url } from "../encoding";
 export interface SigningOptions {
   nonce?: string;
   audience?: string | string[];
+  issuanceTime?: Date;
 }
 
 export interface PresentationSigner {
@@ -32,13 +33,15 @@ export const signer = async (privateKey: PrivateKey) => {
         jwtPayload.sub = presentation.holder;
       }
 
-      // Add iat (issued at) claim - current time in seconds
-      const now = Math.floor(Date.now() / 1000);
-      jwtPayload.iat = now;
+      // Add iat (issued at) claim - use provided time or current time
+      const issueTime = options?.issuanceTime || new Date();
+      const iat = Math.floor(issueTime.getTime() / 1000);
+      jwtPayload.iat = iat;
 
-      // Add exp (expiration) claim - default to 2 minutes from now
-      // Presentations are typically short-lived for security
-      jwtPayload.exp = now + 120; // 120 seconds = 2 minutes
+
+      // Add exp (expiration) claim - default to 1 hour from issuance time
+      // Presentations are typically short-lived for security, but allow reasonable verification window
+      jwtPayload.exp = iat + 3600; // 3600 seconds = 1 hour
 
       // Add nonce if provided (for replay attack prevention)
       if (options?.nonce) {

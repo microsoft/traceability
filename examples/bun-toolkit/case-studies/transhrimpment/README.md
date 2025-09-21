@@ -30,6 +30,21 @@ However, the investigation reveals that on **February 8, 2024**, `Shady Distribu
 On **February 20, 2024**, the customs broker filed paperwork for the imported shrimp as HS code 0306.17, originating from `Trinidad and Tobago`.
 On **March 1, 2024**, lab tests revealed chemical contamination in the shrimp, triggering a regulatory investigation that uncovered the fraud.
 
+## Credential Presentation Timeline
+
+The following timeline shows when credentials were presented for verification during the investigation:
+
+- **January 15, 2024 10:30 AM**: Purchase order credentials presented to `Camarón Corriente S.A.` for order processing
+- **January 20, 2024 10:30 AM**: Commercial invoice credentials presented to `Chompchomp Ltd` for payment verification
+- **January 22, 2024 10:30 AM**: Certificate of origin credentials presented to shipping carrier for export documentation
+- **February 1, 2024 10:30 AM**: Bill of lading credentials presented to `Chompchomp Ltd` for delivery acceptance
+- **February 1, 2024 11:30 AM**: Forged bill of lading credentials presented to customs for partial loss claim
+- **February 5, 2024 10:30 AM**: FRAUDULENT certificate of origin credentials presented by `Shady Distributor Ltd` claiming `Legit Shrimp Ltd` identity
+- **February 8, 2024 10:30 AM**: STOLEN legitimate certificate credentials inappropriately presented by `Shady Distributor Ltd`
+- **February 10, 2024 11:30 AM**: Secondary purchase order credentials presented to `Shady Distributor Ltd` for order processing
+- **February 12, 2024 10:30 AM**: Secondary commercial invoice credentials presented to `Anonymous Distributor` for payment
+- **February 15, 2024 10:30 AM**: Secondary bill of lading credentials presented to `Anonymous Distributor` for delivery
+
 ## Security Analysis
 
 The investigation revealed three critical types of fraud that compromised this supply chain:
