@@ -1040,7 +1040,7 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
   ],
   "issuer": "https://chompchomp.example/entity/bvi-001",
   "cnf": {
-    "kid": "RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0"
+    "kid": "https://camaron-corriente.example/entity/ve-pbc-001#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0"
   },
   "credentialSubject": {
     "id": "https://orders.example/po-2024-001",
@@ -1073,7 +1073,7 @@ bun src/cli.ts verify-presentation --presentation case-studies/transhrimpment/pr
 
 **Verify Result:**
 ```
-❌ Presentation verification failed: Error: Public key not found for id: wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE
+❌ Presentation verification failed: Error: Controller not found for id: unknown-holder
 ```
 
 </details>
@@ -1103,7 +1103,7 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
   ],
   "issuer": "https://camaron-corriente.example/entity/ve-pbc-001",
   "cnf": {
-    "kid": "wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE"
+    "kid": "https://chompchomp.example/entity/bvi-001#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE"
   },
   "credentialSubject": {
     "id": "https://invoices.example/inv-2024-001",
@@ -1136,7 +1136,7 @@ bun src/cli.ts verify-presentation --presentation case-studies/transhrimpment/pr
 
 **Verify Result:**
 ```
-❌ Presentation verification failed: Error: Public key not found for id: RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0
+❌ Presentation verification failed: Error: Controller not found for id: unknown-holder
 ```
 
 </details>
@@ -1184,7 +1184,7 @@ bun src/cli.ts verify-presentation --presentation case-studies/transhrimpment/pr
 
 **Verify Result:**
 ```
-❌ Presentation verification failed: Error: Public key not found for id: RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0
+❌ Presentation verification failed: Error: Controller not found for id: unknown-holder
 ```
 
 </details>
@@ -1214,7 +1214,7 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
   ],
   "issuer": "https://shady-carrier.example/entity/aw-oru-001",
   "cnf": {
-    "kid": "wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE"
+    "kid": "https://chompchomp.example/entity/bvi-001#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE"
   },
   "credentialSubject": {
     "id": "https://shipments.example/bol-2024-001",
@@ -1247,7 +1247,7 @@ bun src/cli.ts verify-presentation --presentation case-studies/transhrimpment/pr
 
 **Verify Result:**
 ```
-❌ Presentation verification failed: Error: Public key not found for id: RZp0CzLsm1iBdc6RyR6ryCFb3sNiOIdzzSf92n7fBJg
+❌ Presentation verification failed: Error: Controller not found for id: unknown-holder
 ```
 
 </details>
@@ -1295,7 +1295,7 @@ bun src/cli.ts verify-presentation --presentation case-studies/transhrimpment/pr
 
 **Verify Result:**
 ```
-❌ Presentation verification failed: Error: Public key not found for id: -XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A
+❌ Presentation verification failed: Error: Controller not found for id: unknown-holder
 ```
 
 </details>
@@ -1343,7 +1343,7 @@ bun src/cli.ts verify-presentation --presentation case-studies/transhrimpment/pr
 
 **Verify Result:**
 ```
-❌ Presentation verification failed: Error: Public key not found for id: ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8
+❌ Presentation verification failed: Error: Controller not found for id: unknown-holder
 ```
 
 </details>
@@ -1373,7 +1373,7 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
   ],
   "issuer": "https://shady-carrier.example/entity/aw-oru-001",
   "cnf": {
-    "kid": "-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A"
+    "kid": "https://anonymous-distributor.example/entity/vi-stt-001#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A"
   },
   "credentialSubject": {
     "id": "https://shipments.example/bol-2024-001",
@@ -1406,7 +1406,7 @@ bun src/cli.ts verify-presentation --presentation case-studies/transhrimpment/pr
 
 **Verify Result:**
 ```
-❌ Presentation verification failed: Error: Public key not found for id: RZp0CzLsm1iBdc6RyR6ryCFb3sNiOIdzzSf92n7fBJg
+❌ Presentation verification failed: Error: Controller not found for id: unknown-holder
 ```
 
 </details>
@@ -1436,7 +1436,7 @@ bun src/cli.ts verify-credential --credential case-studies/transhrimpment/creden
   ],
   "issuer": "https://legit-shrimp.example/entity/tt-pos-001",
   "cnf": {
-    "kid": "Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E"
+    "kid": "https://honest-importer.example/entity/us-mia-001#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E"
   },
   "credentialSubject": {
     "id": "https://certificates.example/coo-2024-001",
@@ -1469,7 +1469,7 @@ bun src/cli.ts verify-presentation --presentation case-studies/transhrimpment/pr
 
 **Verify Result:**
 ```
-❌ Presentation verification failed: Error: Public key not found for id: F4FzDU1QWvUzDpWAuwlpvO-A4TuixJ-92PXLUwwqKPo
+❌ Presentation verification failed: Error: Controller not found for id: unknown-holder
 ```
 
 </details>
@@ -1517,7 +1517,7 @@ bun src/cli.ts verify-presentation --presentation case-studies/transhrimpment/pr
 
 **Verify Result:**
 ```
-❌ Presentation verification failed: Error: Public key not found for id: 4yFP_7YUQvcDt1XLqnWzQ962oehxO8QAy_Y4IMP2uDQ
+❌ Presentation verification failed: Error: Controller not found for id: unknown-holder
 ```
 
 </details>

@@ -11,7 +11,7 @@
   "validFrom": "2025-01-15T10:00:00Z",
   "validUntil": "2030-12-31T23:59:59Z",
   "cnf": {
-    "kid": "RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0"
+    "kid": "https://camaron-corriente.example/entity/ve-pbc-001#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0"
   },
   "credentialSubject": {
     "id": "https://orders.example/po-2024-001",

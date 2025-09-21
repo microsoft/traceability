@@ -11,7 +11,7 @@
   "validFrom": "2025-01-20T10:00:00Z",
   "validUntil": "2030-12-31T23:59:59Z",
   "cnf": {
-    "kid": "-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A"
+    "kid": "https://anonymous-distributor.example/entity/vi-stt-001#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A"
   },
   "credentialSubject": {
     "id": "https://invoices.example/inv-2024-001",
