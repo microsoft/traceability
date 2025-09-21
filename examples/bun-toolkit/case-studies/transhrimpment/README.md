@@ -5,30 +5,30 @@ The investigation reveals how document fraud, identity theft, and synthetic iden
 The techniques demonstrated here are applicable to pharmaceuticals, food safety, and other critical supply chains requiring traceability.
 
 The case involves a small seafood importer called `Chompchomp Ltd` based in `Road Town, Tortola, British Virgin Islands`.
-`Chompchomp Ltd` signed a contract with a seafood distributor called `Camarón Corriente S.A.` based in `Puerto Cabello, Venezuela`.
+On **January 10, 2024**, `Chompchomp Ltd` signed a contract with a seafood distributor called `Camarón Corriente S.A.` based in `Puerto Cabello, Venezuela`.
 
-`Chompchomp Ltd` submitted a purchase order to `Camarón Corriente S.A.` for 1000kg of frozen shrimp, and `Camarón Corriente S.A.` sent a commercial invoice to `Chompchomp Ltd`.
+On **January 15, 2024**, `Chompchomp Ltd` submitted a purchase order to `Camarón Corriente S.A.` for 1000kg of frozen shrimp, and on **January 20, 2024**, `Camarón Corriente S.A.` sent a commercial invoice to `Chompchomp Ltd`.
 
-`Camarón Corriente S.A.`'s usual carrier, `Cargo Line Ltd` based in `San Juan, Puerto Rico`, was unable to deliver the goods due to hurricane damage requiring fleet repairs.
+On **January 25, 2024**, `Camarón Corriente S.A.`'s usual carrier, `Cargo Line Ltd` based in `San Juan, Puerto Rico`, was unable to deliver the goods due to hurricane damage requiring fleet repairs.
 
-`Camarón Corriente S.A.` rushed their vetting process and contracted with `Shady Carrier Ltd` based in `Oranjestad, Aruba` as an alternative carrier.
+On **January 26, 2024**, `Camarón Corriente S.A.` rushed their vetting process and contracted with `Shady Carrier Ltd` based in `Oranjestad, Aruba` as an alternative carrier.
 
-`Shady Carrier Ltd` quickly delivers the goods but forges critical supply chain documentation to make it appear that part of the frozen shrimp was destroyed during transit.
+On **February 1, 2024**, `Shady Carrier Ltd` quickly delivers the goods but forges critical supply chain documentation to make it appear that part of the frozen shrimp was destroyed during transit.
 
-`Shady Carrier Ltd` then sells the goods to a recently registered seafood distributor called `Shady Distributor Ltd` who is also based in `Road Town, Tortola, British Virgin Islands`.
+On **February 3, 2024**, `Shady Carrier Ltd` then sells the goods to a recently registered seafood distributor called `Shady Distributor Ltd` who is also based in `Road Town, Tortola, British Virgin Islands`.
 
-`Shady Distributor Ltd` forges fresh certifcates of origin that say the frozen shrimp was sourced from a legitimate supplier called `Legit Shrimp Ltd` based out of `Port of Spain, Trinidad and Tobago`.
+On **February 5, 2024**, `Shady Distributor Ltd` forges fresh certifcates of origin that say the frozen shrimp was sourced from a legitimate supplier called `Legit Shrimp Ltd` based out of `Port of Spain, Trinidad and Tobago`.
 
 **Note:** `Legit Shrimp Ltd` is a legitimate supplier that has proper certificates of origin for their actual shrimp products, but their identity was stolen and used fraudulently. `Shady Distributor Ltd` was created as a front company to facilitate the sale of stolen goods. By presenting stolen credentials and forged certificates from `Legit Shrimp Ltd`, `Shady Distributor Ltd` was able to establish credibility as a legitimate seafood distributor with established supply chain relationships, making it easier to conduct business with unsuspecting customers like `Anonymous Distributor`.
 
-A seafood distributor in `Charlotte Amalie, St. Thomas, U.S. Virgin Islands` (`Anonymous Distributor`) placed an order for 500kg of frozen shrimp from `Shady Distributor Ltd`. `Shady Distributor Ltd` used the now-repaired `Cargo Line Ltd` to deliver the goods.
+On **February 10, 2024**, a seafood distributor in `Charlotte Amalie, St. Thomas, U.S. Virgin Islands` (`Anonymous Distributor`) placed an order for 500kg of frozen shrimp from `Shady Distributor Ltd`. On **February 15, 2024**, `Shady Distributor Ltd` used the now-repaired `Cargo Line Ltd` to deliver the goods.
 
-The secondary transaction generated purchase orders, commercial invoices, and a bill of lading from `Cargo Line Ltd` that appeared legitimate on the surface.
+On **February 12, 2024**, the secondary transaction generated purchase orders, commercial invoices, and a bill of lading from `Cargo Line Ltd` that appeared legitimate on the surface.
 
-However, the investigation reveals that `Shady Distributor Ltd` not only forged new documents but also attempted to use a genuine Certificate of Origin originally issued by `Legit Shrimp Ltd` to `Honest Importer Ltd`. By acquiring this valid certificate through unauthorized means, `Shady Distributor Ltd` tried to pass off their shrimp as legitimately sourced, despite not being the rightful holder. This highlights how the misuse of authentic documents can undermine trust in the supply chain and obscure the true origin of goods.
+However, the investigation reveals that on **February 8, 2024**, `Shady Distributor Ltd` not only forged new documents but also attempted to use a genuine Certificate of Origin originally issued by `Legit Shrimp Ltd` to `Honest Importer Ltd` on **January 5, 2024**. By acquiring this valid certificate through unauthorized means, `Shady Distributor Ltd` tried to pass off their shrimp as legitimately sourced, despite not being the rightful holder. This highlights how the misuse of authentic documents can undermine trust in the supply chain and obscure the true origin of goods.
 
-The customs broker filed paperwork for the imported shrimp as HS code 0306.17, originating from `Trinidad and Tobago`.
-Lab tests revealed chemical contamination in the shrimp, triggering a regulatory investigation that uncovered the fraud.
+On **February 20, 2024**, the customs broker filed paperwork for the imported shrimp as HS code 0306.17, originating from `Trinidad and Tobago`.
+On **March 1, 2024**, lab tests revealed chemical contamination in the shrimp, triggering a regulatory investigation that uncovered the fraud.
 
 ## Security Analysis
 
