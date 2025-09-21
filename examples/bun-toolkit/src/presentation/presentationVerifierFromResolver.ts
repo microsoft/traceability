@@ -16,18 +16,21 @@ export interface VerificationOptions {
 
 export interface DetailedVerificationResult {
   verified: boolean; // Logical AND of all security checks
-  is_presentation_signature_valid: boolean;
-  is_within_validity_period: boolean;
-  is_signed_by_confirmation_key: boolean;
-  is_credential_verified: boolean;
   credentials: CredentialVerificationResult[];
+  problems: Problem[];
+  verified_header?: any; // JWT header when verification succeeds
+  verified_payload?: any; // JWT payload when verification succeeds
+}
+
+export interface Problem {
+  type: string;
+  title: string;
+  detail: string;
 }
 
 export interface CredentialVerificationResult {
   verified: boolean; // Logical AND of credential security checks
-  is_credential_signature_valid: boolean;
-  is_within_validity_period: boolean;
-  is_iss_prefix_of_kid: boolean;
+  problems: Problem[];
 }
 
 export interface PresentationVerifierFromResolver {
@@ -66,28 +69,53 @@ const verifyPresentedCredentials = async (
   for (const envelopedCred of verifiedPresentation.verifiableCredential) {
     const credResult: CredentialVerificationResult = {
       verified: false,
-      is_credential_signature_valid: false,
-      is_within_validity_period: false,
-      is_iss_prefix_of_kid: false
+      problems: []
     };
+
+    let is_credential_signature_valid = false;
+    let is_within_validity_period = false;
+    let is_iss_prefix_of_kid = false;
 
     // Extract JWS from enveloped credential
     const credJws = createJsonWebSignatureFromEnvelopedVerifiableCredential(envelopedCred as EnvelopedVerifiableCredential);
 
     if (!credJws) {
+      credResult.problems.push({
+        type: "is_credential_signature_valid",
+        title: "Malformed credential",
+        detail: "Unable to extract JWT from enveloped credential. The credential may be corrupted or improperly formatted."
+      });
       results.push(credResult);
       continue;
     }
 
     // Parse credential to get issuer
-    const credParsed = jws.parseJWS(credJws);
+    let credParsed;
+    try {
+      credParsed = jws.parseJWS(credJws);
+    } catch (error) {
+      credResult.problems.push({
+        type: "is_credential_signature_valid",
+        title: "Invalid credential JWT format",
+        detail: "The credential JWT is malformed and cannot be parsed. This indicates data corruption or tampering."
+      });
+      results.push(credResult);
+      continue;
+    }
     const credHeader = credParsed.header;
     const credPayload = credParsed.payload as VerifiableCredential;
 
     const assertionKeyId = credHeader.kid;
 
     // Security check: is_iss_prefix_of_kid - ensure issuer is prefix of kid
-    credResult.is_iss_prefix_of_kid = assertionKeyId.startsWith(credPayload.issuer);
+    is_iss_prefix_of_kid = assertionKeyId.startsWith(credPayload.issuer);
+    if (!is_iss_prefix_of_kid) {
+      credResult.problems.push({
+        type: "is_iss_prefix_of_kid",
+        title: "Issuer identity mismatch",
+        detail: "The credential's issuer identifier must be a prefix of the signing key identifier. This prevents attackers from impersonating other issuers by using keys they don't control."
+      });
+    }
 
     // Extract controller ID from the assertion method ID
     const issuerControllerId = extractControllerIdFromVerificationMethod(assertionKeyId);
@@ -101,11 +129,27 @@ const verifyPresentedCredentials = async (
     // Check signature validity
     try {
       await credentialVerifier.verify(credJws, options.verificationTime);
-      credResult.is_credential_signature_valid = true;
+      is_credential_signature_valid = true;
     } catch (error) {
       // Only catch verification failures, re-throw system errors
-      if (error.message?.includes('signature') || error.message?.includes('expired') || error.message?.includes('Invalid')) {
-        credResult.is_credential_signature_valid = false;
+      if (error.message?.includes('signature') || error.message?.includes('expired') || error.message?.includes('Invalid') || error.message?.includes('not yet valid')) {
+        is_credential_signature_valid = false;
+
+        // Determine if this is a time-related error or signature error
+        if (error.message?.includes('expired') || error.message?.includes('not yet valid')) {
+          is_within_validity_period = false;
+          credResult.problems.push({
+            type: "is_within_validity_period",
+            title: "Credential expired or not yet valid",
+            detail: "The credential is being used outside its validity period. Expired credentials may indicate stale or compromised data, while future-dated credentials may indicate time manipulation attacks."
+          });
+        } else {
+          credResult.problems.push({
+            type: "is_credential_signature_valid",
+            title: "Invalid credential signature",
+            detail: "The cryptographic signature on this credential is invalid. This indicates the credential may have been tampered with, forged, or signed with the wrong key."
+          });
+        }
       } else {
         throw error; // Re-throw unexpected system errors
       }
@@ -114,19 +158,24 @@ const verifyPresentedCredentials = async (
     // Check validity period using existing validation utilities
     try {
       validateJWTTimeClaims(credPayload, options.verificationTime);
-      credResult.is_within_validity_period = true;
+      is_within_validity_period = true;
     } catch (error) {
       if (error.message?.includes('expired') || error.message?.includes('not yet valid')) {
-        credResult.is_within_validity_period = false;
+        is_within_validity_period = false;
+        credResult.problems.push({
+          type: "is_within_validity_period",
+          title: "Credential expired or not yet valid",
+          detail: "The credential is being used outside its validity period. Expired credentials may indicate stale or compromised data, while future-dated credentials may indicate time manipulation attacks."
+        });
       } else {
         throw error; // Re-throw unexpected errors
       }
     }
 
     // Overall credential verification - AND of all checks
-    credResult.verified = credResult.is_credential_signature_valid &&
-                         credResult.is_within_validity_period &&
-                         credResult.is_iss_prefix_of_kid;
+    credResult.verified = is_credential_signature_valid &&
+                         is_within_validity_period &&
+                         is_iss_prefix_of_kid;
 
     // If validateCredentialSchemas option is true, validate credential against its schemas
     if (options.validateCredentialSchemas && credResult.verified) {
@@ -186,12 +235,14 @@ export const presentationVerifierFromResolver = async (
     verify: async (jws: string, options: VerificationOptions) => {
       const result: DetailedVerificationResult = {
         verified: false,
-        is_presentation_signature_valid: false,
-        is_within_validity_period: false,
-        is_signed_by_confirmation_key: false,
-        is_credential_verified: false,
-        credentials: []
+        credentials: [],
+        problems: []
       };
+
+      let is_presentation_signature_valid = false;
+      let is_within_validity_period = false;
+      let is_signed_by_confirmation_key = false;
+      let is_credential_verified = false;
 
       const { header, payload } = parseJWS(jws);
       const authenticationKeyId = header.kid;
@@ -207,11 +258,16 @@ export const presentationVerifierFromResolver = async (
         const presentationVerifier = await holder.authentication.resolve(authenticationKeyId);
 
         await presentationVerifier.verify(jws, options.verificationTime);
-        result.is_presentation_signature_valid = true;
+        is_presentation_signature_valid = true;
       } catch (error) {
         // Only catch verification failures, re-throw system errors
         if (error.message?.includes('signature') || error.message?.includes('expired') || error.message?.includes('Invalid')) {
-          result.is_presentation_signature_valid = false;
+          is_presentation_signature_valid = false;
+          result.problems.push({
+            type: "is_presentation_signature_valid",
+            title: "Invalid presentation signature",
+            detail: "The cryptographic signature on this presentation is invalid. This means the presentation was not signed by the claimed holder or has been tampered with."
+          });
         } else {
           throw error; // Re-throw unexpected system errors
         }
@@ -220,11 +276,16 @@ export const presentationVerifierFromResolver = async (
       // Check time validity
       try {
         validateJWTTimeClaims(payload, options.verificationTime);
-        result.is_within_validity_period = true;
+        is_within_validity_period = true;
       } catch (error) {
         // Only catch time validation failures
         if (error.message?.includes('expired') || error.message?.includes('not yet valid')) {
-          result.is_within_validity_period = false;
+          is_within_validity_period = false;
+          result.problems.push({
+            type: "is_within_validity_period",
+            title: "Presentation expired or not yet valid",
+            detail: "The presentation is being used outside its validity period. This may indicate an attempted replay attack or time manipulation attack."
+          });
         } else {
           throw error; // Re-throw unexpected errors
         }
@@ -239,16 +300,36 @@ export const presentationVerifierFromResolver = async (
       // Verify each credential in the presentation (includes is_iss_prefix_of_kid check)
       const credentialResults = await verifyPresentedCredentials(verifiedPresentation, authenticationKeyId, resolver, options);
       result.credentials = credentialResults;
-      result.is_credential_verified = credentialResults.every(c => c.verified);
+      is_credential_verified = credentialResults.every(c => c.verified);
+      if (!is_credential_verified) {
+        result.problems.push({
+          type: "is_credential_verified",
+          title: "One or more credentials failed verification",
+          detail: "At least one credential in this presentation has verification problems. Check individual credential verification results for specific issues."
+        });
+      }
 
       // Check confirmation key binding
-      result.is_signed_by_confirmation_key = await checkConfirmationKeyBinding(payload, authenticationKeyId);
+      is_signed_by_confirmation_key = await checkConfirmationKeyBinding(payload, authenticationKeyId);
+      if (!is_signed_by_confirmation_key) {
+        result.problems.push({
+          type: "is_signed_by_confirmation_key",
+          title: "Stolen credential detected",
+          detail: "The presentation is signed by a different key than the one the credentials were issued to. This indicates the credentials may have been stolen and are being presented by an unauthorized party."
+        });
+      }
 
       // Overall verification is AND of all checks
-      result.verified = result.is_presentation_signature_valid &&
-                       result.is_within_validity_period &&
-                       result.is_signed_by_confirmation_key &&
-                       result.is_credential_verified;
+      result.verified = is_presentation_signature_valid &&
+                       is_within_validity_period &&
+                       is_signed_by_confirmation_key &&
+                       is_credential_verified;
+
+      // Add verified header and payload if verification succeeds
+      if (result.verified) {
+        result.verified_header = header;
+        result.verified_payload = payload;
+      }
 
       return result;
     }

@@ -4,11 +4,11 @@ import type { PrivateKey } from "../types";
 import { base64url } from "../encoding";
 
 export interface SigningOptions {
-  nonce?: string;
-  audience?: string | string[];
-  issuanceTime?: Date;
-  expirationTime?: Date;
   kid: string; // Mandatory key ID for header
+  iat?: number; // JWT issued at time (seconds since epoch)
+  exp?: number; // JWT expiration time (seconds since epoch)
+  nonce?: string; // Nonce for replay attack prevention
+  aud?: string | string[]; // Audience restriction
 }
 
 export interface PresentationSigner {
@@ -36,28 +36,27 @@ export const signer = async (privateKey: PrivateKey) => {
         jwtPayload.sub = presentation.holder;
       }
 
-      // Add iat (issued at) claim - use provided time or current time
-      const issueTime = options?.issuanceTime || new Date();
+      // Add iat (issued at) claim - use current time by default
+      const issueTime = new Date();
       const iat = Math.floor(issueTime.getTime() / 1000);
       jwtPayload.iat = iat;
 
-
-      // Add exp (expiration) claim - use provided time or default to 1 hour from issuance time
+      // Add exp (expiration) claim - default to 1 hour from issuance time
       // Presentations are typically short-lived for security, but allow reasonable verification window
-      if (options?.expirationTime) {
-        jwtPayload.exp = Math.floor(options.expirationTime.getTime() / 1000);
-      } else {
-        jwtPayload.exp = iat + 3600; // 3600 seconds = 1 hour
-      }
+      jwtPayload.exp = iat + 3600; // 3600 seconds = 1 hour
 
-      // Add nonce if provided (for replay attack prevention)
-      if (options?.nonce) {
+      // Apply options overrides - these always take precedence
+      if (options.iat !== undefined) {
+        jwtPayload.iat = options.iat;
+      }
+      if (options.exp !== undefined) {
+        jwtPayload.exp = options.exp;
+      }
+      if (options.nonce !== undefined) {
         jwtPayload.nonce = options.nonce;
       }
-
-      // Add audience if provided (for audience restriction)
-      if (options?.audience) {
-        jwtPayload.aud = options.audience;
+      if (options.aud !== undefined) {
+        jwtPayload.aud = options.aud;
       }
 
       const payload = base64url.encode(new TextEncoder().encode(JSON.stringify(jwtPayload)));
