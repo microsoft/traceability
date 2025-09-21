@@ -198,7 +198,9 @@ test("presentation verification with generic resolver", async () => {
 
   // Verify with generic resolver
   const presentationVerifier = await presentation.verifierWithGenericResolver(genericResolver);
-  const verifiedPresentation = await presentationVerifier.verify(signedPresentation);
+  const verifiedPresentation = await presentationVerifier.verify(signedPresentation, {
+    verificationTime: new Date()
+  });
 
   // Check core presentation properties
   expect(verifiedPresentation["@context"]).toEqual(presentationData["@context"]);

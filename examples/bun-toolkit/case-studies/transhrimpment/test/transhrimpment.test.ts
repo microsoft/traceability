@@ -175,10 +175,112 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  // Generate final report.json
-  await Bun.write(`${CASE_DIR}/report.json`, JSON.stringify(testReport, null, 2));
-  console.log(`\n📄 Test report generated: ${CASE_DIR}/report.json`);
+  // Create mapping from credential keys to template filenames
+  const credentialToTemplate: Record<string, string> = {
+    "chompchomp-purchase-order": "chompchomp-purchase-order-template.json",
+    "camaron-corriente-invoice": "camaron-corriente-invoice-template.json",
+    "camaron-corriente-origin": "camaron-corriente-origin-template.json",
+    "shady-carrier-lading": "shady-carrier-lading-template.json",
+    "shady-carrier-forged-lading": "shady-carrier-forged-lading-template.json",
+    "anonymous-distributor-secondary-purchase-order": "anonymous-distributor-secondary-purchase-order-template.json",
+    "shady-distributor-secondary-invoice": "shady-distributor-secondary-invoice-template.json",
+    "cargo-line-secondary-lading": "cargo-line-secondary-lading-template.json",
+    "legit-shrimp-honest-importer-origin": "legit-shrimp-honest-importer-origin-template.json",
+    "shady-distributor-fraudulent-origin": "shady-distributor-fraudulent-origin-template.json"
+  };
+
+  // Create index mapping authentication keys to holder names
+  const authKeyToHolderName: Record<string, string> = {};
+  for (const [entityKey, controller] of Object.entries(controllers)) {
+    const holderName = entityConfigs[entityKey]?.name || entityKey;
+    // Map each authentication method to the holder name
+    if (controller.authentication && Array.isArray(controller.authentication)) {
+      for (const authMethod of controller.authentication) {
+        authKeyToHolderName[authMethod] = holderName;
+      }
+    }
+  }
+
+  // Generate GeoJSON FeatureCollection report
+  const geoJsonReport = {
+    type: "FeatureCollection",
+    features: []
+  };
+
+  // Add controller features
+  for (const [entityKey, controller] of Object.entries(controllers)) {
+    // Extract geometry from controller's features array (GeoJSON FeatureCollection format)
+    if (controller.features && controller.features.length > 0 && controller.features[0].geometry) {
+      geoJsonReport.features.push({
+        type: "Feature",
+        geometry: controller.features[0].geometry,
+        properties: {
+          controller_id: controller.id,
+          controller_name: entityConfigs[entityKey]?.name || entityKey
+        }
+      });
+    }
+  }
+
+  // Add presentation verification features
+  for (const presentation of testReport.presentations) {
+    // Find the holder's controller by looking up the credential and finding its holder
+    const credentialKey = presentation.credentialIncluded;
+    const credential = credentials[credentialKey];
+
+    if (credential) {
+      // Extract JWT to get holder info
+      const jwtToken = credential.id.substring("data:application/vc+jwt,".length);
+      const parts = jwtToken.split('.');
+      const payload = JSON.parse(atob(parts[1]));
+      const holderFromCredential = payload.cnf?.kid;
+
+      // Find holder controller based on cnf.kid
+      let holderEntityKey = "";
+      let holderController = null;
+
+      for (const [key, controller] of Object.entries(controllers)) {
+        const ctrl = controller as any;
+        if (ctrl.authentication?.includes(holderFromCredential)) {
+          holderEntityKey = key;
+          holderController = ctrl;
+          break;
+        }
+      }
+
+      if (holderController && holderController.features && holderController.features.length > 0) {
+        // Get credential schema from the credential
+        const credentialPayload = JSON.parse(atob(parts[1]));
+        const credentialSchema = credentialPayload.credentialSchema?.[0]?.type ||
+                               credentialPayload.type?.find((t: string) => t !== "VerifiableCredential") ||
+                               "unknown";
+
+        // Get verification time from timeline
+        const presentationIssuanceTime = verificationTimeline[credentialKey as keyof typeof verificationTimeline];
+        const verificationTime = presentationIssuanceTime ?
+          new Date(presentationIssuanceTime.getTime() + 30000) : // 30 seconds after signing
+          null;
+
+        geoJsonReport.features.push({
+          type: "Feature",
+          geometry: holderController.features[0].geometry,
+          properties: {
+            presentation_verified: presentation.verificationSuccessful,
+            verification_time: verificationTime?.toISOString() || null,
+            authentication_key: holderFromCredential,
+            file_name: credentialToTemplate[credentialKey] || "unknown-template.json",
+            credential_schema: credentialSchema,
+            holder_name: authKeyToHolderName[holderFromCredential] || "unknown-holder"
+          }
+        });
+      }
+    }
+  }
+
+  await Bun.write(`${CASE_DIR}/report.json`, JSON.stringify(geoJsonReport, null, 2));
+  console.log(`\n📄 GeoJSON report generated: ${CASE_DIR}/report.json`);
   console.log(`📊 Summary: ${testReport.summary.testsPassed}/${testReport.summary.testsTotal} tests passed`);
+  console.log(`📍 Features: ${geoJsonReport.features.length} (controllers and presentations)`);
 });
 
 describe("Transhrimpment Case Study", () => {
@@ -567,7 +669,7 @@ describe("Transhrimpment Case Study", () => {
                 // Verify presentation 30 seconds after it was signed, well within the 1-hour validity period
                 const presVerificationTime = presentationIssuanceTime ?
                   new Date(presentationIssuanceTime.getTime() + 30000) : // 30 seconds after presentation signing
-                  undefined;
+                  new Date(); // Fallback to current time if no presentation issuance time
 
                 const presVerifier = await presentation.verifierWithGenericResolver(genericResolver);
                 const presVerificationResult = await presVerifier.verify(signedPresentationJWT, {

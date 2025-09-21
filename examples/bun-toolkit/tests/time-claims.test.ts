@@ -166,10 +166,10 @@ test("presentation includes iat and exp claims", async () => {
   expect(verifiedPresentation.iat).toBeDefined();
   expect(typeof verifiedPresentation.iat).toBe('number');
 
-  // Check that exp is present and is 2 minutes from iat
+  // Check that exp is present and is 1 hour from iat
   expect(verifiedPresentation.exp).toBeDefined();
   expect(typeof verifiedPresentation.exp).toBe('number');
-  expect(verifiedPresentation.exp).toBe(verifiedPresentation.iat! + 120);
+  expect(verifiedPresentation.exp).toBe(verifiedPresentation.iat! + 3600);
 });
 
 test("expired presentation fails verification", async () => {
@@ -184,14 +184,11 @@ test("expired presentation fails verification", async () => {
 
   const signer = await presentation.signer(privateKey);
 
-  // Temporarily mock Date.now to create a presentation that appears old
-  const originalDateNow = Date.now;
-  Date.now = () => originalDateNow() - 150000; // 150 seconds ago (expired)
-
-  const signedPresentation = await signer.sign(testPresentation);
-
-  // Restore original Date.now
-  Date.now = originalDateNow;
+  // Create a presentation that was issued 2 hours ago (should be expired since exp is 1 hour)
+  const twoHoursAgo = new Date(Date.now() - 7200000);
+  const signedPresentation = await signer.sign(testPresentation, {
+    issuanceTime: twoHoursAgo
+  });
 
   const verifier = await presentation.verifier(publicKey);
 
@@ -211,14 +208,11 @@ test("presentation issued in future fails verification", async () => {
 
   const signer = await presentation.signer(privateKey);
 
-  // Temporarily mock Date.now to create a presentation that appears to be from the future
-  const originalDateNow = Date.now;
-  Date.now = () => originalDateNow() + 120000; // 120 seconds in the future (beyond clock skew)
-
-  const signedPresentation = await signer.sign(testPresentation);
-
-  // Restore original Date.now
-  Date.now = originalDateNow;
+  // Create a presentation that appears to be issued in the future (beyond 60 second clock skew)
+  const futureTime = new Date(Date.now() + 120000); // 120 seconds in the future
+  const signedPresentation = await signer.sign(testPresentation, {
+    issuanceTime: futureTime
+  });
 
   const verifier = await presentation.verifier(publicKey);
 

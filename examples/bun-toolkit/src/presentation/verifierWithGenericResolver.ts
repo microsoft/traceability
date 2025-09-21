@@ -9,18 +9,18 @@ export interface VerificationOptions {
   expectedNonce?: string;
   expectedAudience?: string | string[];
   validateCredentialSchemas?: boolean;
-  verificationTime?: Date;
+  verificationTime: Date;
 }
 
 export interface PresentationVerifierWithGenericResolver {
-  verify: (jws: string, options?: VerificationOptions) => Promise<VerifiablePresentation>;
+  verify: (jws: string, options: VerificationOptions) => Promise<VerifiablePresentation>;
 }
 
 export const verifierWithGenericResolver = async (
   resolver: GenericResolver = defaultGenericResolver
 ) => {
   return {
-    verify: async (jws: string, options?: VerificationOptions) => {
+    verify: async (jws: string, options: VerificationOptions) => {
       // Parse JWS to get initial information
       const parts = jws.split('.');
       if (parts.length !== 3) {
@@ -58,13 +58,13 @@ export const verifierWithGenericResolver = async (
       const presentationVerifier = await authenticationKeyResolver.resolve(header.kid);
 
       // Verify the presentation signature
-      const verifiedPresentation = await presentationVerifier.verify(jws);
+      const verifiedPresentation = await presentationVerifier.verify(jws, options.verificationTime);
 
       // Extract the full JWT payload to check time claims, nonce and audience
       const jwtPayload = JSON.parse(new TextDecoder().decode(payloadBytes)) as any;
 
       // Validate time-based JWT claims
-      const now = options?.verificationTime || new Date();
+      const now = options.verificationTime;
       const nowInSeconds = Math.floor(now.getTime() / 1000);
 
 
@@ -91,7 +91,7 @@ export const verifierWithGenericResolver = async (
       }
 
       // Validate nonce if expected
-      if (options?.expectedNonce) {
+      if (options.expectedNonce) {
         if (!jwtPayload.nonce) {
           throw new Error('Nonce is required but not present in presentation');
         }
@@ -101,7 +101,7 @@ export const verifierWithGenericResolver = async (
       }
 
       // Validate audience if expected
-      if (options?.expectedAudience) {
+      if (options.expectedAudience) {
         if (!jwtPayload.aud) {
           throw new Error('Audience is required but not present in presentation');
         }
@@ -153,7 +153,7 @@ export const verifierWithGenericResolver = async (
           const credentialVerifier = await assertionKeyResolver.resolve(credHeader.kid);
 
           // Verify the credential at the same time we're verifying the presentation
-          const verifiedCredential = await credentialVerifier.verify(credJws, options?.verificationTime);
+          const verifiedCredential = await credentialVerifier.verify(credJws, options.verificationTime);
 
           // Check if credential has cnf claim (MUST be top-level)
           if (verifiedCredential.cnf?.kid) {
@@ -173,7 +173,7 @@ export const verifierWithGenericResolver = async (
           }
 
           // If validateCredentialSchemas option is true, validate credential against its schemas
-          if (options?.validateCredentialSchemas && verifiedCredential.credentialSchema) {
+          if (options.validateCredentialSchemas && verifiedCredential.credentialSchema) {
             for (const schema of verifiedCredential.credentialSchema) {
               if (schema.type === "JsonSchema") {
                 try {
