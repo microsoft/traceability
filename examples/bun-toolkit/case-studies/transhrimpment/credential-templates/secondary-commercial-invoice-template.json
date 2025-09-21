@@ -1,0 +1,49 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "CommercialInvoiceCredential"
+  ],
+  "issuer": "https://camaron-corriente.example/entity/ve-pbc-001",
+  "validFrom": "2025-01-20T10:00:00Z",
+  "validUntil": "2030-12-31T23:59:59Z",
+  "cnf": {
+    "kid": "wCgZYzU2U073ubVOEp7wcNHxwEIGuiEoY42b2tuKwfY"
+  },
+  "credentialSubject": {
+    "id": "https://invoices.example/inv-2024-001",
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-68.0125, 10.4647]
+        },
+        "properties": {
+          "type": "CommercialInvoice",
+          "invoiceNumber": "INV-2024-001",
+          "seller": {
+            "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+            "name": "Camarón Corriente S.A."
+          },
+          "buyer": {
+            "id": "https://chompchomp.example/entity/bvi-001",
+            "name": "Chompchomp Ltd"
+          },
+          "items": [
+            {
+              "description": "Frozen Shrimp",
+              "quantity": "1000kg",
+              "price": 12.50
+            }
+          ],
+          "totalAmount": 12500
+        }
+      }
+    ]
+  }
+}

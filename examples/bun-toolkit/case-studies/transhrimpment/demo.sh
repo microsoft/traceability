@@ -167,3 +167,290 @@ echo ""
 echo "🔍 Entity identification completed! Report generated at: $REPORT_FILE"
 echo "📍 Geographic locations extracted for all entities"
 echo "🗺️ Map previews available in report"
+
+echo ""
+echo "📋 Step 2: Collect Documentation"
+echo "==============================="
+echo "📄 Issuing verifiable credentials from the Transhrimpment narrative..."
+echo "🔐 Using private keys from entity configurations..."
+echo "✅ Verifying each credential after issuance..."
+
+# Add Step 2 section to report
+cat >> "$REPORT_FILE" << 'EOF'
+
+---
+
+## Step 2: Collect Documentation
+
+Issuing verifiable credentials based on the Transhrimpment supply chain narrative. This includes 8 legitimate documents and 1 fraudulent certificate of origin. Each credential is cryptographically signed by the appropriate entity using their private keys and verified against their controller documents.
+
+EOF
+
+# Helper function to issue and verify credentials
+issue_and_verify_credential() {
+    local entity_name="$1"
+    local entity_config="$2"
+    local credential_template="$3"
+    local schema_file="$4"
+    local output_file="$5"
+    local description="$6"
+
+    echo "📋 Issuing $description..."
+
+    # Template will be created if it doesn't exist using predefined examples
+    if [ ! -f "$credential_template" ]; then
+        echo "⚠️  Credential template $credential_template not found"
+        echo "Please ensure credential templates are created before running this demo"
+        return 1
+    fi
+
+    # Issue the credential
+    local sign_result
+    sign_result=$(bun src/cli.ts sign-credential --entity-configuration "$entity_config" --credential "$credential_template" --out "$output_file" 2>&1)
+    local sign_exit_code=$?
+
+    # Verify the credential using the corresponding controller document
+    local verify_result=""
+    local verify_exit_code=1
+    local controller_file=""
+
+    # Map entity config to controller document
+    case "$entity_config" in
+        *"chompchomp-config.json") controller_file="case-studies/transhrimpment/controllers/chompchomp-controller.json" ;;
+        *"camaron-corriente-config.json") controller_file="case-studies/transhrimpment/controllers/camaron-corriente-controller.json" ;;
+        *"legit-shrimp-config.json") controller_file="case-studies/transhrimpment/controllers/legit-shrimp-controller.json" ;;
+        *"shady-carrier-config.json") controller_file="case-studies/transhrimpment/controllers/shady-carrier-controller.json" ;;
+        *"shady-distributor-config.json") controller_file="case-studies/transhrimpment/controllers/shady-distributor-controller.json" ;;
+        *"cargo-line-config.json") controller_file="case-studies/transhrimpment/controllers/cargo-line-controller.json" ;;
+        *"anonymous-distributor-config.json") controller_file="case-studies/transhrimpment/controllers/anonymous-distributor-controller.json" ;;
+        *"honest-importer-config.json") controller_file="case-studies/transhrimpment/controllers/honest-importer-controller.json" ;;
+        *) echo "Unknown entity config: $entity_config" ;;
+    esac
+
+    if [ $sign_exit_code -eq 0 ] && [ -f "$output_file" ] && [ -n "$controller_file" ]; then
+        verify_result=$(bun src/cli.ts verify-credential --credential "$output_file" --controller "$controller_file" 2>&1)
+        verify_exit_code=$?
+    fi
+
+    # Determine status
+    local status_emoji="❌"
+    if [ $sign_exit_code -eq 0 ] && [ $verify_exit_code -eq 0 ]; then
+        status_emoji="✅"
+    fi
+
+    # Extract any GeoJSON data from the credential
+    local geojson_preview=""
+    if [ -f "$output_file" ]; then
+        geojson_preview=$(python3 -c "
+import json
+import sys
+try:
+    with open('$output_file', 'r') as f:
+        cred = json.load(f)
+    if 'credentialSubject' in cred and 'features' in cred['credentialSubject']:
+        features = cred['credentialSubject']['features']
+        if features and len(features) > 0:
+            coords = features[0].get('geometry', {}).get('coordinates', [])
+            props = features[0].get('properties', {})
+            if coords:
+                print(f'📍 Location: [{coords[0]}, {coords[1]}]')
+                if 'name' in props or 'type' in props:
+                    print(f'🏢 Details: {props.get(\"name\", \"\")} ({props.get(\"type\", \"\")})')
+except Exception as e:
+    pass
+" 2>/dev/null)
+    fi
+
+    # Add to report with credential content and analysis
+    cat >> "$REPORT_FILE" << EOF
+
+### $status_emoji $description
+
+**Entity:** $entity_name
+**Config:** \`$entity_config\`
+**Output:** \`$output_file\`
+
+<details>
+<summary>Credential Issuance and Verification</summary>
+
+**Sign Command:**
+\`\`\`bash
+bun src/cli.ts sign-credential --entity-configuration $entity_config --credential $credential_template --out $output_file
+\`\`\`
+
+**Sign Result:**
+\`\`\`
+$sign_result
+\`\`\`
+Exit code: $sign_exit_code
+
+**Verify Command:**
+\`\`\`bash
+bun src/cli.ts verify-credential --credential $output_file --controller $controller_file
+\`\`\`
+
+**Verify Result:**
+\`\`\`
+$verify_result
+\`\`\`
+Exit code: $verify_exit_code
+
+</details>
+
+EOF
+
+    # Add credential JSON content if successfully created
+    if [ -f "$output_file" ]; then
+        cat >> "$REPORT_FILE" << EOF
+<details>
+<summary>📋 Credential JSON Content (EnvelopedVerifiableCredential)</summary>
+
+\`\`\`json
+$(cat "$output_file" | jq . 2>/dev/null || cat "$output_file")
+\`\`\`
+
+</details>
+
+EOF
+    fi
+
+    # Add GeoJSON preview if available
+    if [ -n "$geojson_preview" ]; then
+        cat >> "$REPORT_FILE" << EOF
+**Geographic Information:**
+$geojson_preview
+
+EOF
+    fi
+
+    return $sign_exit_code
+}
+
+# Create credential templates directory
+mkdir -p case-studies/transhrimpment/credential-templates
+
+echo ""
+echo "🏭 Issuing legitimate supply chain credentials per narrative..."
+
+# LEGITIMATE DOCUMENTS (8 total as per README)
+
+# 1. Purchase Order: Chompchomp → Camarón Corriente
+issue_and_verify_credential \
+    "Chompchomp Ltd" \
+    "case-studies/transhrimpment/entity_configurations/chompchomp-config.json" \
+    "case-studies/transhrimpment/credential-templates/purchase-order-template.json" \
+    "case-studies/transhrimpment/schemas/purchase-order-credential.yaml" \
+    "case-studies/transhrimpment/credentials/chompchomp-purchase-order.json" \
+    "Purchase Order (Chompchomp → Camarón Corriente)"
+
+# 2. Commercial Invoice: Camarón Corriente → Chompchomp
+issue_and_verify_credential \
+    "Camarón Corriente S.A." \
+    "case-studies/transhrimpment/entity_configurations/camaron-corriente-config.json" \
+    "case-studies/transhrimpment/credential-templates/commercial-invoice-template.json" \
+    "case-studies/transhrimpment/schemas/commercial-invoice-credential.yaml" \
+    "case-studies/transhrimpment/credentials/camaron-corriente-invoice.json" \
+    "Commercial Invoice (Camarón Corriente → Chompchomp)"
+
+# 3. Certificate of Origin: Camarón Corriente → Chompchomp
+issue_and_verify_credential \
+    "Camarón Corriente S.A." \
+    "case-studies/transhrimpment/entity_configurations/camaron-corriente-config.json" \
+    "case-studies/transhrimpment/credential-templates/certificate-origin-template.json" \
+    "case-studies/transhrimpment/schemas/certificate-of-origin-credential.yaml" \
+    "case-studies/transhrimpment/credentials/camaron-corriente-origin.json" \
+    "Certificate of Origin (Camarón Corriente → Chompchomp)"
+
+# 4. Bill of Lading: Shady Carrier → Chompchomp
+issue_and_verify_credential \
+    "Shady Carrier Ltd" \
+    "case-studies/transhrimpment/entity_configurations/shady-carrier-config.json" \
+    "case-studies/transhrimpment/credential-templates/bill-lading-template.json" \
+    "case-studies/transhrimpment/schemas/bill-of-lading-credential.yaml" \
+    "case-studies/transhrimpment/credentials/shady-carrier-lading.json" \
+    "Bill of Lading (Shady Carrier → Chompchomp)"
+
+# 5. Secondary Purchase Order: Anonymous Distributor → Shady Distributor
+issue_and_verify_credential \
+    "Anonymous Distributor" \
+    "case-studies/transhrimpment/entity_configurations/anonymous-distributor-config.json" \
+    "case-studies/transhrimpment/credential-templates/secondary-purchase-order-template.json" \
+    "case-studies/transhrimpment/schemas/purchase-order-credential.yaml" \
+    "case-studies/transhrimpment/credentials/anonymous-distributor-purchase-order.json" \
+    "Secondary Purchase Order (Anonymous Distributor → Shady Distributor)"
+
+# 6. Secondary Commercial Invoice: Shady Distributor → Anonymous Distributor
+issue_and_verify_credential \
+    "Shady Distributor Ltd" \
+    "case-studies/transhrimpment/entity_configurations/shady-distributor-config.json" \
+    "case-studies/transhrimpment/credential-templates/secondary-commercial-invoice-template.json" \
+    "case-studies/transhrimpment/schemas/commercial-invoice-credential.yaml" \
+    "case-studies/transhrimpment/credentials/shady-distributor-invoice.json" \
+    "Secondary Commercial Invoice (Shady Distributor → Anonymous Distributor)"
+
+# 7. Secondary Bill of Lading: Cargo Line → Anonymous Distributor
+issue_and_verify_credential \
+    "Cargo Line Ltd" \
+    "case-studies/transhrimpment/entity_configurations/cargo-line-config.json" \
+    "case-studies/transhrimpment/credential-templates/secondary-bill-lading-template.json" \
+    "case-studies/transhrimpment/schemas/bill-of-lading-credential.yaml" \
+    "case-studies/transhrimpment/credentials/cargo-line-secondary-lading.json" \
+    "Secondary Bill of Lading (Cargo Line → Anonymous Distributor)"
+
+# 8. Stolen Certificate of Origin: Legit Shrimp → Honest Importer (legitimate but will be misused)
+issue_and_verify_credential \
+    "Legit Shrimp Ltd" \
+    "case-studies/transhrimpment/entity_configurations/legit-shrimp-config.json" \
+    "case-studies/transhrimpment/credential-templates/stolen-certificate-template.json" \
+    "case-studies/transhrimpment/schemas/certificate-of-origin-credential.yaml" \
+    "case-studies/transhrimpment/credentials/legit-shrimp-honest-importer-origin.json" \
+    "Certificate of Origin (Legit Shrimp → Honest Importer) - WILL BE STOLEN"
+
+echo ""
+echo "🚨 Issuing fraudulent credential (for investigation purposes)..."
+
+# FRAUDULENT DOCUMENTS (1 total as per README)
+
+# 9. Fraudulent Certificate of Origin: Shady Distributor forging Legit Shrimp's identity
+issue_and_verify_credential \
+    "Shady Distributor Ltd" \
+    "case-studies/transhrimpment/entity_configurations/shady-distributor-config.json" \
+    "case-studies/transhrimpment/credential-templates/fraudulent-origin-template.json" \
+    "case-studies/transhrimpment/schemas/certificate-of-origin-credential.yaml" \
+    "case-studies/transhrimpment/credentials/shady-distributor-fraudulent-origin.json" \
+    "FRAUDULENT Certificate of Origin (Shady Distributor forging Legit Shrimp identity)"
+
+# Add summary section to report
+cat >> "$REPORT_FILE" << 'EOF'
+
+---
+
+## Step 2 Summary - Document Collection Results
+
+### Legitimate Documents Issued (8 total)
+
+The following legitimate documents were successfully issued according to the Transhrimpment narrative:
+
+1. **Purchase Order** (Chompchomp → Camarón Corriente) - Initial 1000kg shrimp order
+2. **Commercial Invoice** (Camarón Corriente → Chompchomp) - Invoice for the order
+3. **Certificate of Origin** (Camarón Corriente → Chompchomp) - Legitimate origin certificate
+4. **Bill of Lading** (Shady Carrier → Chompchomp) - Transport document (legitimate signing, but entity is fraudulent)
+5. **Secondary Purchase Order** (Anonymous Distributor → Shady Distributor) - 500kg order from diverted goods
+6. **Secondary Commercial Invoice** (Shady Distributor → Anonymous Distributor) - Invoice for stolen goods
+7. **Secondary Bill of Lading** (Cargo Line → Anonymous Distributor) - Final delivery (legitimate carrier)
+8. **Certificate of Origin** (Legit Shrimp → Honest Importer) - Legitimate certificate that will be stolen/misused
+
+### Fraudulent Documents Issued (1 total)
+
+1. **FRAUDULENT Certificate of Origin** - Shady Distributor forging Legit Shrimp Ltd's identity
+
+**📋 Documentation collection completed - ready for fraud detection analysis!**
+
+EOF
+
+echo ""
+echo "📋 Step 2: Documentation collection completed!"
+echo "✅ 8 legitimate credentials issued per narrative"
+echo "🚨 1 fraudulent certificate of origin issued"
+echo "🔐 All credentials cryptographically signed and verified"
+echo "📍 Geographic data preserved for route analysis"

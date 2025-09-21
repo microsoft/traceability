@@ -1,0 +1,40 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "CertificateOfOriginCredential"
+  ],
+  "issuer": "https://legit-shrimp.example/entity/tt-pos-001",
+  "validFrom": "2025-01-10T10:00:00Z",
+  "validUntil": "2030-12-31T23:59:59Z",
+  "cnf": {
+    "kid": "LrQ5E8KeOiQ62VVIc_iDcCU1xMwcIOzk1DciPI8DdpU"
+  },
+  "credentialSubject": {
+    "id": "https://certificates.example/coo-2024-001",
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-61.5167, 10.6596]
+        },
+        "properties": {
+          "type": "CertificateOfOrigin",
+          "certificateNumber": "COO-2024-001",
+          "origin": {
+            "country": "Trinidad and Tobago",
+            "facility": "Legit Shrimp Ltd Port Facility"
+          },
+          "product": "Frozen Shrimp",
+          "quantity": "1000kg",
+          "issueDate": "2024-01-10"
+        }
+      }
+    ]
+  }
+}

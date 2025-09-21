@@ -22,10 +22,10 @@ Commands:
   init-case-study --name <case-name>            Initialize a new case study with configuration files
   generate-keys --out <file>                    Generate key pair and save to file
   generate-controller --config <file> --out <file>   Generate controller from config file
-  sign-credential --key <file> --cred <file> --out <file>   Sign credential with private key
-  sign-presentation --key <file> --pres <file> --out <file> Sign presentation with private key
-  verify-credential --cred <file> --key <file>           Verify credential with public key
-  verify-presentation --pres <file> --resolver <file>    Verify presentation with resolver
+  sign-credential --entity-configuration <file> --credential <file> --out <file>   Sign credential with entity configuration
+  sign-presentation --key <file> --presentation <file> --out <file> Sign presentation with private key
+  verify-credential --credential <file> --controller <file>    Verify credential with controller document
+  verify-presentation --presentation <file> --resolver <file>    Verify presentation with resolver
   extract-public-key --key <file> --out <file>           Extract public key from private key
   validate-schema --schema <file> [--example <file>]      Validate YAML schema and optional example
   validate-controller --controller <file> --schema <file> Validate controller document
@@ -36,8 +36,8 @@ Examples:
   bun cli.ts init-case-study --name my-case-study
   bun cli.ts generate-keys --out entity1-keys.json
   bun cli.ts generate-controller --config entity1-config.json --out entity1-controller.json
-  bun cli.ts sign-credential --key entity1-keys.json --cred shipment.json --out signed-shipment.json
-  bun cli.ts verify-credential --cred signed-shipment.json --key entity1-public.json
+  bun cli.ts sign-credential --entity-configuration entity1-config.json --credential shipment.json --out signed-shipment.json
+  bun cli.ts verify-credential --credential signed-shipment.json --controller entity1-controller.json
   bun cli.ts validate-schema --schema schema.yaml --example example.json
   bun cli.ts validate-controller --controller controller.json --schema schema.yaml
 `);
@@ -880,9 +880,16 @@ async function signCredential(keyFile: string, credentialFile: string, outputFil
       privateKey = keyData; // Fall back to direct key format
     }
     const signer = await credential.signer(privateKey);
-    const signedCredential = await signer.sign(unsignedCredential);
+    const signedCredentialJWT = await signer.sign(unsignedCredential);
 
-    await Bun.write(outputFile, JSON.stringify(signedCredential, null, 2));
+    // Wrap JWT in EnvelopedVerifiableCredential format with vc+jwt media type
+    const envelopedCredential = {
+      "@context": "https://www.w3.org/ns/credentials/v2",
+      "id": `data:application/vc+jwt,${signedCredentialJWT}`,
+      "type": "EnvelopedVerifiableCredential"
+    };
+
+    await Bun.write(outputFile, JSON.stringify(envelopedCredential, null, 2));
     console.log(`✅ Signed credential saved to ${outputFile}`);
   } catch (error) {
     console.error(`❌ Error signing credential: ${error}`);
@@ -920,23 +927,42 @@ async function signPresentation(keyFile: string, presentationFile: string, outpu
   }
 }
 
-async function verifyCredential(credentialFile: string, keyFile: string) {
-  console.log(`Verifying credential ${credentialFile} with key ${keyFile}...`);
+async function verifyCredential(credentialFile: string, controllerFile: string) {
+  console.log(`Verifying credential ${credentialFile} with controller ${controllerFile}...`);
 
   try {
-    const signedCredential = await Bun.file(credentialFile).text();
-    const keyData = await Bun.file(keyFile).json();
+    const credentialData = await Bun.file(credentialFile).json();
+    const controllerData = await Bun.file(controllerFile).json();
 
-    // Support multiple key formats
-    let publicKey;
-    if (keyData.publicKey) {
-      publicKey = keyData.publicKey;
-    } else if (keyData.assertion && Array.isArray(keyData.assertion) && keyData.assertion.length > 0) {
-      publicKey = await key.exportPublicKey(keyData.assertion[0]); // Export public from first assertion key
-    } else if (keyData.authentication && Array.isArray(keyData.authentication) && keyData.authentication.length > 0) {
-      publicKey = await key.exportPublicKey(keyData.authentication[0]); // Export public from first auth key
+    // Handle EnvelopedVerifiableCredential format
+    let signedCredential;
+    if (credentialData.type === "EnvelopedVerifiableCredential" && credentialData.id) {
+      // Extract JWT from data URL
+      const dataUrlPrefix = "data:application/vc+jwt,";
+      if (credentialData.id.startsWith(dataUrlPrefix)) {
+        signedCredential = credentialData.id.substring(dataUrlPrefix.length);
+      } else {
+        throw new Error("Invalid EnvelopedVerifiableCredential format");
+      }
     } else {
-      publicKey = keyData; // Fall back to direct key format
+      // Fall back to raw JWT string format
+      signedCredential = typeof credentialData === 'string' ? credentialData : JSON.stringify(credentialData);
+    }
+
+    // Extract public key from controller document
+    // For credential verification, we need the assertion method (used for signing credentials)
+    let publicKey;
+    if (controllerData.verificationMethod && controllerData.assertionMethod && controllerData.assertionMethod.length > 0) {
+      // Find the assertion method verification key
+      const assertionMethodId = controllerData.assertionMethod[0];
+      const verificationMethod = controllerData.verificationMethod.find((vm: any) => vm.id === assertionMethodId);
+      if (verificationMethod && verificationMethod.publicKeyJwk) {
+        publicKey = verificationMethod.publicKeyJwk;
+      } else {
+        throw new Error("Could not find assertion method public key in controller document");
+      }
+    } else {
+      throw new Error("Controller document must have verificationMethod and assertionMethod");
     }
     const verifier = await credential.verifier(publicKey);
     const result = await verifier.verify(signedCredential);
@@ -1258,9 +1284,11 @@ const { values, positionals } = parseArgs({
     out: { type: 'string' },
     config: { type: 'string' },
     key: { type: 'string' },
+    'entity-configuration': { type: 'string' },
     cred: { type: 'string' },
     credential: { type: 'string' },
     pres: { type: 'string' },
+    presentation: { type: 'string' },
     resolver: { type: 'string' },
     schema: { type: 'string' },
     example: { type: 'string' },
@@ -1305,35 +1333,35 @@ try {
       break;
 
     case 'sign-credential':
-      if (!values.key || !values.cred || !values.out) {
-        console.error("Please specify --key <file>, --cred <file>, and --out <file>.");
+      if (!values['entity-configuration'] || !values.credential || !values.out) {
+        console.error("Please specify --entity-configuration <file>, --credential <file>, and --out <file>.");
         process.exit(1);
       }
-      await signCredential(values.key, values.cred, values.out);
+      await signCredential(values['entity-configuration'], values.credential, values.out);
       break;
 
     case 'sign-presentation':
-      if (!values.key || !values.pres || !values.out) {
-        console.error("Please specify --key <file>, --pres <file>, and --out <file>.");
+      if (!values.key || !values.presentation || !values.out) {
+        console.error("Please specify --key <file>, --presentation <file>, and --out <file>.");
         process.exit(1);
       }
-      await signPresentation(values.key, values.pres, values.out);
+      await signPresentation(values.key, values.presentation, values.out);
       break;
 
     case 'verify-credential':
-      if (!values.cred || !values.key) {
-        console.error("Please specify --cred <file> and --key <file>.");
+      if (!values.credential || !values.controller) {
+        console.error("Please specify --credential <file> and --controller <file>.");
         process.exit(1);
       }
-      await verifyCredential(values.cred, values.key);
+      await verifyCredential(values.credential, values.controller);
       break;
 
     case 'verify-presentation':
-      if (!values.pres || !values.resolver) {
-        console.error("Please specify --pres <file> and --resolver <file>.");
+      if (!values.presentation || !values.resolver) {
+        console.error("Please specify --presentation <file> and --resolver <file>.");
         process.exit(1);
       }
-      await verifyPresentation(values.pres, values.resolver);
+      await verifyPresentation(values.presentation, values.resolver);
       break;
 
     case 'extract-public-key':

@@ -1501,3 +1501,1359 @@ The identified entities and their geographic information can now be used to:
 
 **🔍 Entity identification completed - geographic fraud detection enabled!**
 
+
+---
+
+## Step 2: Collect Documentation
+
+Issuing verifiable credentials based on the Transhrimpment supply chain narrative. This includes 8 legitimate documents and 1 fraudulent certificate of origin. Each credential is cryptographically signed by the appropriate entity using their private keys and verified against their controller documents.
+
+
+### ✅ Purchase Order (Chompchomp → Camarón Corriente)
+
+**Entity:** Chompchomp Ltd
+**Config:** `case-studies/transhrimpment/entity_configurations/chompchomp-config.json`
+**Output:** `case-studies/transhrimpment/credentials/chompchomp-purchase-order.json`
+
+<details>
+<summary>Credential Issuance and Verification</summary>
+
+**Sign Command:**
+```bash
+bun src/cli.ts sign-credential --entity-configuration case-studies/transhrimpment/entity_configurations/chompchomp-config.json --credential case-studies/transhrimpment/credential-templates/purchase-order-template.json --out case-studies/transhrimpment/credentials/chompchomp-purchase-order.json
+```
+
+**Sign Result:**
+```
+Signing credential case-studies/transhrimpment/credential-templates/purchase-order-template.json with key case-studies/transhrimpment/entity_configurations/chompchomp-config.json and saving to case-studies/transhrimpment/credentials/chompchomp-purchase-order.json...
+🗺️ Geographic data detected in credential: Feature collection with 1 features containing Point
+🔐 Using assertion key for credential issuance
+✅ Signed credential saved to case-studies/transhrimpment/credentials/chompchomp-purchase-order.json
+```
+Exit code: 0
+
+**Verify Command:**
+```bash
+bun src/cli.ts verify-credential --credential case-studies/transhrimpment/credentials/chompchomp-purchase-order.json --controller case-studies/transhrimpment/controllers/chompchomp-controller.json
+```
+
+**Verify Result:**
+```
+Verifying credential case-studies/transhrimpment/credentials/chompchomp-purchase-order.json with controller case-studies/transhrimpment/controllers/chompchomp-controller.json...
+✅ Credential verification successful
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "PurchaseOrderCredential"
+  ],
+  "issuer": "https://chompchomp.example/entity/bvi-001",
+  "cnf": {
+    "kid": "nx62J6beWOO6mIavpWEQCg_GoOi8zfAECZ8p-zHxEvI"
+  },
+  "credentialSubject": {
+    "id": "https://orders.example/po-2024-001",
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -64.6208,
+            18.4167
+          ]
+        },
+        "properties": {
+          "type": "PurchaseOrder",
+          "orderNumber": "PO-2024-001",
+          "buyer": {
+            "id": "https://chompchomp.example/entity/bvi-001",
+            "name": "Chompchomp Ltd"
+          },
+          "seller": {
+            "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+            "name": "Camarón Corriente S.A."
+          },
+          "description": "1000kg frozen shrimp",
+          "quantity": "1000kg",
+          "deliveryDate": "2024-02-15"
+        }
+      }
+    ]
+  },
+  "iat": 1758416185,
+  "nbf": 1736935200,
+  "exp": 1924991999
+}
+
+🗺️ Geographic data detected in credential:
+
+<details>
+<summary>📍 Feature collection with 1 features containing Point</summary>
+
+
+```geojson
+{
+  "id": "https://orders.example/po-2024-001",
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
+      },
+      "properties": {
+        "type": "PurchaseOrder",
+        "orderNumber": "PO-2024-001",
+        "buyer": {
+          "id": "https://chompchomp.example/entity/bvi-001",
+          "name": "Chompchomp Ltd"
+        },
+        "seller": {
+          "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+          "name": "Camarón Corriente S.A."
+        },
+        "description": "1000kg frozen shrimp",
+        "quantity": "1000kg",
+        "deliveryDate": "2024-02-15"
+      }
+    }
+  ]
+}
+```
+
+</details>
+```
+Exit code: 0
+
+</details>
+
+<details>
+<summary>📋 Credential JSON Content (EnvelopedVerifiableCredential)</summary>
+
+```json
+{
+  "@context": "https://www.w3.org/ns/credentials/v2",
+  "id": "data:application/vc+jwt,eyJ0eXAiOiJ2Yytqd3QiLCJhbGciOiJFUzI1NiIsImtpZCI6Im54NjJKNmJlV09PNm1JYXZwV0VRQ2dfR29PaTh6ZkFFQ1o4cC16SHhFdkkifQ.eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL2dlb2pzb24ub3JnL2dlb2pzb24tbGQvZ2VvanNvbi1jb250ZXh0Lmpzb25sZCJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiUHVyY2hhc2VPcmRlckNyZWRlbnRpYWwiXSwiaXNzdWVyIjoiaHR0cHM6Ly9jaG9tcGNob21wLmV4YW1wbGUvZW50aXR5L2J2aS0wMDEiLCJjbmYiOnsia2lkIjoibng2Mko2YmVXT082bUlhdnBXRVFDZ19Hb09pOHpmQUVDWjhwLXpIeEV2SSJ9LCJjcmVkZW50aWFsU3ViamVjdCI6eyJpZCI6Imh0dHBzOi8vb3JkZXJzLmV4YW1wbGUvcG8tMjAyNC0wMDEiLCJ0eXBlIjoiRmVhdHVyZUNvbGxlY3Rpb24iLCJmZWF0dXJlcyI6W3sidHlwZSI6IkZlYXR1cmUiLCJnZW9tZXRyeSI6eyJ0eXBlIjoiUG9pbnQiLCJjb29yZGluYXRlcyI6Wy02NC42MjA4LDE4LjQxNjddfSwicHJvcGVydGllcyI6eyJ0eXBlIjoiUHVyY2hhc2VPcmRlciIsIm9yZGVyTnVtYmVyIjoiUE8tMjAyNC0wMDEiLCJidXllciI6eyJpZCI6Imh0dHBzOi8vY2hvbXBjaG9tcC5leGFtcGxlL2VudGl0eS9idmktMDAxIiwibmFtZSI6IkNob21wY2hvbXAgTHRkIn0sInNlbGxlciI6eyJpZCI6Imh0dHBzOi8vY2FtYXJvbi1jb3JyaWVudGUuZXhhbXBsZS9lbnRpdHkvdmUtcGJjLTAwMSIsIm5hbWUiOiJDYW1hcsOzbiBDb3JyaWVudGUgUy5BLiJ9LCJkZXNjcmlwdGlvbiI6IjEwMDBrZyBmcm96ZW4gc2hyaW1wIiwicXVhbnRpdHkiOiIxMDAwa2ciLCJkZWxpdmVyeURhdGUiOiIyMDI0LTAyLTE1In19XX0sImlhdCI6MTc1ODQxNjE4NSwibmJmIjoxNzM2OTM1MjAwLCJleHAiOjE5MjQ5OTE5OTl9.HTneIZed9kyc92RXgH_fiwNVaiB9ZzPcSpcN4bJ9PImP-FmFvDdMxim7iFqKcyHcuLTNvSDMGqFjyctdrdotrw",
+  "type": "EnvelopedVerifiableCredential"
+}
+```
+
+</details>
+
+
+### ✅ Commercial Invoice (Camarón Corriente → Chompchomp)
+
+**Entity:** Camarón Corriente S.A.
+**Config:** `case-studies/transhrimpment/entity_configurations/camaron-corriente-config.json`
+**Output:** `case-studies/transhrimpment/credentials/camaron-corriente-invoice.json`
+
+<details>
+<summary>Credential Issuance and Verification</summary>
+
+**Sign Command:**
+```bash
+bun src/cli.ts sign-credential --entity-configuration case-studies/transhrimpment/entity_configurations/camaron-corriente-config.json --credential case-studies/transhrimpment/credential-templates/commercial-invoice-template.json --out case-studies/transhrimpment/credentials/camaron-corriente-invoice.json
+```
+
+**Sign Result:**
+```
+Signing credential case-studies/transhrimpment/credential-templates/commercial-invoice-template.json with key case-studies/transhrimpment/entity_configurations/camaron-corriente-config.json and saving to case-studies/transhrimpment/credentials/camaron-corriente-invoice.json...
+🗺️ Geographic data detected in credential: Feature collection with 1 features containing Point
+🔐 Using assertion key for credential issuance
+✅ Signed credential saved to case-studies/transhrimpment/credentials/camaron-corriente-invoice.json
+```
+Exit code: 0
+
+**Verify Command:**
+```bash
+bun src/cli.ts verify-credential --credential case-studies/transhrimpment/credentials/camaron-corriente-invoice.json --controller case-studies/transhrimpment/controllers/camaron-corriente-controller.json
+```
+
+**Verify Result:**
+```
+Verifying credential case-studies/transhrimpment/credentials/camaron-corriente-invoice.json with controller case-studies/transhrimpment/controllers/camaron-corriente-controller.json...
+✅ Credential verification successful
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "CommercialInvoiceCredential"
+  ],
+  "issuer": "https://camaron-corriente.example/entity/ve-pbc-001",
+  "cnf": {
+    "kid": "wCgZYzU2U073ubVOEp7wcNHxwEIGuiEoY42b2tuKwfY"
+  },
+  "credentialSubject": {
+    "id": "https://invoices.example/inv-2024-001",
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -68.0125,
+            10.4647
+          ]
+        },
+        "properties": {
+          "type": "CommercialInvoice",
+          "invoiceNumber": "INV-2024-001",
+          "seller": {
+            "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+            "name": "Camarón Corriente S.A."
+          },
+          "buyer": {
+            "id": "https://chompchomp.example/entity/bvi-001",
+            "name": "Chompchomp Ltd"
+          },
+          "items": [
+            {
+              "description": "Frozen Shrimp",
+              "quantity": "1000kg",
+              "price": 12.5
+            }
+          ],
+          "totalAmount": 12500
+        }
+      }
+    ]
+  },
+  "iat": 1758416185,
+  "nbf": 1737367200,
+  "exp": 1924991999
+}
+
+🗺️ Geographic data detected in credential:
+
+<details>
+<summary>📍 Feature collection with 1 features containing Point</summary>
+
+
+```geojson
+{
+  "id": "https://invoices.example/inv-2024-001",
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -68.0125,
+          10.4647
+        ]
+      },
+      "properties": {
+        "type": "CommercialInvoice",
+        "invoiceNumber": "INV-2024-001",
+        "seller": {
+          "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+          "name": "Camarón Corriente S.A."
+        },
+        "buyer": {
+          "id": "https://chompchomp.example/entity/bvi-001",
+          "name": "Chompchomp Ltd"
+        },
+        "items": [
+          {
+            "description": "Frozen Shrimp",
+            "quantity": "1000kg",
+            "price": 12.5
+          }
+        ],
+        "totalAmount": 12500
+      }
+    }
+  ]
+}
+```
+
+</details>
+```
+Exit code: 0
+
+</details>
+
+<details>
+<summary>📋 Credential JSON Content (EnvelopedVerifiableCredential)</summary>
+
+```json
+{
+  "@context": "https://www.w3.org/ns/credentials/v2",
+  "id": "data:application/vc+jwt,eyJ0eXAiOiJ2Yytqd3QiLCJhbGciOiJFUzI1NiIsImtpZCI6IndDZ1pZelUyVTA3M3ViVk9FcDd3Y05IeHdFSUd1aUVvWTQyYjJ0dUt3ZlkifQ.eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL2dlb2pzb24ub3JnL2dlb2pzb24tbGQvZ2VvanNvbi1jb250ZXh0Lmpzb25sZCJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiQ29tbWVyY2lhbEludm9pY2VDcmVkZW50aWFsIl0sImlzc3VlciI6Imh0dHBzOi8vY2FtYXJvbi1jb3JyaWVudGUuZXhhbXBsZS9lbnRpdHkvdmUtcGJjLTAwMSIsImNuZiI6eyJraWQiOiJ3Q2daWXpVMlUwNzN1YlZPRXA3d2NOSHh3RUlHdWlFb1k0MmIydHVLd2ZZIn0sImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImlkIjoiaHR0cHM6Ly9pbnZvaWNlcy5leGFtcGxlL2ludi0yMDI0LTAwMSIsInR5cGUiOiJGZWF0dXJlQ29sbGVjdGlvbiIsImZlYXR1cmVzIjpbeyJ0eXBlIjoiRmVhdHVyZSIsImdlb21ldHJ5Ijp7InR5cGUiOiJQb2ludCIsImNvb3JkaW5hdGVzIjpbLTY4LjAxMjUsMTAuNDY0N119LCJwcm9wZXJ0aWVzIjp7InR5cGUiOiJDb21tZXJjaWFsSW52b2ljZSIsImludm9pY2VOdW1iZXIiOiJJTlYtMjAyNC0wMDEiLCJzZWxsZXIiOnsiaWQiOiJodHRwczovL2NhbWFyb24tY29ycmllbnRlLmV4YW1wbGUvZW50aXR5L3ZlLXBiYy0wMDEiLCJuYW1lIjoiQ2FtYXLDs24gQ29ycmllbnRlIFMuQS4ifSwiYnV5ZXIiOnsiaWQiOiJodHRwczovL2Nob21wY2hvbXAuZXhhbXBsZS9lbnRpdHkvYnZpLTAwMSIsIm5hbWUiOiJDaG9tcGNob21wIEx0ZCJ9LCJpdGVtcyI6W3siZGVzY3JpcHRpb24iOiJGcm96ZW4gU2hyaW1wIiwicXVhbnRpdHkiOiIxMDAwa2ciLCJwcmljZSI6MTIuNX1dLCJ0b3RhbEFtb3VudCI6MTI1MDB9fV19LCJpYXQiOjE3NTg0MTYxODUsIm5iZiI6MTczNzM2NzIwMCwiZXhwIjoxOTI0OTkxOTk5fQ.xUrGbmGmN5NbQn-8u3igznaocU0ys5RLLO-ui5dWYDXyz94t8WyneTqQ2SKwpCbEn3SkdnFish6sWrtDqicCrQ",
+  "type": "EnvelopedVerifiableCredential"
+}
+```
+
+</details>
+
+
+### ✅ Certificate of Origin (Camarón Corriente → Chompchomp)
+
+**Entity:** Camarón Corriente S.A.
+**Config:** `case-studies/transhrimpment/entity_configurations/camaron-corriente-config.json`
+**Output:** `case-studies/transhrimpment/credentials/camaron-corriente-origin.json`
+
+<details>
+<summary>Credential Issuance and Verification</summary>
+
+**Sign Command:**
+```bash
+bun src/cli.ts sign-credential --entity-configuration case-studies/transhrimpment/entity_configurations/camaron-corriente-config.json --credential case-studies/transhrimpment/credential-templates/certificate-origin-template.json --out case-studies/transhrimpment/credentials/camaron-corriente-origin.json
+```
+
+**Sign Result:**
+```
+Signing credential case-studies/transhrimpment/credential-templates/certificate-origin-template.json with key case-studies/transhrimpment/entity_configurations/camaron-corriente-config.json and saving to case-studies/transhrimpment/credentials/camaron-corriente-origin.json...
+🗺️ Geographic data detected in credential: Feature collection with 1 features containing Point
+🔐 Using assertion key for credential issuance
+✅ Signed credential saved to case-studies/transhrimpment/credentials/camaron-corriente-origin.json
+```
+Exit code: 0
+
+**Verify Command:**
+```bash
+bun src/cli.ts verify-credential --credential case-studies/transhrimpment/credentials/camaron-corriente-origin.json --controller case-studies/transhrimpment/controllers/camaron-corriente-controller.json
+```
+
+**Verify Result:**
+```
+Verifying credential case-studies/transhrimpment/credentials/camaron-corriente-origin.json with controller case-studies/transhrimpment/controllers/camaron-corriente-controller.json...
+✅ Credential verification successful
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "CertificateOfOriginCredential"
+  ],
+  "issuer": "https://legit-shrimp.example/entity/tt-pos-001",
+  "cnf": {
+    "kid": "LrQ5E8KeOiQ62VVIc_iDcCU1xMwcIOzk1DciPI8DdpU"
+  },
+  "credentialSubject": {
+    "id": "https://certificates.example/coo-2024-001",
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -61.5167,
+            10.6596
+          ]
+        },
+        "properties": {
+          "type": "CertificateOfOrigin",
+          "certificateNumber": "COO-2024-001",
+          "origin": {
+            "country": "Trinidad and Tobago",
+            "facility": "Legit Shrimp Ltd Port Facility"
+          },
+          "product": "Frozen Shrimp",
+          "quantity": "1000kg",
+          "issueDate": "2024-01-10"
+        }
+      }
+    ]
+  },
+  "iat": 1758416185,
+  "nbf": 1736503200,
+  "exp": 1924991999
+}
+
+🗺️ Geographic data detected in credential:
+
+<details>
+<summary>📍 Feature collection with 1 features containing Point</summary>
+
+
+```geojson
+{
+  "id": "https://certificates.example/coo-2024-001",
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -61.5167,
+          10.6596
+        ]
+      },
+      "properties": {
+        "type": "CertificateOfOrigin",
+        "certificateNumber": "COO-2024-001",
+        "origin": {
+          "country": "Trinidad and Tobago",
+          "facility": "Legit Shrimp Ltd Port Facility"
+        },
+        "product": "Frozen Shrimp",
+        "quantity": "1000kg",
+        "issueDate": "2024-01-10"
+      }
+    }
+  ]
+}
+```
+
+</details>
+```
+Exit code: 0
+
+</details>
+
+<details>
+<summary>📋 Credential JSON Content (EnvelopedVerifiableCredential)</summary>
+
+```json
+{
+  "@context": "https://www.w3.org/ns/credentials/v2",
+  "id": "data:application/vc+jwt,eyJ0eXAiOiJ2Yytqd3QiLCJhbGciOiJFUzI1NiIsImtpZCI6IndDZ1pZelUyVTA3M3ViVk9FcDd3Y05IeHdFSUd1aUVvWTQyYjJ0dUt3ZlkifQ.eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL2dlb2pzb24ub3JnL2dlb2pzb24tbGQvZ2VvanNvbi1jb250ZXh0Lmpzb25sZCJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiQ2VydGlmaWNhdGVPZk9yaWdpbkNyZWRlbnRpYWwiXSwiaXNzdWVyIjoiaHR0cHM6Ly9sZWdpdC1zaHJpbXAuZXhhbXBsZS9lbnRpdHkvdHQtcG9zLTAwMSIsImNuZiI6eyJraWQiOiJMclE1RThLZU9pUTYyVlZJY19pRGNDVTF4TXdjSU96azFEY2lQSThEZHBVIn0sImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImlkIjoiaHR0cHM6Ly9jZXJ0aWZpY2F0ZXMuZXhhbXBsZS9jb28tMjAyNC0wMDEiLCJ0eXBlIjoiRmVhdHVyZUNvbGxlY3Rpb24iLCJmZWF0dXJlcyI6W3sidHlwZSI6IkZlYXR1cmUiLCJnZW9tZXRyeSI6eyJ0eXBlIjoiUG9pbnQiLCJjb29yZGluYXRlcyI6Wy02MS41MTY3LDEwLjY1OTZdfSwicHJvcGVydGllcyI6eyJ0eXBlIjoiQ2VydGlmaWNhdGVPZk9yaWdpbiIsImNlcnRpZmljYXRlTnVtYmVyIjoiQ09PLTIwMjQtMDAxIiwib3JpZ2luIjp7ImNvdW50cnkiOiJUcmluaWRhZCBhbmQgVG9iYWdvIiwiZmFjaWxpdHkiOiJMZWdpdCBTaHJpbXAgTHRkIFBvcnQgRmFjaWxpdHkifSwicHJvZHVjdCI6IkZyb3plbiBTaHJpbXAiLCJxdWFudGl0eSI6IjEwMDBrZyIsImlzc3VlRGF0ZSI6IjIwMjQtMDEtMTAifX1dfSwiaWF0IjoxNzU4NDE2MTg1LCJuYmYiOjE3MzY1MDMyMDAsImV4cCI6MTkyNDk5MTk5OX0.txGQ4lQAEJd1NW88KYBLl6Gp6xGMsFrKD5xNfrkuxVAtIi1UUTLVVkoTf4MJdng7ZHtgRQqpwQN_0D2WvJbyFA",
+  "type": "EnvelopedVerifiableCredential"
+}
+```
+
+</details>
+
+
+### ✅ Bill of Lading (Shady Carrier → Chompchomp)
+
+**Entity:** Shady Carrier Ltd
+**Config:** `case-studies/transhrimpment/entity_configurations/shady-carrier-config.json`
+**Output:** `case-studies/transhrimpment/credentials/shady-carrier-lading.json`
+
+<details>
+<summary>Credential Issuance and Verification</summary>
+
+**Sign Command:**
+```bash
+bun src/cli.ts sign-credential --entity-configuration case-studies/transhrimpment/entity_configurations/shady-carrier-config.json --credential case-studies/transhrimpment/credential-templates/bill-lading-template.json --out case-studies/transhrimpment/credentials/shady-carrier-lading.json
+```
+
+**Sign Result:**
+```
+Signing credential case-studies/transhrimpment/credential-templates/bill-lading-template.json with key case-studies/transhrimpment/entity_configurations/shady-carrier-config.json and saving to case-studies/transhrimpment/credentials/shady-carrier-lading.json...
+🗺️ Geographic data detected in credential: Feature collection with 1 features containing LineString
+🔐 Using assertion key for credential issuance
+✅ Signed credential saved to case-studies/transhrimpment/credentials/shady-carrier-lading.json
+```
+Exit code: 0
+
+**Verify Command:**
+```bash
+bun src/cli.ts verify-credential --credential case-studies/transhrimpment/credentials/shady-carrier-lading.json --controller case-studies/transhrimpment/controllers/shady-carrier-controller.json
+```
+
+**Verify Result:**
+```
+Verifying credential case-studies/transhrimpment/credentials/shady-carrier-lading.json with controller case-studies/transhrimpment/controllers/shady-carrier-controller.json...
+✅ Credential verification successful
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "BillOfLadingCredential"
+  ],
+  "issuer": "https://shady-carrier.example/entity/aw-oru-001",
+  "cnf": {
+    "kid": "n7GWD9LbqAZQy1Wt5XdYiy81GofxhJgFnIu8iduEMmE"
+  },
+  "credentialSubject": {
+    "id": "https://shipments.example/bol-2024-001",
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -68.0125,
+              10.4647
+            ],
+            [
+              -70.027,
+              12.5186
+            ],
+            [
+              -64.6208,
+              18.4167
+            ]
+          ]
+        },
+        "properties": {
+          "type": "BillOfLading",
+          "billNumber": "BOL-2024-001",
+          "shipper": {
+            "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+            "name": "Camarón Corriente S.A."
+          },
+          "consignee": {
+            "id": "https://chompchomp.example/entity/bvi-001",
+            "name": "Chompchomp Ltd"
+          },
+          "cargo": {
+            "description": "Frozen Shrimp",
+            "quantity": "800kg"
+          },
+          "route": {
+            "origin": "Puerto Cabello, Venezuela",
+            "destination": "Road Town, Tortola, BVI"
+          }
+        }
+      }
+    ]
+  },
+  "iat": 1758416185,
+  "nbf": 1737799200,
+  "exp": 1924991999
+}
+
+🗺️ Geographic data detected in credential:
+
+<details>
+<summary>🗺️ Feature collection with 1 features containing LineString</summary>
+
+
+```geojson
+{
+  "id": "https://shipments.example/bol-2024-001",
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -68.0125,
+            10.4647
+          ],
+          [
+            -70.027,
+            12.5186
+          ],
+          [
+            -64.6208,
+            18.4167
+          ]
+        ]
+      },
+      "properties": {
+        "type": "BillOfLading",
+        "billNumber": "BOL-2024-001",
+        "shipper": {
+          "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+          "name": "Camarón Corriente S.A."
+        },
+        "consignee": {
+          "id": "https://chompchomp.example/entity/bvi-001",
+          "name": "Chompchomp Ltd"
+        },
+        "cargo": {
+          "description": "Frozen Shrimp",
+          "quantity": "800kg"
+        },
+        "route": {
+          "origin": "Puerto Cabello, Venezuela",
+          "destination": "Road Town, Tortola, BVI"
+        }
+      }
+    }
+  ]
+}
+```
+
+</details>
+```
+Exit code: 0
+
+</details>
+
+<details>
+<summary>📋 Credential JSON Content (EnvelopedVerifiableCredential)</summary>
+
+```json
+{
+  "@context": "https://www.w3.org/ns/credentials/v2",
+  "id": "data:application/vc+jwt,eyJ0eXAiOiJ2Yytqd3QiLCJhbGciOiJFUzI1NiIsImtpZCI6Im43R1dEOUxicUFaUXkxV3Q1WGRZaXk4MUdvZnhoSmdGbkl1OGlkdUVNbUUifQ.eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL2dlb2pzb24ub3JnL2dlb2pzb24tbGQvZ2VvanNvbi1jb250ZXh0Lmpzb25sZCJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiQmlsbE9mTGFkaW5nQ3JlZGVudGlhbCJdLCJpc3N1ZXIiOiJodHRwczovL3NoYWR5LWNhcnJpZXIuZXhhbXBsZS9lbnRpdHkvYXctb3J1LTAwMSIsImNuZiI6eyJraWQiOiJuN0dXRDlMYnFBWlF5MVd0NVhkWWl5ODFHb2Z4aEpnRm5JdThpZHVFTW1FIn0sImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImlkIjoiaHR0cHM6Ly9zaGlwbWVudHMuZXhhbXBsZS9ib2wtMjAyNC0wMDEiLCJ0eXBlIjoiRmVhdHVyZUNvbGxlY3Rpb24iLCJmZWF0dXJlcyI6W3sidHlwZSI6IkZlYXR1cmUiLCJnZW9tZXRyeSI6eyJ0eXBlIjoiTGluZVN0cmluZyIsImNvb3JkaW5hdGVzIjpbWy02OC4wMTI1LDEwLjQ2NDddLFstNzAuMDI3LDEyLjUxODZdLFstNjQuNjIwOCwxOC40MTY3XV19LCJwcm9wZXJ0aWVzIjp7InR5cGUiOiJCaWxsT2ZMYWRpbmciLCJiaWxsTnVtYmVyIjoiQk9MLTIwMjQtMDAxIiwic2hpcHBlciI6eyJpZCI6Imh0dHBzOi8vY2FtYXJvbi1jb3JyaWVudGUuZXhhbXBsZS9lbnRpdHkvdmUtcGJjLTAwMSIsIm5hbWUiOiJDYW1hcsOzbiBDb3JyaWVudGUgUy5BLiJ9LCJjb25zaWduZWUiOnsiaWQiOiJodHRwczovL2Nob21wY2hvbXAuZXhhbXBsZS9lbnRpdHkvYnZpLTAwMSIsIm5hbWUiOiJDaG9tcGNob21wIEx0ZCJ9LCJjYXJnbyI6eyJkZXNjcmlwdGlvbiI6IkZyb3plbiBTaHJpbXAiLCJxdWFudGl0eSI6IjgwMGtnIn0sInJvdXRlIjp7Im9yaWdpbiI6IlB1ZXJ0byBDYWJlbGxvLCBWZW5lenVlbGEiLCJkZXN0aW5hdGlvbiI6IlJvYWQgVG93biwgVG9ydG9sYSwgQlZJIn19fV19LCJpYXQiOjE3NTg0MTYxODUsIm5iZiI6MTczNzc5OTIwMCwiZXhwIjoxOTI0OTkxOTk5fQ.RvZEC4pAU3BmHdbU67lsCdA5mxGtrb2c4V_jiNZ6OFUbHb2vTvFl7YEWUqRE99tntc4v81oCBQ3RGTvD_of7jQ",
+  "type": "EnvelopedVerifiableCredential"
+}
+```
+
+</details>
+
+
+### ✅ Secondary Purchase Order (Anonymous Distributor → Shady Distributor)
+
+**Entity:** Anonymous Distributor
+**Config:** `case-studies/transhrimpment/entity_configurations/anonymous-distributor-config.json`
+**Output:** `case-studies/transhrimpment/credentials/anonymous-distributor-purchase-order.json`
+
+<details>
+<summary>Credential Issuance and Verification</summary>
+
+**Sign Command:**
+```bash
+bun src/cli.ts sign-credential --entity-configuration case-studies/transhrimpment/entity_configurations/anonymous-distributor-config.json --credential case-studies/transhrimpment/credential-templates/secondary-purchase-order-template.json --out case-studies/transhrimpment/credentials/anonymous-distributor-purchase-order.json
+```
+
+**Sign Result:**
+```
+Signing credential case-studies/transhrimpment/credential-templates/secondary-purchase-order-template.json with key case-studies/transhrimpment/entity_configurations/anonymous-distributor-config.json and saving to case-studies/transhrimpment/credentials/anonymous-distributor-purchase-order.json...
+🗺️ Geographic data detected in credential: Feature collection with 1 features containing Point
+🔐 Using assertion key for credential issuance
+✅ Signed credential saved to case-studies/transhrimpment/credentials/anonymous-distributor-purchase-order.json
+```
+Exit code: 0
+
+**Verify Command:**
+```bash
+bun src/cli.ts verify-credential --credential case-studies/transhrimpment/credentials/anonymous-distributor-purchase-order.json --controller case-studies/transhrimpment/controllers/anonymous-distributor-controller.json
+```
+
+**Verify Result:**
+```
+Verifying credential case-studies/transhrimpment/credentials/anonymous-distributor-purchase-order.json with controller case-studies/transhrimpment/controllers/anonymous-distributor-controller.json...
+✅ Credential verification successful
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "PurchaseOrderCredential"
+  ],
+  "issuer": "https://chompchomp.example/entity/bvi-001",
+  "cnf": {
+    "kid": "nx62J6beWOO6mIavpWEQCg_GoOi8zfAECZ8p-zHxEvI"
+  },
+  "credentialSubject": {
+    "id": "https://orders.example/po-2024-001",
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -64.6208,
+            18.4167
+          ]
+        },
+        "properties": {
+          "type": "PurchaseOrder",
+          "orderNumber": "PO-2024-001",
+          "buyer": {
+            "id": "https://chompchomp.example/entity/bvi-001",
+            "name": "Chompchomp Ltd"
+          },
+          "seller": {
+            "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+            "name": "Camarón Corriente S.A."
+          },
+          "description": "1000kg frozen shrimp",
+          "quantity": "1000kg",
+          "deliveryDate": "2024-02-15"
+        }
+      }
+    ]
+  },
+  "iat": 1758416186,
+  "nbf": 1736935200,
+  "exp": 1924991999
+}
+
+🗺️ Geographic data detected in credential:
+
+<details>
+<summary>📍 Feature collection with 1 features containing Point</summary>
+
+
+```geojson
+{
+  "id": "https://orders.example/po-2024-001",
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
+      },
+      "properties": {
+        "type": "PurchaseOrder",
+        "orderNumber": "PO-2024-001",
+        "buyer": {
+          "id": "https://chompchomp.example/entity/bvi-001",
+          "name": "Chompchomp Ltd"
+        },
+        "seller": {
+          "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+          "name": "Camarón Corriente S.A."
+        },
+        "description": "1000kg frozen shrimp",
+        "quantity": "1000kg",
+        "deliveryDate": "2024-02-15"
+      }
+    }
+  ]
+}
+```
+
+</details>
+```
+Exit code: 0
+
+</details>
+
+<details>
+<summary>📋 Credential JSON Content (EnvelopedVerifiableCredential)</summary>
+
+```json
+{
+  "@context": "https://www.w3.org/ns/credentials/v2",
+  "id": "data:application/vc+jwt,eyJ0eXAiOiJ2Yytqd3QiLCJhbGciOiJFUzI1NiIsImtpZCI6IkZJcXR2M1ZKNVVCSG5NMTJtR2MwWDVlYkRQMGt2UkNXT0gycnQ0QnNaM0kifQ.eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL2dlb2pzb24ub3JnL2dlb2pzb24tbGQvZ2VvanNvbi1jb250ZXh0Lmpzb25sZCJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiUHVyY2hhc2VPcmRlckNyZWRlbnRpYWwiXSwiaXNzdWVyIjoiaHR0cHM6Ly9jaG9tcGNob21wLmV4YW1wbGUvZW50aXR5L2J2aS0wMDEiLCJjbmYiOnsia2lkIjoibng2Mko2YmVXT082bUlhdnBXRVFDZ19Hb09pOHpmQUVDWjhwLXpIeEV2SSJ9LCJjcmVkZW50aWFsU3ViamVjdCI6eyJpZCI6Imh0dHBzOi8vb3JkZXJzLmV4YW1wbGUvcG8tMjAyNC0wMDEiLCJ0eXBlIjoiRmVhdHVyZUNvbGxlY3Rpb24iLCJmZWF0dXJlcyI6W3sidHlwZSI6IkZlYXR1cmUiLCJnZW9tZXRyeSI6eyJ0eXBlIjoiUG9pbnQiLCJjb29yZGluYXRlcyI6Wy02NC42MjA4LDE4LjQxNjddfSwicHJvcGVydGllcyI6eyJ0eXBlIjoiUHVyY2hhc2VPcmRlciIsIm9yZGVyTnVtYmVyIjoiUE8tMjAyNC0wMDEiLCJidXllciI6eyJpZCI6Imh0dHBzOi8vY2hvbXBjaG9tcC5leGFtcGxlL2VudGl0eS9idmktMDAxIiwibmFtZSI6IkNob21wY2hvbXAgTHRkIn0sInNlbGxlciI6eyJpZCI6Imh0dHBzOi8vY2FtYXJvbi1jb3JyaWVudGUuZXhhbXBsZS9lbnRpdHkvdmUtcGJjLTAwMSIsIm5hbWUiOiJDYW1hcsOzbiBDb3JyaWVudGUgUy5BLiJ9LCJkZXNjcmlwdGlvbiI6IjEwMDBrZyBmcm96ZW4gc2hyaW1wIiwicXVhbnRpdHkiOiIxMDAwa2ciLCJkZWxpdmVyeURhdGUiOiIyMDI0LTAyLTE1In19XX0sImlhdCI6MTc1ODQxNjE4NiwibmJmIjoxNzM2OTM1MjAwLCJleHAiOjE5MjQ5OTE5OTl9.9CQewlfSGPGh-VGFSIzfRzHuZHIWlnERV6yDyiMJXDxnTEqT9jDyg6B86K1whCGltWIq1jR5LJRPlbIgVcVCWQ",
+  "type": "EnvelopedVerifiableCredential"
+}
+```
+
+</details>
+
+
+### ✅ Secondary Commercial Invoice (Shady Distributor → Anonymous Distributor)
+
+**Entity:** Shady Distributor Ltd
+**Config:** `case-studies/transhrimpment/entity_configurations/shady-distributor-config.json`
+**Output:** `case-studies/transhrimpment/credentials/shady-distributor-invoice.json`
+
+<details>
+<summary>Credential Issuance and Verification</summary>
+
+**Sign Command:**
+```bash
+bun src/cli.ts sign-credential --entity-configuration case-studies/transhrimpment/entity_configurations/shady-distributor-config.json --credential case-studies/transhrimpment/credential-templates/secondary-commercial-invoice-template.json --out case-studies/transhrimpment/credentials/shady-distributor-invoice.json
+```
+
+**Sign Result:**
+```
+Signing credential case-studies/transhrimpment/credential-templates/secondary-commercial-invoice-template.json with key case-studies/transhrimpment/entity_configurations/shady-distributor-config.json and saving to case-studies/transhrimpment/credentials/shady-distributor-invoice.json...
+🗺️ Geographic data detected in credential: Feature collection with 1 features containing Point
+🔐 Using assertion key for credential issuance
+✅ Signed credential saved to case-studies/transhrimpment/credentials/shady-distributor-invoice.json
+```
+Exit code: 0
+
+**Verify Command:**
+```bash
+bun src/cli.ts verify-credential --credential case-studies/transhrimpment/credentials/shady-distributor-invoice.json --controller case-studies/transhrimpment/controllers/shady-distributor-controller.json
+```
+
+**Verify Result:**
+```
+Verifying credential case-studies/transhrimpment/credentials/shady-distributor-invoice.json with controller case-studies/transhrimpment/controllers/shady-distributor-controller.json...
+✅ Credential verification successful
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "CommercialInvoiceCredential"
+  ],
+  "issuer": "https://camaron-corriente.example/entity/ve-pbc-001",
+  "cnf": {
+    "kid": "wCgZYzU2U073ubVOEp7wcNHxwEIGuiEoY42b2tuKwfY"
+  },
+  "credentialSubject": {
+    "id": "https://invoices.example/inv-2024-001",
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -68.0125,
+            10.4647
+          ]
+        },
+        "properties": {
+          "type": "CommercialInvoice",
+          "invoiceNumber": "INV-2024-001",
+          "seller": {
+            "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+            "name": "Camarón Corriente S.A."
+          },
+          "buyer": {
+            "id": "https://chompchomp.example/entity/bvi-001",
+            "name": "Chompchomp Ltd"
+          },
+          "items": [
+            {
+              "description": "Frozen Shrimp",
+              "quantity": "1000kg",
+              "price": 12.5
+            }
+          ],
+          "totalAmount": 12500
+        }
+      }
+    ]
+  },
+  "iat": 1758416186,
+  "nbf": 1737367200,
+  "exp": 1924991999
+}
+
+🗺️ Geographic data detected in credential:
+
+<details>
+<summary>📍 Feature collection with 1 features containing Point</summary>
+
+
+```geojson
+{
+  "id": "https://invoices.example/inv-2024-001",
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -68.0125,
+          10.4647
+        ]
+      },
+      "properties": {
+        "type": "CommercialInvoice",
+        "invoiceNumber": "INV-2024-001",
+        "seller": {
+          "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+          "name": "Camarón Corriente S.A."
+        },
+        "buyer": {
+          "id": "https://chompchomp.example/entity/bvi-001",
+          "name": "Chompchomp Ltd"
+        },
+        "items": [
+          {
+            "description": "Frozen Shrimp",
+            "quantity": "1000kg",
+            "price": 12.5
+          }
+        ],
+        "totalAmount": 12500
+      }
+    }
+  ]
+}
+```
+
+</details>
+```
+Exit code: 0
+
+</details>
+
+<details>
+<summary>📋 Credential JSON Content (EnvelopedVerifiableCredential)</summary>
+
+```json
+{
+  "@context": "https://www.w3.org/ns/credentials/v2",
+  "id": "data:application/vc+jwt,eyJ0eXAiOiJ2Yytqd3QiLCJhbGciOiJFUzI1NiIsImtpZCI6IkhWaVYxd2xRZ3pYWGJkYWhqeUZEVmJVX1J4UFVWQ0xRQ2Y1MWZ5R2F0RWMifQ.eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL2dlb2pzb24ub3JnL2dlb2pzb24tbGQvZ2VvanNvbi1jb250ZXh0Lmpzb25sZCJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiQ29tbWVyY2lhbEludm9pY2VDcmVkZW50aWFsIl0sImlzc3VlciI6Imh0dHBzOi8vY2FtYXJvbi1jb3JyaWVudGUuZXhhbXBsZS9lbnRpdHkvdmUtcGJjLTAwMSIsImNuZiI6eyJraWQiOiJ3Q2daWXpVMlUwNzN1YlZPRXA3d2NOSHh3RUlHdWlFb1k0MmIydHVLd2ZZIn0sImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImlkIjoiaHR0cHM6Ly9pbnZvaWNlcy5leGFtcGxlL2ludi0yMDI0LTAwMSIsInR5cGUiOiJGZWF0dXJlQ29sbGVjdGlvbiIsImZlYXR1cmVzIjpbeyJ0eXBlIjoiRmVhdHVyZSIsImdlb21ldHJ5Ijp7InR5cGUiOiJQb2ludCIsImNvb3JkaW5hdGVzIjpbLTY4LjAxMjUsMTAuNDY0N119LCJwcm9wZXJ0aWVzIjp7InR5cGUiOiJDb21tZXJjaWFsSW52b2ljZSIsImludm9pY2VOdW1iZXIiOiJJTlYtMjAyNC0wMDEiLCJzZWxsZXIiOnsiaWQiOiJodHRwczovL2NhbWFyb24tY29ycmllbnRlLmV4YW1wbGUvZW50aXR5L3ZlLXBiYy0wMDEiLCJuYW1lIjoiQ2FtYXLDs24gQ29ycmllbnRlIFMuQS4ifSwiYnV5ZXIiOnsiaWQiOiJodHRwczovL2Nob21wY2hvbXAuZXhhbXBsZS9lbnRpdHkvYnZpLTAwMSIsIm5hbWUiOiJDaG9tcGNob21wIEx0ZCJ9LCJpdGVtcyI6W3siZGVzY3JpcHRpb24iOiJGcm96ZW4gU2hyaW1wIiwicXVhbnRpdHkiOiIxMDAwa2ciLCJwcmljZSI6MTIuNX1dLCJ0b3RhbEFtb3VudCI6MTI1MDB9fV19LCJpYXQiOjE3NTg0MTYxODYsIm5iZiI6MTczNzM2NzIwMCwiZXhwIjoxOTI0OTkxOTk5fQ.ncs95icxIuNdx7Z60Rig1lBoNZUfBE0jccGcCM3rR3hoimEbuU89yWjqIWlmBtj7Bc1rufSHd6dKc9eg7qBidw",
+  "type": "EnvelopedVerifiableCredential"
+}
+```
+
+</details>
+
+
+### ✅ Secondary Bill of Lading (Cargo Line → Anonymous Distributor)
+
+**Entity:** Cargo Line Ltd
+**Config:** `case-studies/transhrimpment/entity_configurations/cargo-line-config.json`
+**Output:** `case-studies/transhrimpment/credentials/cargo-line-secondary-lading.json`
+
+<details>
+<summary>Credential Issuance and Verification</summary>
+
+**Sign Command:**
+```bash
+bun src/cli.ts sign-credential --entity-configuration case-studies/transhrimpment/entity_configurations/cargo-line-config.json --credential case-studies/transhrimpment/credential-templates/secondary-bill-lading-template.json --out case-studies/transhrimpment/credentials/cargo-line-secondary-lading.json
+```
+
+**Sign Result:**
+```
+Signing credential case-studies/transhrimpment/credential-templates/secondary-bill-lading-template.json with key case-studies/transhrimpment/entity_configurations/cargo-line-config.json and saving to case-studies/transhrimpment/credentials/cargo-line-secondary-lading.json...
+🗺️ Geographic data detected in credential: Feature collection with 1 features containing LineString
+🔐 Using assertion key for credential issuance
+✅ Signed credential saved to case-studies/transhrimpment/credentials/cargo-line-secondary-lading.json
+```
+Exit code: 0
+
+**Verify Command:**
+```bash
+bun src/cli.ts verify-credential --credential case-studies/transhrimpment/credentials/cargo-line-secondary-lading.json --controller case-studies/transhrimpment/controllers/cargo-line-controller.json
+```
+
+**Verify Result:**
+```
+Verifying credential case-studies/transhrimpment/credentials/cargo-line-secondary-lading.json with controller case-studies/transhrimpment/controllers/cargo-line-controller.json...
+✅ Credential verification successful
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "BillOfLadingCredential"
+  ],
+  "issuer": "https://shady-carrier.example/entity/aw-oru-001",
+  "cnf": {
+    "kid": "n7GWD9LbqAZQy1Wt5XdYiy81GofxhJgFnIu8iduEMmE"
+  },
+  "credentialSubject": {
+    "id": "https://shipments.example/bol-2024-001",
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [
+            [
+              -68.0125,
+              10.4647
+            ],
+            [
+              -70.027,
+              12.5186
+            ],
+            [
+              -64.6208,
+              18.4167
+            ]
+          ]
+        },
+        "properties": {
+          "type": "BillOfLading",
+          "billNumber": "BOL-2024-001",
+          "shipper": {
+            "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+            "name": "Camarón Corriente S.A."
+          },
+          "consignee": {
+            "id": "https://chompchomp.example/entity/bvi-001",
+            "name": "Chompchomp Ltd"
+          },
+          "cargo": {
+            "description": "Frozen Shrimp",
+            "quantity": "800kg"
+          },
+          "route": {
+            "origin": "Puerto Cabello, Venezuela",
+            "destination": "Road Town, Tortola, BVI"
+          }
+        }
+      }
+    ]
+  },
+  "iat": 1758416186,
+  "nbf": 1737799200,
+  "exp": 1924991999
+}
+
+🗺️ Geographic data detected in credential:
+
+<details>
+<summary>🗺️ Feature collection with 1 features containing LineString</summary>
+
+
+```geojson
+{
+  "id": "https://shipments.example/bol-2024-001",
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -68.0125,
+            10.4647
+          ],
+          [
+            -70.027,
+            12.5186
+          ],
+          [
+            -64.6208,
+            18.4167
+          ]
+        ]
+      },
+      "properties": {
+        "type": "BillOfLading",
+        "billNumber": "BOL-2024-001",
+        "shipper": {
+          "id": "https://camaron-corriente.example/entity/ve-pbc-001",
+          "name": "Camarón Corriente S.A."
+        },
+        "consignee": {
+          "id": "https://chompchomp.example/entity/bvi-001",
+          "name": "Chompchomp Ltd"
+        },
+        "cargo": {
+          "description": "Frozen Shrimp",
+          "quantity": "800kg"
+        },
+        "route": {
+          "origin": "Puerto Cabello, Venezuela",
+          "destination": "Road Town, Tortola, BVI"
+        }
+      }
+    }
+  ]
+}
+```
+
+</details>
+```
+Exit code: 0
+
+</details>
+
+<details>
+<summary>📋 Credential JSON Content (EnvelopedVerifiableCredential)</summary>
+
+```json
+{
+  "@context": "https://www.w3.org/ns/credentials/v2",
+  "id": "data:application/vc+jwt,eyJ0eXAiOiJ2Yytqd3QiLCJhbGciOiJFUzI1NiIsImtpZCI6IkNZcE4tVzFFWGM2Y0xQb3Y3YXhCSE1mRHYzYV9QWm9qMExtRGpGdVAyME0ifQ.eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL2dlb2pzb24ub3JnL2dlb2pzb24tbGQvZ2VvanNvbi1jb250ZXh0Lmpzb25sZCJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiQmlsbE9mTGFkaW5nQ3JlZGVudGlhbCJdLCJpc3N1ZXIiOiJodHRwczovL3NoYWR5LWNhcnJpZXIuZXhhbXBsZS9lbnRpdHkvYXctb3J1LTAwMSIsImNuZiI6eyJraWQiOiJuN0dXRDlMYnFBWlF5MVd0NVhkWWl5ODFHb2Z4aEpnRm5JdThpZHVFTW1FIn0sImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImlkIjoiaHR0cHM6Ly9zaGlwbWVudHMuZXhhbXBsZS9ib2wtMjAyNC0wMDEiLCJ0eXBlIjoiRmVhdHVyZUNvbGxlY3Rpb24iLCJmZWF0dXJlcyI6W3sidHlwZSI6IkZlYXR1cmUiLCJnZW9tZXRyeSI6eyJ0eXBlIjoiTGluZVN0cmluZyIsImNvb3JkaW5hdGVzIjpbWy02OC4wMTI1LDEwLjQ2NDddLFstNzAuMDI3LDEyLjUxODZdLFstNjQuNjIwOCwxOC40MTY3XV19LCJwcm9wZXJ0aWVzIjp7InR5cGUiOiJCaWxsT2ZMYWRpbmciLCJiaWxsTnVtYmVyIjoiQk9MLTIwMjQtMDAxIiwic2hpcHBlciI6eyJpZCI6Imh0dHBzOi8vY2FtYXJvbi1jb3JyaWVudGUuZXhhbXBsZS9lbnRpdHkvdmUtcGJjLTAwMSIsIm5hbWUiOiJDYW1hcsOzbiBDb3JyaWVudGUgUy5BLiJ9LCJjb25zaWduZWUiOnsiaWQiOiJodHRwczovL2Nob21wY2hvbXAuZXhhbXBsZS9lbnRpdHkvYnZpLTAwMSIsIm5hbWUiOiJDaG9tcGNob21wIEx0ZCJ9LCJjYXJnbyI6eyJkZXNjcmlwdGlvbiI6IkZyb3plbiBTaHJpbXAiLCJxdWFudGl0eSI6IjgwMGtnIn0sInJvdXRlIjp7Im9yaWdpbiI6IlB1ZXJ0byBDYWJlbGxvLCBWZW5lenVlbGEiLCJkZXN0aW5hdGlvbiI6IlJvYWQgVG93biwgVG9ydG9sYSwgQlZJIn19fV19LCJpYXQiOjE3NTg0MTYxODYsIm5iZiI6MTczNzc5OTIwMCwiZXhwIjoxOTI0OTkxOTk5fQ.sqCgj5XFqVm_46AwGybHt1xhh6ypRlxwteYS7LUBcZtChwa5Kvo8sAAmRO5RcBWfWVtPcZDRYw-MzNqARI3uGQ",
+  "type": "EnvelopedVerifiableCredential"
+}
+```
+
+</details>
+
+
+### ✅ Certificate of Origin (Legit Shrimp → Honest Importer) - WILL BE STOLEN
+
+**Entity:** Legit Shrimp Ltd
+**Config:** `case-studies/transhrimpment/entity_configurations/legit-shrimp-config.json`
+**Output:** `case-studies/transhrimpment/credentials/legit-shrimp-honest-importer-origin.json`
+
+<details>
+<summary>Credential Issuance and Verification</summary>
+
+**Sign Command:**
+```bash
+bun src/cli.ts sign-credential --entity-configuration case-studies/transhrimpment/entity_configurations/legit-shrimp-config.json --credential case-studies/transhrimpment/credential-templates/stolen-certificate-template.json --out case-studies/transhrimpment/credentials/legit-shrimp-honest-importer-origin.json
+```
+
+**Sign Result:**
+```
+Signing credential case-studies/transhrimpment/credential-templates/stolen-certificate-template.json with key case-studies/transhrimpment/entity_configurations/legit-shrimp-config.json and saving to case-studies/transhrimpment/credentials/legit-shrimp-honest-importer-origin.json...
+🗺️ Geographic data detected in credential: Feature collection with 1 features containing Point
+🔐 Using assertion key for credential issuance
+✅ Signed credential saved to case-studies/transhrimpment/credentials/legit-shrimp-honest-importer-origin.json
+```
+Exit code: 0
+
+**Verify Command:**
+```bash
+bun src/cli.ts verify-credential --credential case-studies/transhrimpment/credentials/legit-shrimp-honest-importer-origin.json --controller case-studies/transhrimpment/controllers/legit-shrimp-controller.json
+```
+
+**Verify Result:**
+```
+Verifying credential case-studies/transhrimpment/credentials/legit-shrimp-honest-importer-origin.json with controller case-studies/transhrimpment/controllers/legit-shrimp-controller.json...
+✅ Credential verification successful
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "CertificateOfOriginCredential"
+  ],
+  "issuer": "https://legit-shrimp.example/entity/tt-pos-001",
+  "cnf": {
+    "kid": "LrQ5E8KeOiQ62VVIc_iDcCU1xMwcIOzk1DciPI8DdpU"
+  },
+  "credentialSubject": {
+    "id": "https://certificates.example/coo-2024-001",
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -61.5167,
+            10.6596
+          ]
+        },
+        "properties": {
+          "type": "CertificateOfOrigin",
+          "certificateNumber": "COO-2024-001",
+          "origin": {
+            "country": "Trinidad and Tobago",
+            "facility": "Legit Shrimp Ltd Port Facility"
+          },
+          "product": "Frozen Shrimp",
+          "quantity": "1000kg",
+          "issueDate": "2024-01-10"
+        }
+      }
+    ]
+  },
+  "iat": 1758416186,
+  "nbf": 1736503200,
+  "exp": 1924991999
+}
+
+🗺️ Geographic data detected in credential:
+
+<details>
+<summary>📍 Feature collection with 1 features containing Point</summary>
+
+
+```geojson
+{
+  "id": "https://certificates.example/coo-2024-001",
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -61.5167,
+          10.6596
+        ]
+      },
+      "properties": {
+        "type": "CertificateOfOrigin",
+        "certificateNumber": "COO-2024-001",
+        "origin": {
+          "country": "Trinidad and Tobago",
+          "facility": "Legit Shrimp Ltd Port Facility"
+        },
+        "product": "Frozen Shrimp",
+        "quantity": "1000kg",
+        "issueDate": "2024-01-10"
+      }
+    }
+  ]
+}
+```
+
+</details>
+```
+Exit code: 0
+
+</details>
+
+<details>
+<summary>📋 Credential JSON Content (EnvelopedVerifiableCredential)</summary>
+
+```json
+{
+  "@context": "https://www.w3.org/ns/credentials/v2",
+  "id": "data:application/vc+jwt,eyJ0eXAiOiJ2Yytqd3QiLCJhbGciOiJFUzI1NiIsImtpZCI6IkxyUTVFOEtlT2lRNjJWVkljX2lEY0NVMXhNd2NJT3prMURjaVBJOERkcFUifQ.eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL2dlb2pzb24ub3JnL2dlb2pzb24tbGQvZ2VvanNvbi1jb250ZXh0Lmpzb25sZCJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiQ2VydGlmaWNhdGVPZk9yaWdpbkNyZWRlbnRpYWwiXSwiaXNzdWVyIjoiaHR0cHM6Ly9sZWdpdC1zaHJpbXAuZXhhbXBsZS9lbnRpdHkvdHQtcG9zLTAwMSIsImNuZiI6eyJraWQiOiJMclE1RThLZU9pUTYyVlZJY19pRGNDVTF4TXdjSU96azFEY2lQSThEZHBVIn0sImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImlkIjoiaHR0cHM6Ly9jZXJ0aWZpY2F0ZXMuZXhhbXBsZS9jb28tMjAyNC0wMDEiLCJ0eXBlIjoiRmVhdHVyZUNvbGxlY3Rpb24iLCJmZWF0dXJlcyI6W3sidHlwZSI6IkZlYXR1cmUiLCJnZW9tZXRyeSI6eyJ0eXBlIjoiUG9pbnQiLCJjb29yZGluYXRlcyI6Wy02MS41MTY3LDEwLjY1OTZdfSwicHJvcGVydGllcyI6eyJ0eXBlIjoiQ2VydGlmaWNhdGVPZk9yaWdpbiIsImNlcnRpZmljYXRlTnVtYmVyIjoiQ09PLTIwMjQtMDAxIiwib3JpZ2luIjp7ImNvdW50cnkiOiJUcmluaWRhZCBhbmQgVG9iYWdvIiwiZmFjaWxpdHkiOiJMZWdpdCBTaHJpbXAgTHRkIFBvcnQgRmFjaWxpdHkifSwicHJvZHVjdCI6IkZyb3plbiBTaHJpbXAiLCJxdWFudGl0eSI6IjEwMDBrZyIsImlzc3VlRGF0ZSI6IjIwMjQtMDEtMTAifX1dfSwiaWF0IjoxNzU4NDE2MTg2LCJuYmYiOjE3MzY1MDMyMDAsImV4cCI6MTkyNDk5MTk5OX0.fWNbfyT4El0Yb8Kvo18U1w3bTCwS3arnifS47WST2VwLOFTN-DnljFB9t08xRcY4z_hngUr0bVXbi7xd_yBpcw",
+  "type": "EnvelopedVerifiableCredential"
+}
+```
+
+</details>
+
+
+### ✅ FRAUDULENT Certificate of Origin (Shady Distributor forging Legit Shrimp identity)
+
+**Entity:** Shady Distributor Ltd
+**Config:** `case-studies/transhrimpment/entity_configurations/shady-distributor-config.json`
+**Output:** `case-studies/transhrimpment/credentials/shady-distributor-fraudulent-origin.json`
+
+<details>
+<summary>Credential Issuance and Verification</summary>
+
+**Sign Command:**
+```bash
+bun src/cli.ts sign-credential --entity-configuration case-studies/transhrimpment/entity_configurations/shady-distributor-config.json --credential case-studies/transhrimpment/credential-templates/fraudulent-origin-template.json --out case-studies/transhrimpment/credentials/shady-distributor-fraudulent-origin.json
+```
+
+**Sign Result:**
+```
+Signing credential case-studies/transhrimpment/credential-templates/fraudulent-origin-template.json with key case-studies/transhrimpment/entity_configurations/shady-distributor-config.json and saving to case-studies/transhrimpment/credentials/shady-distributor-fraudulent-origin.json...
+🗺️ Geographic data detected in credential: Feature collection with 1 features containing Point
+🔐 Using assertion key for credential issuance
+✅ Signed credential saved to case-studies/transhrimpment/credentials/shady-distributor-fraudulent-origin.json
+```
+Exit code: 0
+
+**Verify Command:**
+```bash
+bun src/cli.ts verify-credential --credential case-studies/transhrimpment/credentials/shady-distributor-fraudulent-origin.json --controller case-studies/transhrimpment/controllers/shady-distributor-controller.json
+```
+
+**Verify Result:**
+```
+Verifying credential case-studies/transhrimpment/credentials/shady-distributor-fraudulent-origin.json with controller case-studies/transhrimpment/controllers/shady-distributor-controller.json...
+✅ Credential verification successful
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "CertificateOfOriginCredential"
+  ],
+  "issuer": "https://legit-shrimp.example/entity/tt-pos-001",
+  "cnf": {
+    "kid": "LrQ5E8KeOiQ62VVIc_iDcCU1xMwcIOzk1DciPI8DdpU"
+  },
+  "credentialSubject": {
+    "id": "https://certificates.example/coo-2024-001",
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [
+            -61.5167,
+            10.6596
+          ]
+        },
+        "properties": {
+          "type": "CertificateOfOrigin",
+          "certificateNumber": "COO-2024-001",
+          "origin": {
+            "country": "Trinidad and Tobago",
+            "facility": "Legit Shrimp Ltd Port Facility"
+          },
+          "product": "Frozen Shrimp",
+          "quantity": "1000kg",
+          "issueDate": "2024-01-10"
+        }
+      }
+    ]
+  },
+  "iat": 1758416186,
+  "nbf": 1736503200,
+  "exp": 1924991999
+}
+
+🗺️ Geographic data detected in credential:
+
+<details>
+<summary>📍 Feature collection with 1 features containing Point</summary>
+
+
+```geojson
+{
+  "id": "https://certificates.example/coo-2024-001",
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -61.5167,
+          10.6596
+        ]
+      },
+      "properties": {
+        "type": "CertificateOfOrigin",
+        "certificateNumber": "COO-2024-001",
+        "origin": {
+          "country": "Trinidad and Tobago",
+          "facility": "Legit Shrimp Ltd Port Facility"
+        },
+        "product": "Frozen Shrimp",
+        "quantity": "1000kg",
+        "issueDate": "2024-01-10"
+      }
+    }
+  ]
+}
+```
+
+</details>
+```
+Exit code: 0
+
+</details>
+
+<details>
+<summary>📋 Credential JSON Content (EnvelopedVerifiableCredential)</summary>
+
+```json
+{
+  "@context": "https://www.w3.org/ns/credentials/v2",
+  "id": "data:application/vc+jwt,eyJ0eXAiOiJ2Yytqd3QiLCJhbGciOiJFUzI1NiIsImtpZCI6IkhWaVYxd2xRZ3pYWGJkYWhqeUZEVmJVX1J4UFVWQ0xRQ2Y1MWZ5R2F0RWMifQ.eyJAY29udGV4dCI6WyJodHRwczovL3d3dy53My5vcmcvbnMvY3JlZGVudGlhbHMvdjIiLCJodHRwczovL2dlb2pzb24ub3JnL2dlb2pzb24tbGQvZ2VvanNvbi1jb250ZXh0Lmpzb25sZCJdLCJ0eXBlIjpbIlZlcmlmaWFibGVDcmVkZW50aWFsIiwiQ2VydGlmaWNhdGVPZk9yaWdpbkNyZWRlbnRpYWwiXSwiaXNzdWVyIjoiaHR0cHM6Ly9sZWdpdC1zaHJpbXAuZXhhbXBsZS9lbnRpdHkvdHQtcG9zLTAwMSIsImNuZiI6eyJraWQiOiJMclE1RThLZU9pUTYyVlZJY19pRGNDVTF4TXdjSU96azFEY2lQSThEZHBVIn0sImNyZWRlbnRpYWxTdWJqZWN0Ijp7ImlkIjoiaHR0cHM6Ly9jZXJ0aWZpY2F0ZXMuZXhhbXBsZS9jb28tMjAyNC0wMDEiLCJ0eXBlIjoiRmVhdHVyZUNvbGxlY3Rpb24iLCJmZWF0dXJlcyI6W3sidHlwZSI6IkZlYXR1cmUiLCJnZW9tZXRyeSI6eyJ0eXBlIjoiUG9pbnQiLCJjb29yZGluYXRlcyI6Wy02MS41MTY3LDEwLjY1OTZdfSwicHJvcGVydGllcyI6eyJ0eXBlIjoiQ2VydGlmaWNhdGVPZk9yaWdpbiIsImNlcnRpZmljYXRlTnVtYmVyIjoiQ09PLTIwMjQtMDAxIiwib3JpZ2luIjp7ImNvdW50cnkiOiJUcmluaWRhZCBhbmQgVG9iYWdvIiwiZmFjaWxpdHkiOiJMZWdpdCBTaHJpbXAgTHRkIFBvcnQgRmFjaWxpdHkifSwicHJvZHVjdCI6IkZyb3plbiBTaHJpbXAiLCJxdWFudGl0eSI6IjEwMDBrZyIsImlzc3VlRGF0ZSI6IjIwMjQtMDEtMTAifX1dfSwiaWF0IjoxNzU4NDE2MTg2LCJuYmYiOjE3MzY1MDMyMDAsImV4cCI6MTkyNDk5MTk5OX0.mac6YZjmW_1twUoKYVMj3UzGuWm4OQdL_1Ytu-hXH7KeffV_XAlEYeD-bf5sT-yzVO20uACVaDcbqvgcbdhADQ",
+  "type": "EnvelopedVerifiableCredential"
+}
+```
+
+</details>
+
+
+---
+
+## Step 2 Summary - Document Collection Results
+
+### Legitimate Documents Issued (8 total)
+
+The following legitimate documents were successfully issued according to the Transhrimpment narrative:
+
+1. **Purchase Order** (Chompchomp → Camarón Corriente) - Initial 1000kg shrimp order
+2. **Commercial Invoice** (Camarón Corriente → Chompchomp) - Invoice for the order
+3. **Certificate of Origin** (Camarón Corriente → Chompchomp) - Legitimate origin certificate
+4. **Bill of Lading** (Shady Carrier → Chompchomp) - Transport document (legitimate signing, but entity is fraudulent)
+5. **Secondary Purchase Order** (Anonymous Distributor → Shady Distributor) - 500kg order from diverted goods
+6. **Secondary Commercial Invoice** (Shady Distributor → Anonymous Distributor) - Invoice for stolen goods
+7. **Secondary Bill of Lading** (Cargo Line → Anonymous Distributor) - Final delivery (legitimate carrier)
+8. **Certificate of Origin** (Legit Shrimp → Honest Importer) - Legitimate certificate that will be stolen/misused
+
+### Fraudulent Documents Issued (1 total)
+
+1. **FRAUDULENT Certificate of Origin** - Shady Distributor forging Legit Shrimp Ltd's identity
+
+**📋 Documentation collection completed - ready for fraud detection analysis!**
+
