@@ -149,6 +149,11 @@ echo "🔍 Entity identification completed! Report generated at: $REPORT_FILE"
 echo "📍 Geographic locations extracted for all entities"
 echo "🗺️ Map previews available in report"
 
+# Create resolver cache from all controller documents
+echo ""
+echo "🗃️  Creating resolver cache from controller documents..."
+run_command_and_report "Create resolver cache from controllers" "bun src/cli.ts create-resolver-cache --controllers case-studies/transhrimpment/controllers --out case-studies/transhrimpment/resolver-cache.json" "📦"
+
 echo ""
 echo "📋 Step 2: Document Creation (Credential Issuance)"
 echo "=================================================="
@@ -195,26 +200,12 @@ issue_and_verify_credential() {
     sign_result=$(bun src/cli.ts sign-credential --entity-configuration "$entity_config" --credential "$credential_template" --out "$output_file" 2>&1 | head -16)
     local sign_exit_code=$?
 
-    # Verify the credential using the corresponding controller document
+    # Verify the credential using the resolver cache
     local verify_result=""
     local verify_exit_code=1
-    local controller_file=""
 
-    # Map entity config to controller document
-    case "$entity_config" in
-        *"chompchomp-config.json") controller_file="case-studies/transhrimpment/controllers/chompchomp-controller.json" ;;
-        *"camaron-corriente-config.json") controller_file="case-studies/transhrimpment/controllers/camaron-corriente-controller.json" ;;
-        *"legit-shrimp-config.json") controller_file="case-studies/transhrimpment/controllers/legit-shrimp-controller.json" ;;
-        *"shady-carrier-config.json") controller_file="case-studies/transhrimpment/controllers/shady-carrier-controller.json" ;;
-        *"shady-distributor-config.json") controller_file="case-studies/transhrimpment/controllers/shady-distributor-controller.json" ;;
-        *"cargo-line-config.json") controller_file="case-studies/transhrimpment/controllers/cargo-line-controller.json" ;;
-        *"anonymous-distributor-config.json") controller_file="case-studies/transhrimpment/controllers/anonymous-distributor-controller.json" ;;
-        *"honest-importer-config.json") controller_file="case-studies/transhrimpment/controllers/honest-importer-controller.json" ;;
-        *) echo "Unknown entity config: $entity_config" ;;
-    esac
-
-    if [ $sign_exit_code -eq 0 ] && [ -f "$output_file" ] && [ -n "$controller_file" ]; then
-        verify_result=$(bun src/cli.ts verify-credential --credential "$output_file" --controller "$controller_file" 2>&1 | head -16)
+    if [ $sign_exit_code -eq 0 ] && [ -f "$output_file" ]; then
+        verify_result=$(bun src/cli.ts verify-credential --credential "$output_file" --resolver-cache case-studies/transhrimpment/resolver-cache.json 2>&1 | head -16)
         verify_exit_code=$?
     fi
 
@@ -257,7 +248,7 @@ except Exception as e:
 
 **Verify Command:**
 \`\`\`bash
-bun src/cli.ts verify-credential --credential $output_file --controller $controller_file
+bun src/cli.ts verify-credential --credential $output_file --resolver-cache case-studies/transhrimpment/resolver-cache.json
 \`\`\`
 
 **Verify Result:**
@@ -282,14 +273,14 @@ EOF
 
     # === PRESENTATION WORKFLOW ===
     # Create and sign presentation for this credential
-    if [ $sign_exit_code -eq 0 ] && [ -f "$output_file" ] && [ -n "$controller_file" ]; then
+    if [ $sign_exit_code -eq 0 ] && [ -f "$output_file" ]; then
         # Determine presentation output file
         local base_filename=$(basename "$output_file" .json)
         local presentation_file="case-studies/transhrimpment/presentations/${base_filename}-presentation.json"
         local presentation_template_file="${output_file%.json}-presentation-template.json"
 
-        # Determine holder ID from controller document
-        local holder_id=$(jq -r '.id' "$controller_file" 2>/dev/null || echo "unknown-holder")
+        # Extract holder ID from credential's cnf.kid field using resolver cache
+        local holder_id=$(bun src/cli.ts extract-holder-id --credential "$output_file" --resolver-cache case-studies/transhrimpment/resolver-cache.json 2>/dev/null || echo "unknown-holder")
 
         echo "📋 Creating presentation for $description..."
 
@@ -318,7 +309,7 @@ PRES_EOF
         local pres_verify_result=""
         local pres_verify_exit_code=1
         if [ $pres_sign_exit_code -eq 0 ] && [ -f "$presentation_file" ]; then
-            pres_verify_result=$(bun src/cli.ts verify-presentation --presentation "$presentation_file" --controller "$controller_file" 2>&1 | head -16)
+            pres_verify_result=$(bun src/cli.ts verify-presentation --presentation "$presentation_file" --resolver-cache case-studies/transhrimpment/resolver-cache.json 2>&1 | head -16)
             pres_verify_exit_code=$?
         fi
 
@@ -358,7 +349,7 @@ STEP3_EOF
 
 **Verify Command:**
 \`\`\`bash
-bun src/cli.ts verify-presentation --presentation $presentation_file --controller $controller_file
+bun src/cli.ts verify-presentation --presentation $presentation_file --resolver-cache case-studies/transhrimpment/resolver-cache.json
 \`\`\`
 
 **Verify Result:**

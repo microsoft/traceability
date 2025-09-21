@@ -25,7 +25,11 @@ Commands:
   sign-credential --entity-configuration <file> --credential <file> --out <file>   Sign credential with entity configuration
   sign-presentation --entity-configuration <file> --presentation <file> --out <file> Sign presentation with entity configuration
   verify-credential --credential <file> --controller <file>    Verify credential with controller document
+  verify-credential --credential <file> --resolver-cache <file>   Verify credential with resolver cache
   verify-presentation --presentation <file> --controller <file>    Verify presentation with controller document
+  verify-presentation --presentation <file> --resolver-cache <file> Verify presentation with resolver cache
+  create-resolver-cache --controllers <dir> --out <file>          Create resolver cache from controller documents
+  extract-holder-id --credential <file> --resolver-cache <file>   Extract holder ID from credential cnf.kid field
   extract-public-key --key <file> --out <file>           Extract public key from private key
   validate-schema --schema <file> [--example <file>]      Validate YAML schema and optional example
   validate-controller --controller <file> --schema <file> Validate controller document
@@ -38,6 +42,8 @@ Examples:
   bun cli.ts generate-controller --config entity1-config.json --out entity1-controller.json
   bun cli.ts sign-credential --entity-configuration entity1-config.json --credential shipment.json --out signed-shipment.json
   bun cli.ts verify-credential --credential signed-shipment.json --controller entity1-controller.json
+  bun cli.ts verify-credential --credential signed-shipment.json --resolver-cache resolver-cache.json
+  bun cli.ts create-resolver-cache --controllers controllers/ --out resolver-cache.json
   bun cli.ts validate-schema --schema schema.yaml --example example.json
   bun cli.ts validate-controller --controller controller.json --schema schema.yaml
 `);
@@ -934,11 +940,10 @@ async function signPresentation(entityConfigFile: string, presentationFile: stri
   }
 }
 
-async function verifyCredential(credentialFile: string, controllerFile: string) {
+async function verifyCredential(credentialFile: string, resolverCacheFile: string) {
 
   try {
     const credentialData = await Bun.file(credentialFile).json();
-    const controllerData = await Bun.file(controllerFile).json();
 
     // Handle EnvelopedVerifiableCredential format
     let signedCredential;
@@ -953,6 +958,31 @@ async function verifyCredential(credentialFile: string, controllerFile: string) 
     } else {
       // Fall back to raw JWT string format
       signedCredential = typeof credentialData === 'string' ? credentialData : JSON.stringify(credentialData);
+    }
+
+    // Decode JWT to get issuer and find controller in cache
+    const jwt = signedCredential;
+    const parts = jwt.split('.');
+    if (parts.length !== 3) {
+      throw new Error("Invalid JWT format");
+    }
+
+    // Decode payload to get issuer
+    const payloadB64 = parts[1];
+    const payloadJson = atob(payloadB64);
+    const payload = JSON.parse(payloadJson);
+    const issuerUri = payload.iss;
+
+    if (!issuerUri) {
+      throw new Error("No issuer found in credential");
+    }
+
+    // Load resolver cache and find controller
+    const resolverCache = await Bun.file(resolverCacheFile).json();
+    const controllerData = resolverCache[issuerUri];
+
+    if (!controllerData) {
+      throw new Error(`Controller not found in cache for issuer: ${issuerUri}`);
     }
 
     // Extract public key from controller document
@@ -998,11 +1028,10 @@ async function verifyCredential(credentialFile: string, controllerFile: string) 
   }
 }
 
-async function verifyPresentation(presentationFile: string, controllerFile: string) {
+async function verifyPresentation(presentationFile: string, resolverCacheFile: string) {
 
   try {
     const presentationData = await Bun.file(presentationFile).json();
-    const controllerData = await Bun.file(controllerFile).json();
 
     // Handle EnvelopedVerifiablePresentation format
     let signedPresentation;
@@ -1019,9 +1048,12 @@ async function verifyPresentation(presentationFile: string, controllerFile: stri
       signedPresentation = typeof presentationData === 'string' ? presentationData : JSON.stringify(presentationData);
     }
 
-    // Create a generic resolver and add the controller
+    // Create generic resolver and load all controllers from cache
     const genericResolver = resolver.createGenericResolver();
-    genericResolver.addController(controllerData.id, controllerData);
+    const resolverCache = await Bun.file(resolverCacheFile).json();
+    for (const [controllerId, controllerData] of Object.entries(resolverCache)) {
+      genericResolver.addController(controllerId, controllerData);
+    }
 
     const verifier = await presentation.verifierWithGenericResolver(genericResolver);
     const result = await verifier.verify(signedPresentation);
@@ -1292,6 +1324,124 @@ async function analyzeController(controllerFile: string, schemaFile: string) {
   }
 }
 
+async function createResolverCache(controllersDir: string, outputFile: string) {
+  console.log(`Creating resolver cache from controllers in ${controllersDir} and saving to ${outputFile}...`);
+
+  try {
+    // Read all controller files from the directory
+    const controllerFiles = await Bun.$`find ${controllersDir} -name "*.json" -type f`.text();
+    const files = controllerFiles.trim().split('\n').filter(f => f);
+
+    if (files.length === 0) {
+      console.error(`❌ No JSON files found in ${controllersDir}`);
+      process.exit(1);
+    }
+
+    const resolverCache = {};
+
+    for (const file of files) {
+      try {
+        console.log(`📄 Processing ${file}...`);
+        const controllerData = await Bun.file(file).json();
+
+        // Extract the controller ID
+        let controllerId;
+        if (controllerData.id) {
+          controllerId = controllerData.id;
+        } else if (controllerData.controller && controllerData.controller.id) {
+          controllerId = controllerData.controller.id;
+        } else {
+          console.warn(`⚠️  Skipping ${file} - no controller ID found`);
+          continue;
+        }
+
+        // Add to cache
+        resolverCache[controllerId] = controllerData;
+        console.log(`✅ Added controller ${controllerId} to cache`);
+      } catch (error) {
+        console.error(`❌ Error processing ${file}: ${error}`);
+        process.exit(1);
+      }
+    }
+
+    // Save resolver cache
+    await Bun.write(outputFile, JSON.stringify(resolverCache, null, 2));
+    console.log(`✅ Resolver cache saved to ${outputFile} with ${Object.keys(resolverCache).length} controllers`);
+
+    // Print summary
+    console.log(`\n📋 Resolver Cache Summary:`);
+    for (const [id, controller] of Object.entries(resolverCache)) {
+      console.log(`   - ${id}`);
+    }
+
+  } catch (error) {
+    console.error(`❌ Error creating resolver cache: ${error}`);
+    process.exit(1);
+  }
+}
+
+async function extractHolderId(credentialFile: string, resolverCacheFile: string) {
+  try {
+    // Load credential and resolver cache
+    const credentialData = await Bun.file(credentialFile).json();
+    const resolverCache = await Bun.file(resolverCacheFile).json();
+
+    // Handle EnvelopedVerifiableCredential format
+    let signedCredential;
+    if (credentialData.type === "EnvelopedVerifiableCredential" && credentialData.id) {
+      // Extract JWT from data URL
+      const dataUrlPrefix = "data:application/vc+jwt,";
+      if (credentialData.id.startsWith(dataUrlPrefix)) {
+        signedCredential = credentialData.id.substring(dataUrlPrefix.length);
+      } else {
+        throw new Error("Invalid EnvelopedVerifiableCredential format");
+      }
+    } else {
+      throw new Error("Expected EnvelopedVerifiableCredential format");
+    }
+
+    // Decode JWT to get the cnf.kid
+    const parts = signedCredential.split('.');
+    if (parts.length !== 3) {
+      throw new Error("Invalid JWT format");
+    }
+
+    // Decode payload to get cnf.kid
+    const payloadB64 = parts[1];
+    const payloadJson = atob(payloadB64);
+    const payload = JSON.parse(payloadJson);
+
+    if (!payload.cnf || !payload.cnf.kid) {
+      throw new Error("No cnf.kid found in credential - cannot determine holder");
+    }
+
+    const confKid = payload.cnf.kid;
+
+    // Search all controllers in the cache for a key that matches this kid
+    for (const [controllerId, controllerData] of Object.entries(resolverCache)) {
+      const controller = controllerData as any;
+
+      // Check verification methods for matching kid
+      if (controller.verificationMethod) {
+        for (const vm of controller.verificationMethod) {
+          if (vm.publicKeyJwk && vm.publicKeyJwk.kid === confKid) {
+            // Found the controller that has this key - return controller ID without fragment
+            const holderIdWithoutFragment = controllerId.split('#')[0];
+            console.log(holderIdWithoutFragment);
+            return;
+          }
+        }
+      }
+    }
+
+    throw new Error(`No controller found in cache with key ID: ${confKid}`);
+
+  } catch (error) {
+    console.error(`❌ Error extracting holder ID: ${error}`);
+    process.exit(1);
+  }
+}
+
 
 // Parse command line arguments
 const { values, positionals } = parseArgs({
@@ -1307,6 +1457,8 @@ const { values, positionals } = parseArgs({
     pres: { type: 'string' },
     presentation: { type: 'string' },
     resolver: { type: 'string' },
+    'resolver-cache': { type: 'string' },
+    controllers: { type: 'string' },
     schema: { type: 'string' },
     example: { type: 'string' },
     controller: { type: 'string' },
@@ -1366,19 +1518,35 @@ try {
       break;
 
     case 'verify-credential':
-      if (!values.credential || !values.controller) {
-        console.error("Please specify --credential <file> and --controller <file>.");
+      if (!values.credential || !values['resolver-cache']) {
+        console.error("Please specify --credential <file> and --resolver-cache <file>.");
         process.exit(1);
       }
-      await verifyCredential(values.credential, values.controller);
+      await verifyCredential(values.credential, values['resolver-cache']);
       break;
 
     case 'verify-presentation':
-      if (!values.presentation || !values.controller) {
-        console.error("Please specify --presentation <file> and --controller <file>.");
+      if (!values.presentation || !values['resolver-cache']) {
+        console.error("Please specify --presentation <file> and --resolver-cache <file>.");
         process.exit(1);
       }
-      await verifyPresentation(values.presentation, values.controller);
+      await verifyPresentation(values.presentation, values['resolver-cache']);
+      break;
+
+    case 'create-resolver-cache':
+      if (!values.controllers || !values.out) {
+        console.error("Please specify --controllers <directory> and --out <file>.");
+        process.exit(1);
+      }
+      await createResolverCache(values.controllers, values.out);
+      break;
+
+    case 'extract-holder-id':
+      if (!values.credential || !values['resolver-cache']) {
+        console.error("Please specify --credential <file> and --resolver-cache <file>.");
+        process.exit(1);
+      }
+      await extractHolderId(values.credential, values['resolver-cache']);
       break;
 
     case 'extract-public-key':
