@@ -25,18 +25,14 @@
         },
         "properties": {
           "type": "PurchaseOrder",
-          "orderNumber": "PO-SEC-2024-001",
-          "buyer": {
-            "id": "https://anonymous-distributor.example",
-            "name": "Anonymous Distributor"
-          },
-          "seller": {
-            "id": "https://shady-distributor.example",
-            "name": "Shady Distributor Ltd"
-          },
+          "order_number": "PO-SEC-2024-001",
+          "buyer_id": "https://anonymous-distributor.example",
+          "buyer_name": "Anonymous Distributor",
+          "seller_id": "https://shady-distributor.example",
+          "seller_name": "Shady Distributor Ltd",
           "description": "500kg frozen shrimp (secondary market)",
           "quantity": "500kg",
-          "deliveryDate": "2024-03-01"
+          "delivery_date": "2024-03-01"
         }
       }
     ]

@@ -25,14 +25,12 @@
         },
         "properties": {
           "type": "CertificateOfOrigin",
-          "certificateNumber": "COO-2024-001",
-          "origin": {
-            "country": "Trinidad and Tobago",
-            "facility": "Legit Shrimp Ltd Port Facility"
-          },
+          "certificate_number": "COO-2024-001",
+          "origin_country": "Trinidad and Tobago",
+          "origin_facility": "Legit Shrimp Ltd Port Facility",
           "product": "Frozen Shrimp",
           "quantity": "1000kg",
-          "issueDate": "2024-01-05"
+          "issue_date": "2024-01-05"
         }
       }
     ]

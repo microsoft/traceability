@@ -25,23 +25,15 @@
         },
         "properties": {
           "type": "BillOfLading",
-          "billNumber": "BOL-2024-001",
-          "shipper": {
-            "id": "https://camaron-corriente.example",
-            "name": "Camarón Corriente S.A."
-          },
-          "consignee": {
-            "id": "https://chompchomp.example",
-            "name": "Chompchomp Ltd"
-          },
-          "cargo": {
-            "description": "Frozen Shrimp",
-            "quantity": "800kg"
-          },
-          "route": {
-            "origin": "Puerto Cabello, Venezuela",
-            "destination": "Road Town, Tortola, BVI"
-          }
+          "bill_number": "BOL-2024-001",
+          "shipper_id": "https://camaron-corriente.example",
+          "shipper_name": "Camarón Corriente S.A.",
+          "consignee_id": "https://chompchomp.example",
+          "consignee_name": "Chompchomp Ltd",
+          "cargo_description": "Frozen Shrimp",
+          "cargo_quantity": "800kg",
+          "route_origin": "Puerto Cabello, Venezuela",
+          "route_destination": "Road Town, Tortola, BVI"
         }
       }
     ]

@@ -25,23 +25,15 @@
         },
         "properties": {
           "type": "CommercialInvoice",
-          "invoiceNumber": "INV-2024-001",
-          "seller": {
-            "id": "https://camaron-corriente.example",
-            "name": "Camarón Corriente S.A."
-          },
-          "buyer": {
-            "id": "https://chompchomp.example",
-            "name": "Chompchomp Ltd"
-          },
-          "items": [
-            {
-              "description": "Frozen Shrimp",
-              "quantity": "1000kg",
-              "price": 12.50
-            }
-          ],
-          "totalAmount": 12500
+          "invoice_number": "INV-2024-001",
+          "seller_id": "https://camaron-corriente.example",
+          "seller_name": "Camarón Corriente S.A.",
+          "buyer_id": "https://chompchomp.example",
+          "buyer_name": "Chompchomp Ltd",
+          "item_description": "Frozen Shrimp",
+          "item_quantity": "1000kg",
+          "item_price": 12.50,
+          "total_amount": 12500
         }
       }
     ]

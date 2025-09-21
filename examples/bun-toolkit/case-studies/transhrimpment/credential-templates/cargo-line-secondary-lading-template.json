@@ -25,23 +25,15 @@
         },
         "properties": {
           "type": "BillOfLading",
-          "billNumber": "BOL-SEC-2024-001",
-          "shipper": {
-            "id": "https://shady-distributor.example",
-            "name": "Shady Distributor Ltd"
-          },
-          "consignee": {
-            "id": "https://anonymous-distributor.example",
-            "name": "Anonymous Distributor"
-          },
-          "cargo": {
-            "description": "Frozen Shrimp (secondary transaction)",
-            "quantity": "500kg"
-          },
-          "route": {
-            "origin": "Road Town, Tortola, BVI",
-            "destination": "Charlotte Amalie, St. Thomas, USVI"
-          }
+          "bill_number": "BOL-SEC-2024-001",
+          "shipper_id": "https://shady-distributor.example",
+          "shipper_name": "Shady Distributor Ltd",
+          "consignee_id": "https://anonymous-distributor.example",
+          "consignee_name": "Anonymous Distributor",
+          "cargo_description": "Frozen Shrimp (secondary transaction)",
+          "cargo_quantity": "500kg",
+          "route_origin": "Road Town, Tortola, BVI",
+          "route_destination": "Charlotte Amalie, St. Thomas, USVI"
         }
       }
     ]

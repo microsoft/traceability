@@ -432,14 +432,14 @@ afterAll(async () => {
           const qtyMatch = properties.quantity.match(/(\d+)/);
           quantity = qtyMatch ? parseInt(qtyMatch[1]) : 0;
           product = properties.description || "";
-        } else if (docType === "BillOfLading" && properties.cargo?.quantity) {
-          const qtyMatch = properties.cargo.quantity.match(/(\d+)/);
+        } else if (docType === "BillOfLading" && properties.cargo_quantity) {
+          const qtyMatch = properties.cargo_quantity.match(/(\d+)/);
           quantity = qtyMatch ? parseInt(qtyMatch[1]) : 0;
-          product = properties.cargo.description || "";
-        } else if (docType === "CommercialInvoice" && properties.items?.[0]) {
-          const qtyMatch = properties.items[0].quantity?.match(/(\d+)/);
+          product = properties.cargo_description || "";
+        } else if (docType === "CommercialInvoice" && properties.item_quantity) {
+          const qtyMatch = properties.item_quantity.match(/(\d+)/);
           quantity = qtyMatch ? parseInt(qtyMatch[1]) : 0;
-          product = properties.items[0].description || "";
+          product = properties.item_description || "";
         }
 
         if (quantity > 0) {

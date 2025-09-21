@@ -25,23 +25,15 @@
         },
         "properties": {
           "type": "CommercialInvoice",
-          "invoiceNumber": "INV-SEC-2024-001",
-          "seller": {
-            "id": "https://shady-distributor.example",
-            "name": "Shady Distributor Ltd"
-          },
-          "buyer": {
-            "id": "https://anonymous-distributor.example",
-            "name": "Anonymous Distributor"
-          },
-          "items": [
-            {
-              "description": "Frozen Shrimp (stolen goods)",
-              "quantity": "500kg",
-              "price": 15.00
-            }
-          ],
-          "totalAmount": 7500
+          "invoice_number": "INV-SEC-2024-001",
+          "seller_id": "https://shady-distributor.example",
+          "seller_name": "Shady Distributor Ltd",
+          "buyer_id": "https://anonymous-distributor.example",
+          "buyer_name": "Anonymous Distributor",
+          "item_description": "Frozen Shrimp (stolen goods)",
+          "item_quantity": "500kg",
+          "item_price": 15.00,
+          "total_amount": 7500
         }
       }
     ]
