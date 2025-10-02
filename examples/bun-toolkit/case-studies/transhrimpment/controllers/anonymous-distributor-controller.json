@@ -1,0 +1,77 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://anonymous-distributor.example",
+  "verificationMethod": [
+    {
+      "id": "https://anonymous-distributor.example#sjCcIQefWYDejyZh0KvGVhGBP4UQ9tNgP2X5TrMuHa8",
+      "type": "JsonWebKey",
+      "controller": "https://anonymous-distributor.example",
+      "publicKeyJwk": {
+        "kid": "sjCcIQefWYDejyZh0KvGVhGBP4UQ9tNgP2X5TrMuHa8",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "q2cKSoqMo-OcsFHXiLaLd28Z0ybNObuE_Mv90G8ZZrM",
+        "y": "TugFHYIlH8_34sEJjGyMYeET86C3WQu_TTud0AUdBio",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
+      "type": "JsonWebKey",
+      "controller": "https://anonymous-distributor.example",
+      "publicKeyJwk": {
+        "kid": "-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "ppCimKcKdotlKXxfLrmAexBo1I3bhSh0XDffvPddRxg",
+        "y": "uggiLjSyenaBn1cZUUVm2Zj0OEwWLRgO9FwqqaILqtc",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://anonymous-distributor.example#sjCcIQefWYDejyZh0KvGVhGBP4UQ9tNgP2X5TrMuHa8"
+  ],
+  "authentication": [
+    "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432106",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34326",
+    "urn:ietf:spice:glue:pen:12350"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.9307,
+          18.3419
+        ]
+      },
+      "properties": {
+        "name": "Anonymous Distributor Warehouse",
+        "type": "Seafood Distributor",
+        "role": "final-buyer",
+        "address": {
+          "streetAddress": "Charlotte Amalie Port",
+          "addressLocality": "Charlotte Amalie",
+          "addressRegion": "St. Thomas",
+          "addressCountry": "VI"
+        },
+        "legitimacy": "legitimate-victim"
+      }
+    }
+  ]
+}

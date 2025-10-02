@@ -1,0 +1,46 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "PurchaseOrderCredential"
+  ],
+  "issuer": "https://chompchomp.example",
+  "validFrom": "2024-01-15T09:15:00Z",
+  "validUntil": "2024-12-31T23:59:59Z",
+  "credentialSchema": [
+    {
+      "id": "https://global-customs.example/schemas/purchase-order-credential.yaml",
+      "type": "JsonSchema"
+    }
+  ],
+  "cnf": {
+    "kid": "https://camaron-corriente.example#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0"
+  },
+  "credentialSubject": {
+    "id": "https://orders.example/po-2024-001",
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-64.6208, 18.4167]
+        },
+        "properties": {
+          "type": "PurchaseOrder",
+          "order_number": "PO-2024-001",
+          "buyer_id": "https://chompchomp.example",
+          "buyer_name": "Chompchomp Ltd",
+          "seller_id": "https://camaron-corriente.example",
+          "seller_name": "Camarón Corriente S.A.",
+          "description": "1000kg frozen shrimp",
+          "quantity": "1000kg",
+          "delivery_date": "2024-02-15"
+        }
+      }
+    ]
+  }
+}

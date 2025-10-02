@@ -1,0 +1,47 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "BillOfLadingCredential"
+  ],
+  "issuer": "https://shady-carrier.example",
+  "validFrom": "2024-01-25T10:00:00Z",
+  "validUntil": "2024-12-31T23:59:59Z",
+  "credentialSchema": [
+    {
+      "id": "https://global-customs.example/schemas/bill-of-lading-credential.yaml",
+      "type": "JsonSchema"
+    }
+  ],
+  "cnf": {
+    "kid": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A"
+  },
+  "credentialSubject": {
+    "id": "https://shipments.example/bol-2024-001",
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [[-68.0125, 10.4647], [-70.0270, 12.5186], [-64.6208, 18.4167]]
+        },
+        "properties": {
+          "type": "BillOfLading",
+          "bill_number": "BOL-2024-001",
+          "shipper_id": "https://camaron-corriente.example",
+          "shipper_name": "Camarón Corriente S.A.",
+          "consignee_id": "https://chompchomp.example",
+          "consignee_name": "Chompchomp Ltd",
+          "cargo_description": "Frozen Shrimp",
+          "cargo_quantity": "800kg",
+          "route_origin": "Puerto Cabello, Venezuela",
+          "route_destination": "Road Town, Tortola, BVI"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://honest-importer.example",
+  "verificationMethod": [
+    {
+      "id": "https://honest-importer.example#Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI",
+      "type": "JsonWebKey",
+      "controller": "https://honest-importer.example",
+      "publicKeyJwk": {
+        "kid": "Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "ji254yTxwgtXnmK09oIhM38Y-_23wWRv1S3vh2ZXVU8",
+        "y": "QLCAo0sieFK9cfSSakkRg_P0_-UiXwR3HyXIoULlde4",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://honest-importer.example#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E",
+      "type": "JsonWebKey",
+      "controller": "https://honest-importer.example",
+      "publicKeyJwk": {
+        "kid": "Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "pWpf2ySOo7Q5YaajR0gwmjS6NFMJaRfK1J9rY-exwDU",
+        "y": "pnKf8E48uq_e4amkTD5Lwm5s9WY2YwXXh6lG4M2PNUY",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://honest-importer.example#Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI"
+  ],
+  "authentication": [
+    "https://honest-importer.example#Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432107",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34327",
+    "urn:ietf:spice:glue:pen:12351"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.1918,
+          25.7617
+        ]
+      },
+      "properties": {
+        "name": "Honest Importer Inc Headquarters",
+        "type": "Seafood Importer",
+        "role": "headquarters",
+        "address": {
+          "streetAddress": "1001 Biscayne Boulevard",
+          "addressLocality": "Miami",
+          "addressRegion": "Florida",
+          "addressCountry": "US"
+        },
+        "legitimacy": "legitimate"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.1776,
+          25.7877
+        ]
+      },
+      "properties": {
+        "name": "Honest Importer Inc Processing Facility",
+        "type": "Processing Facility",
+        "role": "import-processing",
+        "capacity": "15000kg",
+        "certifications": [
+          "HACCP",
+          "FDA"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://shady-distributor.example",
+  "verificationMethod": [
+    {
+      "id": "https://shady-distributor.example#4yFP_7YUQvcDt1XLqnWzQ962oehxO8QAy_Y4IMP2uDQ",
+      "type": "JsonWebKey",
+      "controller": "https://shady-distributor.example",
+      "publicKeyJwk": {
+        "kid": "4yFP_7YUQvcDt1XLqnWzQ962oehxO8QAy_Y4IMP2uDQ",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "Ya3Z29_jP_FxWm94X58WxYw2doQD_zmttY8Bz4nO78k",
+        "y": "2yHt3e1scqz5rApDy1v4pnZ3CEiVSqw8I9mZg9F-Gmw",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
+      "type": "JsonWebKey",
+      "controller": "https://shady-distributor.example",
+      "publicKeyJwk": {
+        "kid": "ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "VksWbvRAsFt9OAHTrwHhAM3cLyDjJw9pnrBvaLotx1c",
+        "y": "AcsG4_kXArkPaPlI2wu7DPXTOpZWtMGwXa-HBPDue-w",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://shady-distributor.example#4yFP_7YUQvcDt1XLqnWzQ962oehxO8QAy_Y4IMP2uDQ"
+  ],
+  "authentication": [
+    "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
+      },
+      "properties": {
+        "name": "Shady Distributor Ltd Office",
+        "type": "Seafood Distributor",
+        "role": "intermediary",
+        "address": {
+          "streetAddress": "Offshore Building",
+          "addressLocality": "Road Town",
+          "addressRegion": "Tortola",
+          "addressCountry": "VG"
+        },
+        "legitimacy": "fraudulent"
+      }
+    }
+  ]
+}

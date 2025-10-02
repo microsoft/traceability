@@ -1,0 +1,47 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "BillOfLadingCredential"
+  ],
+  "issuer": "https://cargo-line.example",
+  "validFrom": "2024-02-10T10:00:00Z",
+  "validUntil": "2024-12-31T23:59:59Z",
+  "credentialSchema": [
+    {
+      "id": "https://global-customs.example/schemas/bill-of-lading-credential.yaml",
+      "type": "JsonSchema"
+    }
+  ],
+  "cnf": {
+    "kid": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A"
+  },
+  "credentialSubject": {
+    "id": "https://shipments.example/bol-secondary-2024-001",
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "LineString",
+          "coordinates": [[-64.6208, 18.4167], [-66.1057, 18.4655], [-64.9307, 18.3419]]
+        },
+        "properties": {
+          "type": "BillOfLading",
+          "bill_number": "BOL-SEC-2024-001",
+          "shipper_id": "https://shady-distributor.example",
+          "shipper_name": "Shady Distributor Ltd",
+          "consignee_id": "https://anonymous-distributor.example",
+          "consignee_name": "Anonymous Distributor",
+          "cargo_description": "Frozen Shrimp (secondary transaction)",
+          "cargo_quantity": "500kg",
+          "route_origin": "Road Town, Tortola, BVI",
+          "route_destination": "Charlotte Amalie, St. Thomas, USVI"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "CertificateOfOriginCredential"
+  ],
+  "issuer": "https://camaron-corriente.example",
+  "validFrom": "2024-01-22T09:30:00Z",
+  "validUntil": "2024-12-31T23:59:59Z",
+  "credentialSchema": [
+    {
+      "id": "https://global-customs.example/schemas/certificate-of-origin-credential.yaml",
+      "type": "JsonSchema"
+    }
+  ],
+  "cnf": {
+    "kid": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE"
+  },
+  "credentialSubject": {
+    "id": "https://certificates.example/coo-camaron-2024-001",
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Point",
+          "coordinates": [-68.0125, 10.4647]
+        },
+        "properties": {
+          "type": "CertificateOfOrigin",
+          "certificate_number": "COO-CAMARON-2024-001",
+          "origin_country": "Venezuela",
+          "origin_facility": "Camarón Corriente S.A. Export Facility",
+          "product": "Frozen Shrimp",
+          "quantity": "1000kg",
+          "issue_date": "2024-01-22"
+        }
+      }
+    ]
+  }
+}

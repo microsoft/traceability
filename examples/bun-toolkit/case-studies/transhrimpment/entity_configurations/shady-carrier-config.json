@@ -1,0 +1,57 @@
+{
+  "type": "FeatureCollection",
+  "id": "https://shady-carrier.example",
+  "contexts": [
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "assertion": [
+    {
+      "kid": "5oD1QCp0J1MVNcptL_UPotidwjw8pScO1Ky2cQedt2Q",
+      "kty": "EC",
+      "crv": "P-256",
+      "alg": "ES256",
+      "x": "lczh29InZLqV8end6s06AfP2goBrJe158AAdS7chYFc",
+      "y": "1sKildJFCJURagfLveI-so5uzk5E6NJ8ZDnbPF7JRHs",
+      "d": "AkerKTNc9v4qITnHzyc_Sdx4T9aJUFvcHkq8c3B5O-A",
+      "key_ops": [
+        "sign"
+      ]
+    }
+  ],
+  "authentication": [
+    {
+      "kid": "RZp0CzLsm1iBdc6RyR6ryCFb3sNiOIdzzSf92n7fBJg",
+      "kty": "EC",
+      "crv": "P-256",
+      "alg": "ES256",
+      "x": "DMq5FkHecSg2oTwUsmpJV0wVkv65uiSiS5JUeWHjRms",
+      "y": "Z4qdbhzxIzSjaEHsiljRXp-YVbaAW9zyH9Lya08YRVw",
+      "d": "auceV9T60UQCb_S5tzC_M7TRdFodbXodEKeymQILOPw",
+      "key_ops": [
+        "sign"
+      ]
+    }
+  ],
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -70.027,
+          12.5186
+        ]
+      },
+      "properties": {
+        "name": "Shady Carrier Ltd Operations",
+        "type": "Carrier",
+        "role": "substitute-carrier",
+        "streetAddress": "Harbor District",
+        "addressLocality": "Oranjestad",
+        "addressRegion": "Aruba",
+        "addressCountry": "AW",
+        "legitimacy": "fraudulent"
+      }
+    }
+  ]
+}

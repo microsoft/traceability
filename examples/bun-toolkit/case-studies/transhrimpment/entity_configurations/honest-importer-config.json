@@ -1,0 +1,79 @@
+{
+  "type": "FeatureCollection",
+  "id": "https://honest-importer.example",
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432107",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34327",
+    "urn:ietf:spice:glue:pen:12351"
+  ],
+  "contexts": [
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "assertion": [
+    {
+      "kid": "Vi0LSTwvj_ws3nIjfNPMJS31juPClrUPOAzctwlCAZI",
+      "kty": "EC",
+      "crv": "P-256",
+      "alg": "ES256",
+      "x": "ji254yTxwgtXnmK09oIhM38Y-_23wWRv1S3vh2ZXVU8",
+      "y": "QLCAo0sieFK9cfSSakkRg_P0_-UiXwR3HyXIoULlde4",
+      "d": "CgIiwQrymxYbdfyuuEWpIq_-BxRcHDftlYiOfG51CQM",
+      "key_ops": [
+        "sign"
+      ]
+    }
+  ],
+  "authentication": [
+    {
+      "kid": "Q8rnIRwrk-G_2vie7dP8AlbXiTGGKExx7Y1QnIj4C-E",
+      "kty": "EC",
+      "crv": "P-256",
+      "alg": "ES256",
+      "x": "pWpf2ySOo7Q5YaajR0gwmjS6NFMJaRfK1J9rY-exwDU",
+      "y": "pnKf8E48uq_e4amkTD5Lwm5s9WY2YwXXh6lG4M2PNUY",
+      "d": "8wY7hxwWrJEnDK7XcWQXUkG4MYvLt--LZwQtDknTHwI",
+      "key_ops": [
+        "sign"
+      ]
+    }
+  ],
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.1918,
+          25.7617
+        ]
+      },
+      "properties": {
+        "name": "Honest Importer Inc Headquarters",
+        "type": "Seafood Importer",
+        "role": "headquarters",
+        "streetAddress": "1001 Biscayne Boulevard",
+        "addressLocality": "Miami",
+        "addressRegion": "Florida",
+        "addressCountry": "US",
+        "legitimacy": "legitimate"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.1776,
+          25.7877
+        ]
+      },
+      "properties": {
+        "name": "Honest Importer Inc Processing Facility",
+        "type": "Processing Facility",
+        "role": "import-processing",
+        "capacity": "15000kg",
+        "certifications": ["HACCP", "FDA"]
+      }
+    }
+  ]
+}

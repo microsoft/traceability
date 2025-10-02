@@ -1,0 +1,62 @@
+{
+  "type": "FeatureCollection",
+  "id": "https://legit-shrimp.example",
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432103",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34323",
+    "urn:ietf:spice:glue:pen:12347"
+  ],
+  "contexts": [
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "assertion": [
+    {
+      "kid": "TTmxpbDxEQJKCTxehUHYHoz6qRQ00YenAsry4wJgwxE",
+      "kty": "EC",
+      "crv": "P-256",
+      "alg": "ES256",
+      "x": "zg4EKxDs-3__x3w1cdX6wyIX_bZzKNHPSWVP8UBjFUk",
+      "y": "iam5J54U8HY1EKVWK9qJUFDuIZ-e3T-IM1DY634b-xM",
+      "d": "itgrgjSoY0M1P44b9ufzePvGc3fnSDjwcLaJYL_ZJq4",
+      "key_ops": [
+        "sign"
+      ]
+    }
+  ],
+  "authentication": [
+    {
+      "kid": "F4FzDU1QWvUzDpWAuwlpvO-A4TuixJ-92PXLUwwqKPo",
+      "kty": "EC",
+      "crv": "P-256",
+      "alg": "ES256",
+      "x": "K9k1WfK7WQsRI8xjvLI_ux805Zzt3wxXEqHFSXxhVh0",
+      "y": "0V9-VKIPfQ-YWhyMRCtuYVCeetnV-wZUL_aSmKBJ0os",
+      "d": "BWnpZBwWq6HhnIzubyQTafPlvs3SnPfwutnR7KCbhgQ",
+      "key_ops": [
+        "sign"
+      ]
+    }
+  ],
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -61.5167,
+          10.6596
+        ]
+      },
+      "properties": {
+        "name": "Legit Shrimp Ltd Facility",
+        "type": "Seafood Supplier",
+        "role": "supplier",
+        "streetAddress": "Port of Spain Harbor",
+        "addressLocality": "Port of Spain",
+        "addressRegion": "Port of Spain",
+        "addressCountry": "TT",
+        "legitimacy": "legitimate-identity-stolen"
+      }
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/cid/v1",
+    "https://geojson.org/geojson-ld/geojson-context.jsonld"
+  ],
+  "id": "https://camaron-corriente.example",
+  "verificationMethod": [
+    {
+      "id": "https://camaron-corriente.example#yEO0pZQ6_bFYlZZkmmK6MQLrydeubOdKdtYO-cXKsAg",
+      "type": "JsonWebKey",
+      "controller": "https://camaron-corriente.example",
+      "publicKeyJwk": {
+        "kid": "yEO0pZQ6_bFYlZZkmmK6MQLrydeubOdKdtYO-cXKsAg",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "6EynIUgbLq0CKvNEZIjnKc56dC2CCbegsdbfDUuvYcY",
+        "y": "xLlq9FtgNggxYw_prjbipdy4By7wTbAc2IOiYgTOzFk",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    },
+    {
+      "id": "https://camaron-corriente.example#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0",
+      "type": "JsonWebKey",
+      "controller": "https://camaron-corriente.example",
+      "publicKeyJwk": {
+        "kid": "RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0",
+        "kty": "EC",
+        "crv": "P-256",
+        "alg": "ES256",
+        "x": "QWcGVBtUXXis8Og7UrQLY8rkGltxd3KOjv6Jr3eKRSs",
+        "y": "KP-J4igQr3D3iXInj9qrwJiERdH9OIdEzqqDGnM2kC0",
+        "key_ops": [
+          "verify"
+        ]
+      }
+    }
+  ],
+  "assertionMethod": [
+    "https://camaron-corriente.example#yEO0pZQ6_bFYlZZkmmK6MQLrydeubOdKdtYO-cXKsAg"
+  ],
+  "authentication": [
+    "https://camaron-corriente.example#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0"
+  ],
+  "alsoKnownAs": [
+    "urn:ietf:spice:glue:gln:4598765432102",
+    "urn:ietf:spice:glue:lei:5493000QQY3QQ6Y34322",
+    "urn:ietf:spice:glue:pen:12346"
+  ],
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -68.0125,
+          10.4647
+        ]
+      },
+      "properties": {
+        "name": "Camarón Corriente S.A. Port Facility",
+        "type": "Seafood Distributor",
+        "role": "export-facility",
+        "address": {
+          "streetAddress": "Puerto Cabello Port",
+          "addressLocality": "Puerto Cabello",
+          "addressRegion": "Carabobo",
+          "addressCountry": "VE"
+        }
+      }
+    }
+  ]
+}

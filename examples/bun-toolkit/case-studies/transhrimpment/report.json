@@ -1,0 +1,565 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
+      },
+      "properties": {
+        "controller_id": "https://chompchomp.example",
+        "controller_name": "chompchomp",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -68.0125,
+          10.4647
+        ]
+      },
+      "properties": {
+        "controller_id": "https://camaron-corriente.example",
+        "controller_name": "camaron-corriente",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -61.5167,
+          10.6596
+        ]
+      },
+      "properties": {
+        "controller_id": "https://legit-shrimp.example",
+        "controller_name": "legit-shrimp",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -70.027,
+          12.5186
+        ]
+      },
+      "properties": {
+        "controller_id": "https://shady-carrier.example",
+        "controller_name": "shady-carrier",
+        "fraud_type": "⚠️ Counterfeiting and Alteration"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
+      },
+      "properties": {
+        "controller_id": "https://shady-distributor.example",
+        "controller_name": "shady-distributor",
+        "fraud_type": "⚠️ Synthetic Identity Fraud"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -66.1057,
+          18.4655
+        ]
+      },
+      "properties": {
+        "controller_id": "https://cargo-line.example",
+        "controller_name": "cargo-line",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.9307,
+          18.3419
+        ]
+      },
+      "properties": {
+        "controller_id": "https://anonymous-distributor.example",
+        "controller_name": "anonymous-distributor",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.1918,
+          25.7617
+        ]
+      },
+      "properties": {
+        "controller_id": "https://honest-importer.example",
+        "controller_name": "honest-importer",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -68.0125,
+          10.4647
+        ]
+      },
+      "properties": {
+        "presentation_verified": true,
+        "verification_time": "2024-01-15T10:30:30.000Z",
+        "authentication_key": "https://camaron-corriente.example#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0",
+        "file_name": "chompchomp-purchase-order-template.json",
+        "credential_schema": "JsonSchema",
+        "holder_name": "camaron-corriente",
+        "presentation_is_fraudulent": false,
+        "presentation_contains_fraudulent_credential": false,
+        "description": "Purchase order credentials presented to Camarón Corriente S.A. for order processing",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
+      },
+      "properties": {
+        "file_name": "chompchomp-purchase-order-template.json",
+        "credential_schema": "JsonSchema",
+        "issuer_id": "https://chompchomp.example",
+        "issuer_name": "chompchomp",
+        "authentication_key": "https://camaron-corriente.example#RREK8ExRqquJQlLTuH2oLgHIu5N5_8EGw4zPDt0ZRa0",
+        "verification_time": "2024-01-15T10:30:30.000Z",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
+      },
+      "properties": {
+        "presentation_verified": true,
+        "verification_time": "2024-01-20T11:15:30.000Z",
+        "authentication_key": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
+        "file_name": "camaron-corriente-invoice-template.json",
+        "credential_schema": "JsonSchema",
+        "holder_name": "chompchomp",
+        "presentation_is_fraudulent": false,
+        "presentation_contains_fraudulent_credential": false,
+        "description": "Commercial invoice credentials presented to Chompchomp Ltd for payment verification",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -68.0125,
+          10.4647
+        ]
+      },
+      "properties": {
+        "file_name": "camaron-corriente-invoice-template.json",
+        "credential_schema": "JsonSchema",
+        "issuer_id": "https://camaron-corriente.example",
+        "issuer_name": "camaron-corriente",
+        "authentication_key": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
+        "verification_time": "2024-01-20T11:15:30.000Z",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
+      },
+      "properties": {
+        "presentation_verified": true,
+        "verification_time": "2024-01-22T12:45:30.000Z",
+        "authentication_key": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
+        "file_name": "camaron-corriente-origin-template.json",
+        "credential_schema": "JsonSchema",
+        "holder_name": "chompchomp",
+        "presentation_is_fraudulent": false,
+        "presentation_contains_fraudulent_credential": false,
+        "description": "Certificate of origin credentials presented to shipping carrier for export documentation",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -68.0125,
+          10.4647
+        ]
+      },
+      "properties": {
+        "file_name": "camaron-corriente-origin-template.json",
+        "credential_schema": "JsonSchema",
+        "issuer_id": "https://camaron-corriente.example",
+        "issuer_name": "camaron-corriente",
+        "authentication_key": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
+        "verification_time": "2024-01-22T12:45:30.000Z",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
+      },
+      "properties": {
+        "presentation_verified": true,
+        "verification_time": "2024-02-01T13:20:30.000Z",
+        "authentication_key": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
+        "file_name": "shady-carrier-lading-template.json",
+        "credential_schema": "JsonSchema",
+        "holder_name": "chompchomp",
+        "presentation_is_fraudulent": false,
+        "presentation_contains_fraudulent_credential": false,
+        "description": "Bill of lading credentials presented to Chompchomp Ltd for delivery acceptance",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -68.0125,
+            10.4647
+          ],
+          [
+            -70.027,
+            12.5186
+          ],
+          [
+            -64.6208,
+            18.4167
+          ]
+        ]
+      },
+      "properties": {
+        "file_name": "shady-carrier-lading-template.json",
+        "credential_schema": "JsonSchema",
+        "issuer_id": "https://shady-carrier.example",
+        "issuer_name": "shady-carrier",
+        "authentication_key": "https://chompchomp.example#wNUtxagpVheCgu0xLnu0Dx7l7KPbU6KYJwnOymA1dyE",
+        "verification_time": "2024-02-01T13:20:30.000Z",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.9307,
+          18.3419
+        ]
+      },
+      "properties": {
+        "presentation_verified": true,
+        "verification_time": "2024-02-01T15:45:30.000Z",
+        "authentication_key": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
+        "file_name": "shady-carrier-forged-lading-template.json",
+        "credential_schema": "JsonSchema",
+        "holder_name": "anonymous-distributor",
+        "presentation_is_fraudulent": false,
+        "presentation_contains_fraudulent_credential": false,
+        "description": "Forged bill of lading credentials presented to customs for partial loss claim",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -68.0125,
+            10.4647
+          ],
+          [
+            -70.027,
+            12.5186
+          ],
+          [
+            -64.6208,
+            18.4167
+          ]
+        ]
+      },
+      "properties": {
+        "file_name": "shady-carrier-forged-lading-template.json",
+        "credential_schema": "JsonSchema",
+        "issuer_id": "https://shady-carrier.example",
+        "issuer_name": "shady-carrier",
+        "authentication_key": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
+        "verification_time": "2024-02-01T15:45:30.000Z",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
+      },
+      "properties": {
+        "presentation_verified": true,
+        "verification_time": "2024-02-10T13:35:30.000Z",
+        "authentication_key": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
+        "file_name": "anonymous-distributor-secondary-purchase-order-template.json",
+        "credential_schema": "JsonSchema",
+        "holder_name": "shady-distributor",
+        "presentation_is_fraudulent": false,
+        "presentation_contains_fraudulent_credential": false,
+        "description": "Secondary purchase order credentials presented to Shady Distributor Ltd for order processing",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.9307,
+          18.3419
+        ]
+      },
+      "properties": {
+        "file_name": "anonymous-distributor-secondary-purchase-order-template.json",
+        "credential_schema": "JsonSchema",
+        "issuer_id": "https://anonymous-distributor.example",
+        "issuer_name": "anonymous-distributor",
+        "authentication_key": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
+        "verification_time": "2024-02-10T13:35:30.000Z",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.9307,
+          18.3419
+        ]
+      },
+      "properties": {
+        "presentation_verified": true,
+        "verification_time": "2024-02-12T14:50:30.000Z",
+        "authentication_key": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
+        "file_name": "shady-distributor-secondary-invoice-template.json",
+        "credential_schema": "JsonSchema",
+        "holder_name": "anonymous-distributor",
+        "presentation_is_fraudulent": false,
+        "presentation_contains_fraudulent_credential": false,
+        "description": "Secondary commercial invoice credentials presented to Anonymous Distributor for payment",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
+      },
+      "properties": {
+        "file_name": "shady-distributor-secondary-invoice-template.json",
+        "credential_schema": "JsonSchema",
+        "issuer_id": "https://shady-distributor.example",
+        "issuer_name": "shady-distributor",
+        "authentication_key": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
+        "verification_time": "2024-02-12T14:50:30.000Z",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.9307,
+          18.3419
+        ]
+      },
+      "properties": {
+        "presentation_verified": true,
+        "verification_time": "2024-02-15T10:20:30.000Z",
+        "authentication_key": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
+        "file_name": "cargo-line-secondary-lading-template.json",
+        "credential_schema": "JsonSchema",
+        "holder_name": "anonymous-distributor",
+        "presentation_is_fraudulent": false,
+        "presentation_contains_fraudulent_credential": false,
+        "description": "Secondary bill of lading credentials presented to Anonymous Distributor for delivery",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            -64.6208,
+            18.4167
+          ],
+          [
+            -66.1057,
+            18.4655
+          ],
+          [
+            -64.9307,
+            18.3419
+          ]
+        ]
+      },
+      "properties": {
+        "file_name": "cargo-line-secondary-lading-template.json",
+        "credential_schema": "JsonSchema",
+        "issuer_id": "https://cargo-line.example",
+        "issuer_name": "cargo-line",
+        "authentication_key": "https://anonymous-distributor.example#-XwVdLYzYfug9elJRgcSlQjawMW1RMEqfB4gG7hEL9A",
+        "verification_time": "2024-02-15T10:20:30.000Z",
+        "fraud_type": null
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
+      },
+      "properties": {
+        "presentation_verified": false,
+        "verification_time": "2024-02-08T14:15:30.000Z",
+        "authentication_key": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
+        "file_name": "legit-shrimp-honest-importer-origin-template.json",
+        "credential_schema": "JsonSchema",
+        "holder_name": "shady-distributor",
+        "presentation_is_fraudulent": true,
+        "presentation_contains_fraudulent_credential": true,
+        "description": "STOLEN legitimate certificate credentials inappropriately presented by Shady Distributor Ltd",
+        "fraud_type": "⚠️ Document Compromise"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -61.5167,
+          10.6596
+        ]
+      },
+      "properties": {
+        "file_name": "legit-shrimp-honest-importer-origin-template.json",
+        "credential_schema": "JsonSchema",
+        "issuer_id": "https://legit-shrimp.example",
+        "issuer_name": "legit-shrimp",
+        "authentication_key": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
+        "verification_time": "2024-02-08T14:15:30.000Z",
+        "fraud_type": "⚠️ Document Compromise"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -64.6208,
+          18.4167
+        ]
+      },
+      "properties": {
+        "presentation_verified": false,
+        "verification_time": "2024-02-05T11:25:30.000Z",
+        "authentication_key": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
+        "file_name": "shady-distributor-fraudulent-origin-template.json",
+        "credential_schema": "JsonSchema",
+        "holder_name": "shady-distributor",
+        "presentation_is_fraudulent": true,
+        "presentation_contains_fraudulent_credential": false,
+        "description": "FRAUDULENT certificate of origin credentials presented by Shady Distributor Ltd claiming Legit Shrimp Ltd identity",
+        "fraud_type": "⚠️ Synthetic Identity Fraud"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -61.5167,
+          10.6596
+        ]
+      },
+      "properties": {
+        "file_name": "shady-distributor-fraudulent-origin-template.json",
+        "credential_schema": "JsonSchema",
+        "issuer_id": "https://legit-shrimp.example",
+        "issuer_name": "legit-shrimp",
+        "authentication_key": "https://shady-distributor.example#ID_fcFqPhzrsWKEbcTrx2pLqyORpk38YL2R8hAsc5R8",
+        "verification_time": "2024-02-05T11:25:30.000Z",
+        "fraud_type": "⚠️ Synthetic Identity Fraud"
+      }
+    }
+  ]
+}
